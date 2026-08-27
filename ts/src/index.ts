@@ -146,6 +146,7 @@ app.get('/', (c) =>
       'GET /v1/calendar/season': 'Liturgical season of a date. ?date=&calendar=',
       'GET /v1/calendar/geez-numeral': "Arabic to Ge'ez numerals. ?number=2018",
       'GET /v1/gitsawe/{date}': 'Fixed-cycle Gitsawe with Sinksar and canonical Bible links.',
+      'GET /v1/readings/{date}': 'Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.',
       'POST /v1/calendar/convert/batch': 'Convert many dates at once. body: {dates:[], calendar?}',
     },
     examples: [
@@ -221,6 +222,38 @@ app.get('/v1/gitsawe/:date', (c) => {
       localEditions: ['gez-1980', 'am-1980'],
       license: 'CC-BY-NC-ND-4.0',
       note: 'Canonical references identify passages; Bible verse text is not bundled with the MIT API.',
+    },
+  });
+});
+
+app.get('/v1/readings/:date', (c) => {
+  const jdn = parseDate(c.req.param('date'), cal(c));
+  const described = describeDay(jdn);
+  const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
+  if (!fixed) throw new ApiError(404, 'No fixed-cycle Gitsawe record for this date.');
+  const gitsawe = fixed.gitsawe as { cycle: string; services: Record<string, any> };
+  const services = Object.fromEntries(Object.entries(gitsawe.services).map(([name, service]) => [name, {
+    psalms: service.psalms ?? [],
+    gospels: service.gospels ?? [],
+    epistles: (service.epistlesAndActs ?? []).filter((reading: any) => reading.bibleBook !== 'ACT'),
+    acts: (service.epistlesAndActs ?? []).filter((reading: any) => reading.bibleBook === 'ACT'),
+    anaphora: service.anaphora ?? null,
+  }]));
+  const movableFeastKeys = described.feasts.filter((feast) => feast.movable).map((feast) => feast.key);
+  return c.json({
+    date: { gregorian: described.gregorian.date, ethiopic: described.ethiopic.date, weekday: described.weekday },
+    source: { cycle: gitsawe.cycle, resolution: 'fixed_candidate_only' },
+    resolutionFactors: {
+      isSunday: described.weekday.n === 0,
+      movableFeasts: movableFeastKeys,
+      knownPrecedenceConflict: described.weekday.n === 0 || movableFeastKeys.length > 0,
+    },
+    services,
+    bible: {
+      textIncluded: false,
+      availableLocalEditions: ['gez-1980', 'am-1980'],
+      license: 'CC-BY-NC-ND-4.0',
+      note: 'This public MIT API exposes Gitsawe citations and normalized references, not licensed Bible verse text.',
     },
   });
 });

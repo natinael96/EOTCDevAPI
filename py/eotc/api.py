@@ -224,6 +224,7 @@ async def index() -> dict[str, Any]:
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
             "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
+            "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
             "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}",
         },
         "examples": [
@@ -297,6 +298,48 @@ async def gitsawe(date: str, calendar: str = Query("gregorian")) -> dict[str, An
             "localEditions": ["gez-1980", "am-1980"],
             "license": "CC-BY-NC-ND-4.0",
             "note": "Canonical references identify passages; Bible verse text is not bundled with the MIT API.",
+        },
+    }
+
+
+@app.get("/v1/readings/{date}", summary="Daily Bible readings appointed in the Gitsawe")
+async def readings(date: str, calendar: str = Query("gregorian")) -> dict[str, Any]:
+    jdn = parse_date(date, calendar.lower())
+    described = describe_day(jdn)
+    fixed = fixed_gitsawe_on(described["ethiopic"]["month"], described["ethiopic"]["day"])
+    if fixed is None:
+        raise ApiError(404, "No fixed-cycle Gitsawe record for this date.")
+    gitsawe_data = fixed["gitsawe"]
+    services: dict[str, Any] = {}
+    for name, service in gitsawe_data["services"].items():
+        epistles_and_acts = service.get("epistlesAndActs", [])
+        services[name] = {
+            "psalms": service.get("psalms", []),
+            "gospels": service.get("gospels", []),
+            "epistles": [r for r in epistles_and_acts if r.get("bibleBook") != "ACT"],
+            "acts": [r for r in epistles_and_acts if r.get("bibleBook") == "ACT"],
+            "anaphora": service.get("anaphora"),
+        }
+    movable_keys = [f["key"] for f in described["feasts"] if f["movable"]]
+    is_sunday = described["weekday"]["n"] == 0
+    return {
+        "date": {
+            "gregorian": described["gregorian"]["date"],
+            "ethiopic": described["ethiopic"]["date"],
+            "weekday": described["weekday"],
+        },
+        "source": {"cycle": gitsawe_data["cycle"], "resolution": "fixed_candidate_only"},
+        "resolutionFactors": {
+            "isSunday": is_sunday,
+            "movableFeasts": movable_keys,
+            "knownPrecedenceConflict": is_sunday or bool(movable_keys),
+        },
+        "services": services,
+        "bible": {
+            "textIncluded": False,
+            "availableLocalEditions": ["gez-1980", "am-1980"],
+            "license": "CC-BY-NC-ND-4.0",
+            "note": "This public MIT API exposes Gitsawe citations and normalized references, not licensed Bible verse text.",
         },
     }
 

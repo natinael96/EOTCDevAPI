@@ -22,6 +22,7 @@
     "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
     "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
     "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
+    "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
     "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}"
    },
    "examples": [
@@ -6249,8 +6250,8 @@
          "book": "ROM",
          "chapter": 14,
          "verseStart": 25,
-         "verseEnd": 25,
-         "toEndOfChapter": false,
+         "verseEnd": null,
+         "toEndOfChapter": true,
          "method": "printed_citation",
          "confidence": "probable"
         }
@@ -6265,8 +6266,8 @@
          "book": "2PE",
          "chapter": 1,
          "verseStart": 19,
-         "verseEnd": 19,
-         "toEndOfChapter": false,
+         "verseEnd": null,
+         "toEndOfChapter": true,
          "method": "printed_citation",
          "confidence": "probable"
         }
@@ -6357,6 +6358,48 @@
       "title": "📖 ሚክ. ፮ ፥ ፮ - ፰"
      }
     ],
+    "annualFeasts": {
+     "sourceEntryId": "12-22-2",
+     "heading": "📌 ነሐሴ ፳፪ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+     "items": [
+      {
+       "id": "12-22-annual-1",
+       "title": "ቅዱስ ሚክያስ ነቢይ",
+       "sourceText": "፩.ቅዱስ ሚክያስ ነቢይ"
+      }
+     ]
+    },
+    "monthlyFeasts": {
+     "sourceEntryId": "12-22-3",
+     "heading": "📌 ወርኀዊ በዓላት",
+     "items": [
+      {
+       "id": "12-22-monthly-1",
+       "title": "ቅዱስ ዑራኤል ሊቀ መላእክት",
+       "sourceText": "፩.ቅዱስ ዑራኤል ሊቀ መላእክት"
+      },
+      {
+       "id": "12-22-monthly-2",
+       "title": "ቅዱስ ሉቃስ ወንጌላዊ",
+       "sourceText": "፪.ቅዱስ ሉቃስ ወንጌላዊ"
+      },
+      {
+       "id": "12-22-monthly-3",
+       "title": "ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)",
+       "sourceText": "፫.ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)"
+      },
+      {
+       "id": "12-22-monthly-4",
+       "title": "አባ እንጦንስ አበ መነኮሳት",
+       "sourceText": "፬.አባ እንጦንስ አበ መነኮሳት"
+      },
+      {
+       "id": "12-22-monthly-5",
+       "title": "አባ ዻውሊ የዋህ",
+       "sourceText": "፭.አባ ዻውሊ የዋህ"
+      }
+     ]
+    },
     "fullTextAvailable": false,
     "reason": "Full-text publication rights are not yet recorded."
    },
@@ -6504,8 +6547,8 @@
          "book": "ROM",
          "chapter": 14,
          "verseStart": 25,
-         "verseEnd": 25,
-         "toEndOfChapter": false,
+         "verseEnd": null,
+         "toEndOfChapter": true,
          "method": "printed_citation",
          "confidence": "probable"
         }
@@ -6520,8 +6563,8 @@
          "book": "2PE",
          "chapter": 1,
          "verseStart": 19,
-         "verseEnd": 19,
-         "toEndOfChapter": false,
+         "verseEnd": null,
+         "toEndOfChapter": true,
          "method": "printed_citation",
          "confidence": "probable"
         }
@@ -6612,6 +6655,48 @@
       "title": "📖 ሚክ. ፮ ፥ ፮ - ፰"
      }
     ],
+    "annualFeasts": {
+     "sourceEntryId": "12-22-2",
+     "heading": "📌 ነሐሴ ፳፪ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+     "items": [
+      {
+       "id": "12-22-annual-1",
+       "title": "ቅዱስ ሚክያስ ነቢይ",
+       "sourceText": "፩.ቅዱስ ሚክያስ ነቢይ"
+      }
+     ]
+    },
+    "monthlyFeasts": {
+     "sourceEntryId": "12-22-3",
+     "heading": "📌 ወርኀዊ በዓላት",
+     "items": [
+      {
+       "id": "12-22-monthly-1",
+       "title": "ቅዱስ ዑራኤል ሊቀ መላእክት",
+       "sourceText": "፩.ቅዱስ ዑራኤል ሊቀ መላእክት"
+      },
+      {
+       "id": "12-22-monthly-2",
+       "title": "ቅዱስ ሉቃስ ወንጌላዊ",
+       "sourceText": "፪.ቅዱስ ሉቃስ ወንጌላዊ"
+      },
+      {
+       "id": "12-22-monthly-3",
+       "title": "ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)",
+       "sourceText": "፫.ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)"
+      },
+      {
+       "id": "12-22-monthly-4",
+       "title": "አባ እንጦንስ አበ መነኮሳት",
+       "sourceText": "፬.አባ እንጦንስ አበ መነኮሳት"
+      },
+      {
+       "id": "12-22-monthly-5",
+       "title": "አባ ዻውሊ የዋህ",
+       "sourceText": "፭.አባ ዻውሊ የዋህ"
+      }
+     ]
+    },
     "fullTextAvailable": false,
     "reason": "Full-text publication rights are not yet recorded."
    },
@@ -6776,7 +6861,7 @@
          "book": "1PE",
          "chapter": 3,
          "verseStart": 18,
-         "verseEnd": 18,
+         "verseEnd": null,
          "toEndOfChapter": true,
          "method": "printed_citation",
          "confidence": "probable"
@@ -6878,6 +6963,68 @@
       "title": "📖 ማቴ. ፭፥፲፬-፲፮"
      }
     ],
+    "annualFeasts": {
+     "sourceEntryId": "8-4-4",
+     "heading": "📌 ሚያዝያ ፫ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+     "items": [
+      {
+       "id": "8-4-annual-1",
+       "title": "ቅዱስ መርቄ ጻድቅ (ክርስቲያናዊ ነጋዴ)",
+       "sourceText": "፩.ቅዱስ መርቄ ጻድቅ (ክርስቲያናዊ ነጋዴ)"
+      },
+      {
+       "id": "8-4-annual-2",
+       "title": "ቅዱስ ዮሐንስ ዘኢየሩሳሌም",
+       "sourceText": "፪.ቅዱስ ዮሐንስ ዘኢየሩሳሌም"
+      },
+      {
+       "id": "8-4-annual-3",
+       "title": "አባ ሚካኤል ዘእስክንድርያ",
+       "sourceText": "፫.አባ ሚካኤል ዘእስክንድርያ"
+      },
+      {
+       "id": "8-4-annual-4",
+       "title": "እግዚአብሔር:- በእግር የሚራመዱ : በክንፍ የሚበሩና በልብ የሚሳቡ : በየብስ የሚኖሩ ፍጥረታትን ፈጠረ",
+       "sourceText": "፬.እግዚአብሔር:- በእግር የሚራመዱ : በክንፍ የሚበሩና በልብ የሚሳቡ : በየብስ የሚኖሩ ፍጥረታትን ፈጠረ"
+      }
+     ]
+    },
+    "monthlyFeasts": {
+     "sourceEntryId": "8-4-5",
+     "heading": "📌 ወርኀዊ በዓላት",
+     "items": [
+      {
+       "id": "8-4-monthly-1",
+       "title": "በዓታ ለእግዝእትነ ማርያም ድንግል ወላዲተ አምላክ",
+       "sourceText": "፩.በዓታ ለእግዝእትነ ማርያም ድንግል ወላዲተ አምላክ"
+      },
+      {
+       "id": "8-4-monthly-2",
+       "title": "ቅዱሳን ኢያቄም ወሐና",
+       "sourceText": "፪.ቅዱሳን ኢያቄም ወሐና"
+      },
+      {
+       "id": "8-4-monthly-3",
+       "title": "ቅዱሳን ሊቃነ ካህናት አበው (ዘካርያስና ስምዖን)",
+       "sourceText": "፫.ቅዱሳን ሊቃነ ካህናት አበው (ዘካርያስና ስምዖን)"
+      },
+      {
+       "id": "8-4-monthly-4",
+       "title": "አባ ሊባኖስ ዘመጣዕ",
+       "sourceText": "፬.አባ ሊባኖስ ዘመጣዕ"
+      },
+      {
+       "id": "8-4-monthly-5",
+       "title": "አቡነ ዜና ማርቆስ",
+       "sourceText": "፭.አቡነ ዜና ማርቆስ"
+      },
+      {
+       "id": "8-4-monthly-6",
+       "title": "አቡነ መድኃኒነ እግዚእ ዘደብረ በንኮል",
+       "sourceText": "፮.አቡነ መድኃኒነ እግዚእ ዘደብረ በንኮል"
+      }
+     ]
+    },
     "fullTextAvailable": false,
     "reason": "Full-text publication rights are not yet recorded."
    },
@@ -6889,6 +7036,424 @@
     ],
     "license": "CC-BY-NC-ND-4.0",
     "note": "Canonical references identify passages; Bible verse text is not bundled with the MIT API."
+   }
+  }
+ },
+ "/v1/readings/2018-12-22?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-08-28",
+    "ethiopic": "2018-12-22",
+    "weekday": {
+     "n": 5,
+     "amharic": "ዓርብ",
+     "translit": "Arb",
+     "english": "Friday"
+    }
+   },
+   "source": {
+    "cycle": "fixed",
+    "resolution": "fixed_candidate_only"
+   },
+   "resolutionFactors": {
+    "isSunday": false,
+    "movableFeasts": [],
+    "knownPrecedenceConflict": false
+   },
+   "services": {
+    "matins": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፻፪ ቍ· ፱ – ፲",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 102,
+        "verseStart": 9,
+        "verseEnd": 10,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ማቴዎስ",
+       "bibleBook": "MAT",
+       "sourceCitation": "ም· ፮ ቍ· ፩ – ፭",
+       "canonicalReference": {
+        "book": "MAT",
+        "chapter": 6,
+        "verseStart": 1,
+        "verseEnd": 5,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [],
+     "acts": [],
+     "anaphora": null
+    },
+    "liturgy": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፻፬ ቍ· ፲፬ – ፲፭",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 104,
+        "verseStart": 14,
+        "verseEnd": 15,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ማቴዎስ",
+       "bibleBook": "MAT",
+       "sourceCitation": "ም· ፪ ቍ· ፩ – ፯",
+       "canonicalReference": {
+        "book": "MAT",
+        "chapter": 2,
+        "verseStart": 1,
+        "verseEnd": 7,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ሮሜ",
+       "bibleBook": "ROM",
+       "sourceCitation": "ም· ፲፬ ቍ· ፳፭ – ፍ፣ም፣",
+       "canonicalReference": {
+        "book": "ROM",
+        "chapter": 14,
+        "verseStart": 25,
+        "verseEnd": null,
+        "toEndOfChapter": true,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      },
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ጴጥ ፪",
+       "bibleBook": "2PE",
+       "sourceCitation": "ም· ፩ ቍ· ፲፱ – ፍ፣ም፣",
+       "canonicalReference": {
+        "book": "2PE",
+        "chapter": 1,
+        "verseStart": 19,
+        "verseEnd": null,
+        "toEndOfChapter": true,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "acts": [
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ግብ፣ ሐዋ፣",
+       "bibleBook": "ACT",
+       "sourceCitation": "ም· ፯ ቍ· ፶፬ – ፶፱",
+       "canonicalReference": {
+        "book": "ACT",
+        "chapter": 7,
+        "verseStart": 54,
+        "verseEnd": 59,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "anaphora": "ዘእግዝእትነ ፤ አው ዘወልደ ነጐድጓድ ።"
+    },
+    "vespers": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፳፯ ቍ· ፩ – ፪",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 27,
+        "verseStart": 1,
+        "verseEnd": 2,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ሉቃስ",
+       "bibleBook": "LUK",
+       "sourceCitation": "ም· ፯ ቍ· ፴፱ – ፵፫",
+       "canonicalReference": {
+        "book": "LUK",
+        "chapter": 7,
+        "verseStart": 39,
+        "verseEnd": 43,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [],
+     "acts": [],
+     "anaphora": null
+    }
+   },
+   "bible": {
+    "textIncluded": false,
+    "availableLocalEditions": [
+     "gez-1980",
+     "am-1980"
+    ],
+    "license": "CC-BY-NC-ND-4.0",
+    "note": "This public MIT API exposes Gitsawe citations and normalized references, not licensed Bible verse text."
+   }
+  }
+ },
+ "/v1/readings/2026-04-12": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-04-12",
+    "ethiopic": "2018-08-04",
+    "weekday": {
+     "n": 0,
+     "amharic": "እሑድ",
+     "translit": "Ehud",
+     "english": "Sunday"
+    }
+   },
+   "source": {
+    "cycle": "fixed",
+    "resolution": "fixed_candidate_only"
+   },
+   "resolutionFactors": {
+    "isSunday": true,
+    "movableFeasts": [
+     "fasika"
+    ],
+    "knownPrecedenceConflict": true
+   },
+   "services": {
+    "matins": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፻፳፯ ቍ· ፪ – ፫",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 127,
+        "verseStart": 2,
+        "verseEnd": 3,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ማቴዎስ",
+       "bibleBook": "MAT",
+       "sourceCitation": "ም· ፲፱ ቍ· ፩ – ፯",
+       "canonicalReference": {
+        "book": "MAT",
+        "chapter": 19,
+        "verseStart": 1,
+        "verseEnd": 7,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [],
+     "acts": [],
+     "anaphora": null
+    },
+    "liturgy": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፹፰ ቍ· ፵፯ – ፵፰",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 88,
+        "verseStart": 47,
+        "verseEnd": 48,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ማቴዎስ",
+       "bibleBook": "MAT",
+       "sourceCitation": "ም· ፲፱ ቍ· ፩ – ፲፭",
+       "canonicalReference": {
+        "book": "MAT",
+        "chapter": 19,
+        "verseStart": 1,
+        "verseEnd": 15,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ዘቅዳሴ ጢሞ ፪",
+       "bibleBook": "2TI",
+       "sourceCitation": "ም· ፫ ቍ· ፩ – ፲",
+       "canonicalReference": {
+        "book": "2TI",
+        "chapter": 3,
+        "verseStart": 1,
+        "verseEnd": 10,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      },
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ጴጥ ፩",
+       "bibleBook": "1PE",
+       "sourceCitation": "ም· ፫ ቍ· ፲፰ – ፍ፡ም፡",
+       "canonicalReference": {
+        "book": "1PE",
+        "chapter": 3,
+        "verseStart": 18,
+        "verseEnd": null,
+        "toEndOfChapter": true,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "acts": [
+      {
+       "sourceField": "epistles_and_acts",
+       "alternate": false,
+       "sourceBook": "ግብ፡ ሐዋ፡",
+       "bibleBook": "ACT",
+       "sourceCitation": "ም· ፲፯ ቍ· ፳፫ – ፴",
+       "canonicalReference": {
+        "book": "ACT",
+        "chapter": 17,
+        "verseStart": 23,
+        "verseEnd": 30,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "anaphora": "አትናቴዎስ አው ዘእግዝእትነ ።"
+    },
+    "vespers": {
+     "psalms": [
+      {
+       "sourceField": "ምስባክ",
+       "alternate": false,
+       "sourceBook": "መዝ·",
+       "bibleBook": "PSA",
+       "sourceCitation": "፲፯ ቍ· ፳፩ – ፳፪",
+       "canonicalReference": {
+        "book": "PSA",
+        "chapter": 17,
+        "verseStart": 21,
+        "verseEnd": 22,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "gospels": [
+      {
+       "sourceField": "ወንጌል",
+       "alternate": false,
+       "sourceBook": "ሉቃስ",
+       "bibleBook": "LUK",
+       "sourceCitation": "ም· ፳፫ ቍ· ፲፫ – ፲፯",
+       "canonicalReference": {
+        "book": "LUK",
+        "chapter": 23,
+        "verseStart": 13,
+        "verseEnd": 17,
+        "toEndOfChapter": false,
+        "method": "printed_citation",
+        "confidence": "probable"
+       }
+      }
+     ],
+     "epistles": [],
+     "acts": [],
+     "anaphora": null
+    }
+   },
+   "bible": {
+    "textIncluded": false,
+    "availableLocalEditions": [
+     "gez-1980",
+     "am-1980"
+    ],
+    "license": "CC-BY-NC-ND-4.0",
+    "note": "This public MIT API exposes Gitsawe citations and normalized references, not licensed Bible verse text."
    }
   }
  },

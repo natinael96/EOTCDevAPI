@@ -92,6 +92,18 @@ describe('Gitsawe content and links', () => {
     expect(body.bible.textIncluded).toBe(false);
   });
 
+  it('returns a focused daily readings response without Sinksar content', async () => {
+    const { status, body } = await get('/v1/readings/2018-12-22?calendar=ethiopian');
+    expect(status).toBe(200);
+    expect(body.date.ethiopic).toBe('2018-12-22');
+    expect(body.source.resolution).toBe('fixed_candidate_only');
+    expect(body.services.liturgy.epistles).toHaveLength(2);
+    expect(body.services.liturgy.acts).toHaveLength(1);
+    expect(body.services.liturgy.gospels[0].canonicalReference.book).toBeTruthy();
+    expect(body.bible.textIncluded).toBe(false);
+    expect(body.sinksar).toBeUndefined();
+  });
+
   it('flags Fasika Sunday as requiring unresolved precedence', async () => {
     const { body } = await get('/v1/gitsawe/2026-04-12');
     expect(body.resolutionFactors.isSunday).toBe(true);
@@ -99,6 +111,24 @@ describe('Gitsawe content and links', () => {
     expect(body.resolutionFactors.knownPrecedenceConflict).toBe(true);
     expect(body.coverage.movableCycle).toBe('not_transcribed');
     expect(body.coverage.sundayCycle).toBe('not_transcribed');
+  });
+
+  it('exposes annual and monthly Sinksar feast lists', async () => {
+    const { body } = await get('/v1/gitsawe/2018-08-04?calendar=ethiopian');
+    expect(body.sinksar.annualFeasts.sourceEntryId).toBe('8-4-4');
+    expect(body.sinksar.annualFeasts.heading).toContain('ዓመታዊ');
+    expect(body.sinksar.annualFeasts.items).toHaveLength(4);
+    expect(body.sinksar.annualFeasts.items[0].title).toContain('ቅዱስ መርቄ');
+    expect(body.sinksar.monthlyFeasts.heading).toContain('ወርኀዊ በዓላት');
+    expect(body.sinksar.monthlyFeasts.items).toHaveLength(6);
+    expect(body.sinksar.monthlyFeasts.items[0].title).toContain('ማርያም');
+  });
+
+  it('uses Gospel field context to distinguish John from 1 John', async () => {
+    const { body } = await get('/v1/readings/2018-01-04?calendar=ethiopian');
+    expect(body.services.liturgy.gospels[0].sourceBook).toBe('ዮሐንስ');
+    expect(body.services.liturgy.gospels[0].bibleBook).toBe('JHN');
+    expect(body.services.liturgy.gospels[0].canonicalReference.book).toBe('JHN');
   });
 });
 
@@ -170,5 +200,26 @@ describe('headers', () => {
     const { headers } = await get('/v1/date/2026-04-12');
     expect(headers.get('access-control-allow-origin')).toBe('*');
     expect(headers.get('cache-control')).toContain('max-age');
+  });
+
+  it('allows POST in CORS preflight', async () => {
+    const res = await app.request('http://localhost/v1/calendar/convert/batch', {
+      method: 'OPTIONS',
+      headers: { origin: 'https://example.com', 'access-control-request-method': 'POST' },
+    });
+    expect(res.headers.get('access-control-allow-methods')).toContain('POST');
+  });
+
+  it('returns the public 429 contract when the platform limiter denies a request', async () => {
+    const res = await app.request('http://localhost/v1/date/2026-04-12', {}, {
+      API_RATE_LIMITER: { limit: async () => ({ success: false }) },
+    });
+    expect(res.status).toBe(429);
+    expect(res.headers.get('retry-after')).toBe('60');
+    expect(await res.json()).toEqual({
+      error: 'rate_limited',
+      message: 'Too many requests. Please retry after 60 seconds.',
+      retryAfter: 60,
+    });
   });
 });
