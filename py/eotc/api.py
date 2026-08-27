@@ -9,6 +9,9 @@ no database, no network, no state.
 from __future__ import annotations
 
 import re
+import os
+import threading
+import time
 from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -46,8 +49,67 @@ app = FastAPI(
 )
 
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "OPTIONS"], allow_headers=["*"]
+    CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"]
 )
+
+
+class _TokenBucketLimiter:
+    """Continuously refilling limiter for self-hosted FastAPI deployments.
+
+    Multi-worker deployments should enforce the same contract at their reverse
+    proxy or use a shared limiter. The Cloudflare implementation uses its native
+    edge binding instead of this process-local state.
+    """
+
+    def __init__(self) -> None:
+        self._buckets: dict[str, tuple[float, float]] = {}
+        self._lock = threading.Lock()
+
+    def take(self, key: str, capacity: int, refill_per_second: float,
+             now: float | None = None) -> tuple[bool, int]:
+        current = time.monotonic() if now is None else now
+        if capacity <= 0 or refill_per_second <= 0:
+            return True, 0
+        with self._lock:
+            tokens, updated = self._buckets.get(key, (float(capacity), current))
+            tokens = min(float(capacity), tokens + max(0.0, current - updated) * refill_per_second)
+            if tokens < 1:
+                retry_after = max(1, int((1 - tokens) / refill_per_second + 0.999999))
+                self._buckets[key] = (tokens, current)
+                return False, retry_after
+            self._buckets[key] = (tokens - 1, current)
+            if len(self._buckets) > 10_000:
+                stale_before = current - (capacity / refill_per_second) * 2
+                self._buckets = {k: v for k, v in self._buckets.items() if v[1] >= stale_before}
+            return True, 0
+
+
+_rate_limiter = _TokenBucketLimiter()
+
+
+@app.middleware("http")
+async def _rate_limit(request: Request, call_next):
+    if request.method == "OPTIONS" or request.url.path == "/v1/health" or not request.url.path.startswith("/v1/"):
+        return await call_next(request)
+    try:
+        capacity = int(os.getenv("EOTC_RATE_CAPACITY", os.getenv("EOTC_RATE_LIMIT", "0")))
+        refill = float(os.getenv("EOTC_RATE_REFILL_PER_SECOND", "10"))
+    except ValueError:
+        capacity, refill = 0, 10
+    if capacity > 0 and refill > 0:
+        # Uvicorn's trusted proxy handling should establish request.client before
+        # the application runs. Do not trust a caller-supplied forwarding header.
+        client = request.client.host if request.client else "anonymous"
+        allowed, retry_after = _rate_limiter.take(client, capacity, refill)
+        if not allowed:
+            return JSONResponse(
+                {"error": "rate_limited",
+                 "message": f"Too many requests. Please retry after {retry_after} seconds.",
+                 "retryAfter": retry_after},
+                status_code=429,
+                headers={"retry-after": str(retry_after), "cache-control": "no-store"},
+            )
+    return await call_next(request)
 
 
 class ApiError(Exception):

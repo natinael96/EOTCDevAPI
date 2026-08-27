@@ -1,9 +1,20 @@
 name = "eotcdev-api"
 main = "src/index.ts"
-compatibility_date = "2024-12-01"
+compatibility_date = "2026-08-27"
 
-# No bindings: the API is pure computation with no storage or network calls.
-# That is what keeps it inside the free tier's 10ms CPU budget.
+# The application remains database-free. Cloudflare's native, edge-local limiter
+# protects the anonymous public endpoint without adding a storage service.
+[[ratelimits]]
+name = "API_RATE_LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 600
+  period = 60
+
+[vars]
+RATE_LIMIT_CAPACITY = "60"
+RATE_LIMIT_REFILL_PER_SECOND = "10"
 
 [observability]
 enabled = true

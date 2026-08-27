@@ -20,10 +20,43 @@ import { toGeez } from './core/geez.ts';
 import { seasonOf } from './core/seasons.ts';
 import { buildIcs } from './core/ical.ts';
 import { fixedGitsaweOn, gitsaweCoverage } from './core/gitsawe.ts';
+import { TokenBucketLimiter } from './core/rate-limit.ts';
 
-const app = new Hono();
+type Bindings = {
+  API_RATE_LIMITER?: RateLimit;
+  RATE_LIMIT_CAPACITY?: string;
+  RATE_LIMIT_REFILL_PER_SECOND?: string;
+};
 
-app.use('*', cors({ origin: '*', allowMethods: ['GET', 'OPTIONS'] }));
+const app = new Hono<{ Bindings: Bindings }>();
+const dynamicLimiter = new TokenBucketLimiter();
+
+app.use('*', cors({ origin: '*', allowMethods: ['GET', 'POST', 'OPTIONS'] }));
+
+// Cloudflare's binding is deliberately optional so the pure application can be
+// embedded and tested without platform state. Production config supplies it.
+app.use('/v1/*', async (c, next) => {
+  if (c.req.method === 'OPTIONS' || c.req.path === '/v1/health') return next();
+  const limiter = c.env?.API_RATE_LIMITER;
+  if (!limiter && c.env?.RATE_LIMIT_CAPACITY === undefined) return next();
+  const client = c.req.header('cf-connecting-ip') ?? c.req.header('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
+  const capacity = Number(c.env?.RATE_LIMIT_CAPACITY ?? 60);
+  const refill = Number(c.env?.RATE_LIMIT_REFILL_PER_SECOND ?? 10);
+  const dynamic = dynamicLimiter.take(client, capacity, refill);
+  if (!dynamic.allowed) {
+    return c.json({
+      error: 'rate_limited',
+      message: `Too many requests. Please retry after ${dynamic.retryAfter} seconds.`,
+      retryAfter: dynamic.retryAfter,
+    }, 429, { 'retry-after': String(dynamic.retryAfter), 'cache-control': 'no-store' });
+  }
+  if (limiter && !(await limiter.limit({ key: client })).success) {
+    return c.json({
+      error: 'rate_limited', message: 'Too many requests. Please retry after 60 seconds.', retryAfter: 60,
+    }, 429, { 'retry-after': '60', 'cache-control': 'no-store' });
+  }
+  return next();
+});
 
 // Cache aggressively: for any given date the answer never changes.
 app.use('/v1/*', async (c, next) => {
