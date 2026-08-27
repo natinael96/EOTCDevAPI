@@ -1,0 +1,374 @@
+{
+  "info": {
+    "_postman_id": "e3a3b2b9-4f92-4d73-8e86-eotcdevapi001",
+    "name": "EOTCDev API — Complete Local Test Collection",
+    "description": "Complete Postman collection for the Node/Hono and Python/FastAPI implementations of EOTCDev API. Includes focused daily Gitsawe Bible readings and structured Sinksar annual/monthly feast lists. The default base URL points to the local Python server. Change baseUrl to a Worker URL to run the same requests against TypeScript. All Ethiopian years are Amete Mihret.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8001", "type": "string" },
+    { "key": "gregorianDate", "value": "2026-04-12", "type": "string" },
+    { "key": "ethiopianDate", "value": "2018-08-04", "type": "string" },
+    { "key": "ethiopianYear", "value": "2018", "type": "string" },
+    { "key": "ethiopianMonth", "value": "8", "type": "string" },
+    { "key": "timezone", "value": "Africa/Addis_Ababa", "type": "string" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'Accept', value: 'application/json' });"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response time is below 2 seconds', () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+          "pm.test('Successful responses are JSON or calendar data', () => {",
+          "  if (pm.response.code < 400) {",
+          "    const type = pm.response.headers.get('content-type') || '';",
+          "    pm.expect(type.includes('application/json') || type.includes('text/calendar')).to.be.true;",
+          "  }",
+          "});",
+          "pm.test('Rate-limit response has retry metadata', () => {",
+          "  if (pm.response.code === 429) {",
+          "    pm.expect(pm.response.headers.get('retry-after')).to.exist;",
+          "    const body = pm.response.json();",
+          "    pm.expect(body.error).to.eql('rate_limited');",
+          "    pm.expect(body.retryAfter).to.be.a('number');",
+          "  }",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Service and Documentation",
+      "item": [
+        {
+          "name": "API Index",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/",
+            "description": "Returns API identity, version, endpoint directory, and examples."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('API index is valid', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.name).to.eql('EOTCDev API'); pm.expect(b.endpoints).to.be.an('object'); });"
+          ] } }]
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/health",
+            "description": "Liveness endpoint. It is excluded from application rate limiting."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Service is healthy', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.status).to.eql('ok'); });"
+          ] } }]
+        },
+        {
+          "name": "OpenAPI JSON",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/openapi.json",
+            "description": "FastAPI-generated OpenAPI schema. Available on the Python implementation."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('OpenAPI document is valid', () => { const b = pm.response.json(); pm.expect(b.openapi).to.match(/^3\\./); pm.expect(b.info.title).to.eql('EOTCDev API'); pm.expect(b.paths).to.be.an('object'); });"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Dates and Conversion",
+      "item": [
+        {
+          "name": "Today in Addis Ababa",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/today?tz={{timezone}}",
+            "description": "Describes today's date in the selected IANA timezone."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Today includes both calendars', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.timezone).to.eql(pm.variables.get('timezone')); pm.expect(b.gregorian.date).to.match(/^\\d{4}-\\d{2}-\\d{2}$/); pm.expect(b.ethiopic.date).to.match(/^\\d{4}-\\d{2}-\\d{2}$/); });"
+          ] } }]
+        },
+        {
+          "name": "Describe Gregorian Date — Fasika",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/date/{{gregorianDate}}",
+            "description": "Fully describes Gregorian 2026-04-12, Ethiopian Fasika 2018."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Fasika date is correct', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.ethiopic.date).to.eql('2018-08-04'); pm.expect(b.weekday.english).to.eql('Sunday'); pm.expect(b.feasts.map(x => x.key)).to.include('fasika'); });"
+          ] } }]
+        },
+        {
+          "name": "Describe Ethiopian Date",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/date/{{ethiopianDate}}?calendar=ethiopian",
+            "description": "Accepts an Ethiopian calendar input date."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Ethiopian input converts correctly', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.gregorian.date).to.eql('2026-04-12'); });"
+          ] } }]
+        },
+        {
+          "name": "Convert Gregorian to Ethiopian",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/convert/{{gregorianDate}}",
+            "description": "Returns JDN, Gregorian, Ethiopian, and weekday representations."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Conversion contains JDN', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.jdn).to.be.a('number'); pm.expect(b.ethiopic.date).to.eql('2018-08-04'); });"
+          ] } }]
+        },
+        {
+          "name": "Batch Convert Dates",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendar\": \"gregorian\",\n  \"dates\": [\n    \"2026-04-12\",\n    \"2026-01-07\",\n    \"2023-09-11\"\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/v1/calendar/convert/batch",
+            "description": "Converts up to 366 non-contiguous dates. Invalid individual dates are returned as per-item errors."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('All batch dates converted', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.count).to.eql(3); pm.expect(b.results).to.have.length(3); pm.expect(b.results.every(x => x.jdn)).to.be.true; });"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Fasting and Feasts",
+      "item": [
+        {
+          "name": "Fasting Status — Great Lent",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/fasting/2026-03-04",
+            "description": "Checks whether a date is fasting and explains the active period and day number."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Great Lent is detected', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.isFasting).to.eql(true); pm.expect(b.periods[0].key).to.eql('abiy_tsome'); pm.expect(b.periods[0].dayOfPeriod).to.be.above(0); });"
+          ] } }]
+        },
+        {
+          "name": "All Fasting Periods",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/fasts/{{ethiopianYear}}",
+            "description": "Returns the seven canonical fasting periods for an Ethiopian year."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Seven fasts returned', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.ethiopicYear).to.eql(2018); pm.expect(b.periods).to.have.length(7); });"
+          ] } }]
+        },
+        {
+          "name": "All Feasts",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/feasts/{{ethiopianYear}}?type=all",
+            "description": "Returns fixed and movable feasts sorted by Gregorian date. Change type to fixed or movable."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Feast count matches array', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.type).to.eql('all'); pm.expect(b.count).to.eql(b.feasts.length); pm.expect(b.feasts.map(x => x.key)).to.include('fasika'); });"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Bahire Hasab",
+      "item": [
+        {
+          "name": "Full Bahire Hasab Computation",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/bahire-hasab/{{ethiopianYear}}",
+            "description": "Exposes Amete Alem, evangelist, Medeb, Wenber, Abekte, Metqi, Mebaja Hamer, New Year properties, and every movable feast."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Bahire Hasab invariants hold', () => {",
+            "  const b = pm.response.json();",
+            "  pm.expect(pm.response.code).to.eql(200);",
+            "  pm.expect(b.ethiopicYear).to.eql(2018);",
+            "  pm.expect(b.ameteAlem).to.eql(7518);",
+            "  pm.expect(b.computation.abekte + b.computation.metqi).to.eql(30);",
+            "  pm.expect(b.computation.mebajaHamer.ethiopic).to.match(/^2018-/);",
+            "  pm.expect(b.movableFeasts.map(x => x.key)).to.include('fasika');",
+            "  pm.expect(b.movableFeasts.find(x => x.key === 'fasika').gregorian).to.eql('2026-04-12');",
+            "});"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Calendar Utilities",
+      "item": [
+        {
+          "name": "Ethiopian Month Calendar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/calendar/{{ethiopianYear}}/{{ethiopianMonth}}",
+            "description": "Returns every fully described day in an Ethiopian month."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Month has complete day list', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.days).to.eql(30); pm.expect(b.calendar).to.have.length(b.days); });"
+          ] } }]
+        },
+        {
+          "name": "Liturgical Season",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/calendar/season?date=2026-03-04&calendar=gregorian",
+            "description": "Returns the liturgical season, UI theme, boundaries, and day within the season."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Season boundaries are present', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.season.key).to.be.a('string'); pm.expect(b.season.theme).to.be.a('string'); pm.expect(b.season.dayOfSeason).to.be.above(0); });"
+          ] } }]
+        },
+        {
+          "name": "Ge'ez Numeral",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/calendar/geez-numeral?number=2018",
+            "description": "Converts an Arabic integer to canonical Ge'ez numerals."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Ge ez numeral is correct', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.number).to.eql(2018); pm.expect(b.geez).to.eql('፳፻፲፰'); });"
+          ] } }]
+        },
+        {
+          "name": "iCalendar — All Events",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "text/calendar" }],
+            "url": "{{baseUrl}}/v1/calendar/ics?year={{ethiopianYear}}&type=all",
+            "description": "Downloads a deterministic RFC 5545 calendar of fasting periods and feasts."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Valid iCalendar returned', () => { pm.expect(pm.response.code).to.eql(200); pm.expect(pm.response.headers.get('content-type')).to.include('text/calendar'); pm.expect(pm.response.text()).to.include('BEGIN:VCALENDAR'); pm.expect(pm.response.text()).to.include('END:VCALENDAR'); });"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Gitsawe and Sinksar",
+      "item": [
+        {
+          "name": "Daily Bible Readings Only",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/readings/2018-12-22?calendar=ethiopian",
+            "description": "Focused daily Gitsawe reading list: Psalms, Gospels, Epistles, Acts, and anaphora. It excludes Sinksar and other calendar content. Bible verse text is intentionally omitted from the MIT API because the available editions are CC BY-NC-ND."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Daily readings are grouped by service and type', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.services.liturgy.epistles).to.have.length(2); pm.expect(b.services.liturgy.acts).to.have.length(1); pm.expect(b.services.liturgy.gospels).to.have.length.above(0); pm.expect(b.bible.textIncluded).to.eql(false); pm.expect(b).not.to.have.property('sinksar'); });"
+          ] } }]
+        },
+        {
+          "name": "Sinksar Annual and Monthly Feast Lists",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/gitsawe/2018-08-04?calendar=ethiopian",
+            "description": "Returns the structured annual and monthly feast lists extracted from the Sinksar summary entries. This exact example verifies annual source entry 8-4-4 and monthly source entry 8-4-5."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Annual feast summary is extracted from 8-4-4', () => {",
+            "  const b = pm.response.json();",
+            "  const annual = b.sinksar.annualFeasts;",
+            "  pm.expect(pm.response.code).to.eql(200);",
+            "  pm.expect(annual.sourceEntryId).to.eql('8-4-4');",
+            "  pm.expect(annual.heading).to.include('ዓመታዊ የቅዱሳን በዓላት');",
+            "  pm.expect(annual.items).to.have.length(4);",
+            "  pm.expect(annual.items[0].id).to.eql('8-4-annual-1');",
+            "  pm.expect(annual.items[0].title).to.include('ቅዱስ መርቄ');",
+            "  pm.expect(annual.items[0].sourceText).to.match(/^፩\\./);",
+            "});",
+            "pm.test('Monthly feast summary is extracted from 8-4-5', () => {",
+            "  const monthly = pm.response.json().sinksar.monthlyFeasts;",
+            "  pm.expect(monthly.sourceEntryId).to.eql('8-4-5');",
+            "  pm.expect(monthly.heading).to.include('ወርኀዊ በዓላት');",
+            "  pm.expect(monthly.items).to.have.length(6);",
+            "  pm.expect(monthly.items[0].id).to.eql('8-4-monthly-1');",
+            "  pm.expect(monthly.items[0].title).to.include('ማርያም');",
+            "});"
+          ] } }]
+        },
+        {
+          "name": "Daily Gitsawe — Fixed Candidate",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/gitsawe/2018-12-22?calendar=ethiopian",
+            "description": "Returns fixed-cycle Matins/Liturgy/Vespers appointments, normalized Bible references, and Sinksar titles. Until remaining cycles and precedence are reviewed, resolution is deliberately fixed_candidate_only."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Gitsawe sources are linked safely', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.resolution).to.eql('fixed_candidate_only'); pm.expect(b.gitsawe.cycle).to.eql('fixed'); pm.expect(b.sinksar.entryCount).to.be.above(0); pm.expect(b.sinksar.annualFeasts).to.be.an('object'); pm.expect(b.sinksar.monthlyFeasts).to.be.an('object'); pm.expect(b.sinksar.fullTextAvailable).to.eql(false); pm.expect(b.bible.textIncluded).to.eql(false); });"
+          ] } }]
+        },
+        {
+          "name": "Gitsawe — Known Fasika Conflict",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/gitsawe/{{gregorianDate}}",
+            "description": "Demonstrates explicit unresolved precedence on a Sunday movable feast instead of pretending the fixed candidate is final."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Precedence conflict is explicit', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(200); pm.expect(b.resolutionFactors.isSunday).to.eql(true); pm.expect(b.resolutionFactors.movableFeasts).to.include('fasika'); pm.expect(b.resolutionFactors.knownPrecedenceConflict).to.eql(true); });"
+          ] } }]
+        }
+      ]
+    },
+    {
+      "name": "Validation and Errors",
+      "item": [
+        {
+          "name": "Invalid Gregorian Date",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/date/2026-02-31",
+            "description": "Expected 400 response for a syntactically plausible date that does not exist."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Invalid date is rejected', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(400); pm.expect(b.error).to.eql('bad_request'); pm.expect(b.message).to.include('not a real Gregorian date'); });"
+          ] } }]
+        },
+        {
+          "name": "Invalid Ethiopian Pagumen Date",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/date/2018-13-06?calendar=ethiopian",
+            "description": "Expected 400 because Pagumen has five days in Ethiopian year 2018."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Invalid Pagumen date is rejected', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(400); pm.expect(b.error).to.eql('bad_request'); pm.expect(b.hint).to.include('Pagumen'); });"
+          ] } }]
+        },
+        {
+          "name": "Unknown Route",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/nope",
+            "description": "Expected standardized 404 response."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('Unknown route uses API error contract', () => { const b = pm.response.json(); pm.expect(pm.response.code).to.eql(404); pm.expect(b.error).to.eql('not_found'); pm.expect(b.hint).to.be.a('string'); });"
+          ] } }]
+        }
+      ]
+    }
+  ]
+}

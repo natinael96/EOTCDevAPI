@@ -1,13 +1,23 @@
 # EOTCDev API -- both implementations, one command each.
 
-.PHONY: help install test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck
+.PHONY: help setup-check install install-ts install-py test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck
 
 help:
 	@grep -E '^[a-z-]+:.*?##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
 
-install:            ## Install both toolchains
-	cd ts && npm install
-	cd py && python3 -m venv .venv && ./.venv/bin/pip install -e '.[dev]'
+setup-check:        ## Verify supported Node and Python versions are available
+	@node -e "const major=Number(process.versions.node.split('.')[0]); if(major!==22){console.error('Node.js 22 required; found '+process.version); process.exit(1)}"
+	@python3 -c "import sys; assert sys.version_info[:2] == (3, 12), f'Python 3.12 required; found {sys.version.split()[0]}'"
+
+install-ts: setup-check   ## Install the locked TypeScript dependencies
+	cd ts && npm ci
+
+install-py: setup-check   ## Create the Python environment and install development dependencies
+	python3 -m venv py/.venv
+	py/.venv/bin/python -m pip install --upgrade pip
+	py/.venv/bin/python -m pip install -e 'py[dev]'
+
+install: install-ts install-py   ## Install both toolchains reproducibly
 
 spec:               ## Regenerate the shared conformance + parity fixtures
 	node --experimental-strip-types ts/scripts/gen-conformance.ts
