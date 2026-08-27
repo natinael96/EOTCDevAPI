@@ -1,0 +1,9 @@
+name = "eotcdev-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# No bindings: the API is pure computation with no storage or network calls.
+# That is what keeps it inside the free tier's 10ms CPU budget.
+
+[observability]
+enabled = true

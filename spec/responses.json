@@ -1,0 +1,6582 @@
+{
+ "/": {
+  "status": 200,
+  "body": {
+   "name": "EOTCDev API",
+   "description": "Open calendar data for the Ethiopian Orthodox Tewahedo Church: date conversion, fasting days, fasting periods, and feasts.",
+   "version": "0.1.0",
+   "license": "MIT",
+   "documentation": "/v1/openapi.json",
+   "note": "All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no rate limit, no key.",
+   "endpoints": {
+    "GET /v1/health": "Liveness check.",
+    "GET /v1/today": "Today, fully described. ?tz=Africa/Addis_Ababa",
+    "GET /v1/date/{date}": "Describe any date. ?calendar=gregorian|ethiopian",
+    "GET /v1/convert/{date}": "Convert between calendars. ?calendar=gregorian|ethiopian",
+    "GET /v1/fasting/{date}": "Is it a fasting day, and why. ?calendar=gregorian|ethiopian",
+    "GET /v1/fasts/{year}": "All fasting periods of an Ethiopian year.",
+    "GET /v1/feasts/{year}": "All feasts. ?type=all|movable|fixed",
+    "GET /v1/bahire-hasab/{year}": "The full ባሕረ ሐሳብ computation.",
+    "GET /v1/calendar/{year}/{month}": "One Ethiopian month, day by day.",
+    "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
+    "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
+    "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
+    "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}"
+   },
+   "examples": [
+    "/v1/today",
+    "/v1/date/2026-04-12",
+    "/v1/fasting/2026-03-04",
+    "/v1/fasts/2018",
+    "/v1/bahire-hasab/2018",
+    "/v1/calendar/2018/1"
+   ]
+  }
+ },
+ "/v1/health": {
+  "status": 200,
+  "body": {
+   "status": "ok",
+   "version": "0.1.0"
+  }
+ },
+ "/v1/date/2026-04-12": {
+  "status": 200,
+  "body": {
+   "jdn": 2461143,
+   "gregorian": {
+    "date": "2026-04-12",
+    "year": 2026,
+    "month": 4,
+    "day": 12
+   },
+   "ethiopic": {
+    "date": "2018-08-04",
+    "year": 2018,
+    "month": 8,
+    "day": 4,
+    "monthName": {
+     "amharic": "ሚያዝያ",
+     "translit": "Miyazya"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 0,
+    "amharic": "እሑድ",
+    "translit": "Ehud",
+    "english": "Sunday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": true,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true
+    }
+   ],
+   "commemorations": []
+  }
+ },
+ "/v1/date/2026-01-07": {
+  "status": 200,
+  "body": {
+   "jdn": 2461048,
+   "gregorian": {
+    "date": "2026-01-07",
+    "year": 2026,
+    "month": 1,
+    "day": 7
+   },
+   "ethiopic": {
+    "date": "2018-04-29",
+    "year": 2018,
+    "month": 4,
+    "day": 29,
+    "monthName": {
+     "amharic": "ታኅሣሥ",
+     "translit": "Tahsas"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": false,
+    "feastOverride": true,
+    "reason": "Not a fasting day: a great feast of the Lord lifts the weekly fast.",
+    "periods": []
+   },
+   "feasts": [
+    {
+     "key": "gena",
+     "amharic": "ገና",
+     "translit": "Gena",
+     "english": "Nativity (Christmas)",
+     "major": true,
+     "movable": false
+    }
+   ],
+   "commemorations": [
+    {
+     "amharic": "በዓለ ወልድ",
+     "translit": "Be'ale Wold",
+     "english": "Commemoration of the Son"
+    }
+   ]
+  }
+ },
+ "/v1/date/2023-09-11": {
+  "status": 200,
+  "body": {
+   "jdn": 2460199,
+   "gregorian": {
+    "date": "2023-09-11",
+    "year": 2023,
+    "month": 9,
+    "day": 11
+   },
+   "ethiopic": {
+    "date": "2015-13-06",
+    "year": 2015,
+    "month": 13,
+    "day": 6,
+    "monthName": {
+     "amharic": "ጳጉሜን",
+     "translit": "Pagumen"
+    },
+    "isLeapYear": true,
+    "daysInMonth": 6
+   },
+   "weekday": {
+    "n": 1,
+    "amharic": "ሰኞ",
+    "translit": "Segno",
+    "english": "Monday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": false,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [],
+   "commemorations": []
+  }
+ },
+ "/v1/date/1994-05-22": {
+  "status": 200,
+  "body": {
+   "jdn": 2449495,
+   "gregorian": {
+    "date": "1994-05-22",
+    "year": 1994,
+    "month": 5,
+    "day": 22
+   },
+   "ethiopic": {
+    "date": "1986-09-14",
+    "year": 1986,
+    "month": 9,
+    "day": 14,
+    "monthName": {
+     "amharic": "ግንቦት",
+     "translit": "Ginbot"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 0,
+    "amharic": "እሑድ",
+    "translit": "Ehud",
+    "english": "Sunday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": true,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [],
+   "commemorations": [
+    {
+     "amharic": "አቡነ አረጋዊ",
+     "translit": "Abune Aregawi",
+     "english": "Abune Aregawi"
+    }
+   ]
+  }
+ },
+ "/v1/date/2018-08-04?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "jdn": 2461143,
+   "gregorian": {
+    "date": "2026-04-12",
+    "year": 2026,
+    "month": 4,
+    "day": 12
+   },
+   "ethiopic": {
+    "date": "2018-08-04",
+    "year": 2018,
+    "month": 8,
+    "day": 4,
+    "monthName": {
+     "amharic": "ሚያዝያ",
+     "translit": "Miyazya"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 0,
+    "amharic": "እሑድ",
+    "translit": "Ehud",
+    "english": "Sunday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": true,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true
+    }
+   ],
+   "commemorations": []
+  }
+ },
+ "/v1/date/2015-13-06?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "jdn": 2460199,
+   "gregorian": {
+    "date": "2023-09-11",
+    "year": 2023,
+    "month": 9,
+    "day": 11
+   },
+   "ethiopic": {
+    "date": "2015-13-06",
+    "year": 2015,
+    "month": 13,
+    "day": 6,
+    "monthName": {
+     "amharic": "ጳጉሜን",
+     "translit": "Pagumen"
+    },
+    "isLeapYear": true,
+    "daysInMonth": 6
+   },
+   "weekday": {
+    "n": 1,
+    "amharic": "ሰኞ",
+    "translit": "Segno",
+    "english": "Monday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": false,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [],
+   "commemorations": []
+  }
+ },
+ "/v1/date/2018-13-05?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "jdn": 2461294,
+   "gregorian": {
+    "date": "2026-09-10",
+    "year": 2026,
+    "month": 9,
+    "day": 10
+   },
+   "ethiopic": {
+    "date": "2018-13-05",
+    "year": 2018,
+    "month": 13,
+    "day": 5,
+    "monthName": {
+     "amharic": "ጳጉሜን",
+     "translit": "Pagumen"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 5
+   },
+   "weekday": {
+    "n": 4,
+    "amharic": "ሐሙስ",
+    "translit": "Hamus",
+    "english": "Thursday"
+   },
+   "fasting": {
+    "isFasting": false,
+    "weeklyFast": false,
+    "fastFreeSeason": false,
+    "feastOverride": false,
+    "reason": "Not a fasting day.",
+    "periods": []
+   },
+   "feasts": [],
+   "commemorations": [
+    {
+     "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+     "translit": "Abo",
+     "english": "Abune Gebre Menfes Kidus"
+    }
+   ]
+  }
+ },
+ "/v1/convert/2026-08-27": {
+  "status": 200,
+  "body": {
+   "jdn": 2461280,
+   "gregorian": {
+    "date": "2026-08-27",
+    "year": 2026,
+    "month": 8,
+    "day": 27
+   },
+   "ethiopic": {
+    "date": "2018-12-21",
+    "year": 2018,
+    "month": 12,
+    "day": 21,
+    "monthName": {
+     "amharic": "ነሐሴ",
+     "translit": "Nehase"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 4,
+    "amharic": "ሐሙስ",
+    "translit": "Hamus",
+    "english": "Thursday"
+   }
+  }
+ },
+ "/v1/convert/2018-12-21?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "jdn": 2461280,
+   "gregorian": {
+    "date": "2026-08-27",
+    "year": 2026,
+    "month": 8,
+    "day": 27
+   },
+   "ethiopic": {
+    "date": "2018-12-21",
+    "year": 2018,
+    "month": 12,
+    "day": 21,
+    "monthName": {
+     "amharic": "ነሐሴ",
+     "translit": "Nehase"
+    },
+    "isLeapYear": false,
+    "daysInMonth": 30
+   },
+   "weekday": {
+    "n": 4,
+    "amharic": "ሐሙስ",
+    "translit": "Hamus",
+    "english": "Thursday"
+   }
+  }
+ },
+ "/v1/fasting/2026-03-04": {
+  "status": 200,
+  "body": {
+   "jdn": 2461104,
+   "gregorian": "2026-03-04",
+   "ethiopic": "2018-06-25",
+   "weekday": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "isFasting": true,
+   "weeklyFast": true,
+   "fastFreeSeason": false,
+   "feastOverride": false,
+   "reason": "ዓቢይ ጾም (Great Lent)",
+   "periods": [
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome (Hudade)",
+     "english": "Great Lent",
+     "start": "2026-02-16",
+     "end": "2026-04-11",
+     "days": 55,
+     "movable": true,
+     "dayOfPeriod": 17
+    }
+   ]
+  }
+ },
+ "/v1/fasting/2026-01-07": {
+  "status": 200,
+  "body": {
+   "jdn": 2461048,
+   "gregorian": "2026-01-07",
+   "ethiopic": "2018-04-29",
+   "weekday": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "isFasting": false,
+   "weeklyFast": false,
+   "fastFreeSeason": false,
+   "feastOverride": true,
+   "reason": "Not a fasting day: a great feast of the Lord lifts the weekly fast.",
+   "periods": []
+  }
+ },
+ "/v1/fasting/2026-04-15": {
+  "status": 200,
+  "body": {
+   "jdn": 2461146,
+   "gregorian": "2026-04-15",
+   "ethiopic": "2018-08-07",
+   "weekday": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "isFasting": false,
+   "weeklyFast": false,
+   "fastFreeSeason": true,
+   "feastOverride": false,
+   "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+   "periods": []
+  }
+ },
+ "/v1/fasting/2026-09-16": {
+  "status": 200,
+  "body": {
+   "jdn": 2461300,
+   "gregorian": "2026-09-16",
+   "ethiopic": "2019-01-06",
+   "weekday": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "isFasting": true,
+   "weeklyFast": true,
+   "fastFreeSeason": false,
+   "feastOverride": false,
+   "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+   "periods": []
+  }
+ },
+ "/v1/fasting/2026-02-02": {
+  "status": 200,
+  "body": {
+   "jdn": 2461074,
+   "gregorian": "2026-02-02",
+   "ethiopic": "2018-05-25",
+   "weekday": {
+    "n": 1,
+    "amharic": "ሰኞ",
+    "translit": "Segno",
+    "english": "Monday"
+   },
+   "isFasting": true,
+   "weeklyFast": false,
+   "fastFreeSeason": false,
+   "feastOverride": false,
+   "reason": "ጾመ ነነዌ (Fast of Nineveh)",
+   "periods": [
+    {
+     "key": "tsome_nenewe",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "start": "2026-02-02",
+     "end": "2026-02-04",
+     "days": 3,
+     "movable": true,
+     "dayOfPeriod": 1
+    }
+   ]
+  }
+ },
+ "/v1/fasting/2026-08-10": {
+  "status": 200,
+  "body": {
+   "jdn": 2461263,
+   "gregorian": "2026-08-10",
+   "ethiopic": "2018-12-04",
+   "weekday": {
+    "n": 1,
+    "amharic": "ሰኞ",
+    "translit": "Segno",
+    "english": "Monday"
+   },
+   "isFasting": true,
+   "weeklyFast": false,
+   "fastFreeSeason": false,
+   "feastOverride": false,
+   "reason": "ጾመ ፍልሰታ (Fast of the Assumption)",
+   "periods": [
+    {
+     "key": "tsome_filseta",
+     "amharic": "ጾመ ፍልሰታ",
+     "translit": "Tsome Filseta",
+     "english": "Fast of the Assumption",
+     "start": "2026-08-07",
+     "end": "2026-08-22",
+     "days": 16,
+     "movable": false,
+     "dayOfPeriod": 4
+    }
+   ]
+  }
+ },
+ "/v1/fasts/2018": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "periods": [
+    {
+     "key": "tsome_nebiyat",
+     "amharic": "ጾመ ነቢያት",
+     "translit": "Tsome Nebiyat",
+     "english": "Prophets' Fast (Advent)",
+     "movable": false,
+     "days": 44,
+     "start": {
+      "gregorian": "2025-11-24",
+      "ethiopic": "2018-03-15"
+     },
+     "end": {
+      "gregorian": "2026-01-06",
+      "ethiopic": "2018-04-28"
+     },
+     "description": "From Hidar 15 to the eve of Gena, kept in expectation of the Nativity."
+    },
+    {
+     "key": "gahad_gena",
+     "amharic": "ጾመ ገሃድ (ገና)",
+     "translit": "Tsome Gahad (Gena)",
+     "english": "Christmas Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2026-01-06",
+      "ethiopic": "2018-04-28"
+     },
+     "end": {
+      "gregorian": "2026-01-06",
+      "ethiopic": "2018-04-28"
+     },
+     "description": "The strict single-day fast on the eve of the Nativity."
+    },
+    {
+     "key": "gahad_timket",
+     "amharic": "ጾመ ገሃድ (ጥምቀት)",
+     "translit": "Tsome Gahad (Timket)",
+     "english": "Epiphany Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2026-01-18",
+      "ethiopic": "2018-05-10"
+     },
+     "end": {
+      "gregorian": "2026-01-18",
+      "ethiopic": "2018-05-10"
+     },
+     "description": "The strict single-day fast on the eve of Timket."
+    },
+    {
+     "key": "tsome_nenewe",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "days": 3,
+     "start": {
+      "gregorian": "2026-02-02",
+      "ethiopic": "2018-05-25"
+     },
+     "end": {
+      "gregorian": "2026-02-04",
+      "ethiopic": "2018-05-27"
+     },
+     "description": "Three days recalling Jonah's preaching to Nineveh. Always Monday to Wednesday."
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome (Hudade)",
+     "english": "Great Lent",
+     "movable": true,
+     "days": 55,
+     "start": {
+      "gregorian": "2026-02-16",
+      "ethiopic": "2018-06-09"
+     },
+     "end": {
+      "gregorian": "2026-04-11",
+      "ethiopic": "2018-08-03"
+     },
+     "description": "Fifty-five days: the eight-day ጾመ ሕርቃል, the Forty Days, and Holy Week (ሰሙነ ሕማማት)."
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast",
+     "movable": true,
+     "days": 42,
+     "start": {
+      "gregorian": "2026-06-01",
+      "ethiopic": "2018-09-24"
+     },
+     "end": {
+      "gregorian": "2026-07-12",
+      "ethiopic": "2018-11-05"
+     },
+     "description": "From the Monday after Pentecost until Hamle 5, the feast of Peter and Paul."
+    },
+    {
+     "key": "tsome_filseta",
+     "amharic": "ጾመ ፍልሰታ",
+     "translit": "Tsome Filseta",
+     "english": "Fast of the Assumption",
+     "movable": false,
+     "days": 16,
+     "start": {
+      "gregorian": "2026-08-07",
+      "ethiopic": "2018-12-01"
+     },
+     "end": {
+      "gregorian": "2026-08-22",
+      "ethiopic": "2018-12-16"
+     },
+     "description": "Sixteen days for the Assumption of the Virgin Mary. Widely kept by the laity."
+    }
+   ],
+   "weeklyFast": {
+    "amharic": "ጾመ ድህነት",
+    "translit": "Tsome Dihnet",
+    "english": "Fast of Salvation",
+    "rule": "Every Wednesday and Friday, suspended during the fifty days from Fasika to Pentecost, and on the great feasts of the Lord (Gena, Timket)."
+   }
+  }
+ },
+ "/v1/fasts/2019": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2019,
+   "periods": [
+    {
+     "key": "tsome_nebiyat",
+     "amharic": "ጾመ ነቢያት",
+     "translit": "Tsome Nebiyat",
+     "english": "Prophets' Fast (Advent)",
+     "movable": false,
+     "days": 44,
+     "start": {
+      "gregorian": "2026-11-24",
+      "ethiopic": "2019-03-15"
+     },
+     "end": {
+      "gregorian": "2027-01-06",
+      "ethiopic": "2019-04-28"
+     },
+     "description": "From Hidar 15 to the eve of Gena, kept in expectation of the Nativity."
+    },
+    {
+     "key": "gahad_gena",
+     "amharic": "ጾመ ገሃድ (ገና)",
+     "translit": "Tsome Gahad (Gena)",
+     "english": "Christmas Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2027-01-06",
+      "ethiopic": "2019-04-28"
+     },
+     "end": {
+      "gregorian": "2027-01-06",
+      "ethiopic": "2019-04-28"
+     },
+     "description": "The strict single-day fast on the eve of the Nativity."
+    },
+    {
+     "key": "gahad_timket",
+     "amharic": "ጾመ ገሃድ (ጥምቀት)",
+     "translit": "Tsome Gahad (Timket)",
+     "english": "Epiphany Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2027-01-18",
+      "ethiopic": "2019-05-10"
+     },
+     "end": {
+      "gregorian": "2027-01-18",
+      "ethiopic": "2019-05-10"
+     },
+     "description": "The strict single-day fast on the eve of Timket."
+    },
+    {
+     "key": "tsome_nenewe",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "days": 3,
+     "start": {
+      "gregorian": "2027-02-22",
+      "ethiopic": "2019-06-15"
+     },
+     "end": {
+      "gregorian": "2027-02-24",
+      "ethiopic": "2019-06-17"
+     },
+     "description": "Three days recalling Jonah's preaching to Nineveh. Always Monday to Wednesday."
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome (Hudade)",
+     "english": "Great Lent",
+     "movable": true,
+     "days": 55,
+     "start": {
+      "gregorian": "2027-03-08",
+      "ethiopic": "2019-06-29"
+     },
+     "end": {
+      "gregorian": "2027-05-01",
+      "ethiopic": "2019-08-23"
+     },
+     "description": "Fifty-five days: the eight-day ጾመ ሕርቃል, the Forty Days, and Holy Week (ሰሙነ ሕማማት)."
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast",
+     "movable": true,
+     "days": 22,
+     "start": {
+      "gregorian": "2027-06-21",
+      "ethiopic": "2019-10-14"
+     },
+     "end": {
+      "gregorian": "2027-07-12",
+      "ethiopic": "2019-11-05"
+     },
+     "description": "From the Monday after Pentecost until Hamle 5, the feast of Peter and Paul."
+    },
+    {
+     "key": "tsome_filseta",
+     "amharic": "ጾመ ፍልሰታ",
+     "translit": "Tsome Filseta",
+     "english": "Fast of the Assumption",
+     "movable": false,
+     "days": 16,
+     "start": {
+      "gregorian": "2027-08-07",
+      "ethiopic": "2019-12-01"
+     },
+     "end": {
+      "gregorian": "2027-08-22",
+      "ethiopic": "2019-12-16"
+     },
+     "description": "Sixteen days for the Assumption of the Virgin Mary. Widely kept by the laity."
+    }
+   ],
+   "weeklyFast": {
+    "amharic": "ጾመ ድህነት",
+    "translit": "Tsome Dihnet",
+    "english": "Fast of Salvation",
+    "rule": "Every Wednesday and Friday, suspended during the fifty days from Fasika to Pentecost, and on the great feasts of the Lord (Gena, Timket)."
+   }
+  }
+ },
+ "/v1/fasts/2015": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2015,
+   "periods": [
+    {
+     "key": "tsome_nebiyat",
+     "amharic": "ጾመ ነቢያት",
+     "translit": "Tsome Nebiyat",
+     "english": "Prophets' Fast (Advent)",
+     "movable": false,
+     "days": 44,
+     "start": {
+      "gregorian": "2022-11-24",
+      "ethiopic": "2015-03-15"
+     },
+     "end": {
+      "gregorian": "2023-01-06",
+      "ethiopic": "2015-04-28"
+     },
+     "description": "From Hidar 15 to the eve of Gena, kept in expectation of the Nativity."
+    },
+    {
+     "key": "gahad_gena",
+     "amharic": "ጾመ ገሃድ (ገና)",
+     "translit": "Tsome Gahad (Gena)",
+     "english": "Christmas Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2023-01-06",
+      "ethiopic": "2015-04-28"
+     },
+     "end": {
+      "gregorian": "2023-01-06",
+      "ethiopic": "2015-04-28"
+     },
+     "description": "The strict single-day fast on the eve of the Nativity."
+    },
+    {
+     "key": "gahad_timket",
+     "amharic": "ጾመ ገሃድ (ጥምቀት)",
+     "translit": "Tsome Gahad (Timket)",
+     "english": "Epiphany Eve Fast",
+     "movable": false,
+     "days": 1,
+     "start": {
+      "gregorian": "2023-01-18",
+      "ethiopic": "2015-05-10"
+     },
+     "end": {
+      "gregorian": "2023-01-18",
+      "ethiopic": "2015-05-10"
+     },
+     "description": "The strict single-day fast on the eve of Timket."
+    },
+    {
+     "key": "tsome_nenewe",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "days": 3,
+     "start": {
+      "gregorian": "2023-02-06",
+      "ethiopic": "2015-05-29"
+     },
+     "end": {
+      "gregorian": "2023-02-08",
+      "ethiopic": "2015-06-01"
+     },
+     "description": "Three days recalling Jonah's preaching to Nineveh. Always Monday to Wednesday."
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome (Hudade)",
+     "english": "Great Lent",
+     "movable": true,
+     "days": 55,
+     "start": {
+      "gregorian": "2023-02-20",
+      "ethiopic": "2015-06-13"
+     },
+     "end": {
+      "gregorian": "2023-04-15",
+      "ethiopic": "2015-08-07"
+     },
+     "description": "Fifty-five days: the eight-day ጾመ ሕርቃል, the Forty Days, and Holy Week (ሰሙነ ሕማማት)."
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast",
+     "movable": true,
+     "days": 38,
+     "start": {
+      "gregorian": "2023-06-05",
+      "ethiopic": "2015-09-28"
+     },
+     "end": {
+      "gregorian": "2023-07-12",
+      "ethiopic": "2015-11-05"
+     },
+     "description": "From the Monday after Pentecost until Hamle 5, the feast of Peter and Paul."
+    },
+    {
+     "key": "tsome_filseta",
+     "amharic": "ጾመ ፍልሰታ",
+     "translit": "Tsome Filseta",
+     "english": "Fast of the Assumption",
+     "movable": false,
+     "days": 16,
+     "start": {
+      "gregorian": "2023-08-07",
+      "ethiopic": "2015-12-01"
+     },
+     "end": {
+      "gregorian": "2023-08-22",
+      "ethiopic": "2015-12-16"
+     },
+     "description": "Sixteen days for the Assumption of the Virgin Mary. Widely kept by the laity."
+    }
+   ],
+   "weeklyFast": {
+    "amharic": "ጾመ ድህነት",
+    "translit": "Tsome Dihnet",
+    "english": "Fast of Salvation",
+    "rule": "Every Wednesday and Friday, suspended during the fifty days from Fasika to Pentecost, and on the great feasts of the Lord (Gena, Timket)."
+   }
+  }
+ },
+ "/v1/feasts/2018": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "type": "all",
+   "count": 23,
+   "feasts": [
+    {
+     "key": "enkutatash",
+     "amharic": "እንቁጣጣሽ",
+     "translit": "Enkutatash",
+     "english": "Ethiopian New Year",
+     "movable": false,
+     "major": true,
+     "gregorian": "2025-09-11",
+     "ethiopic": "2018-01-01",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "meskel",
+     "amharic": "መስቀል",
+     "translit": "Meskel",
+     "english": "Finding of the True Cross",
+     "movable": false,
+     "major": true,
+     "gregorian": "2025-09-27",
+     "ethiopic": "2018-01-17",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "gena",
+     "amharic": "ገና",
+     "translit": "Gena",
+     "english": "Nativity (Christmas)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-01-07",
+     "ethiopic": "2018-04-29",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "timket",
+     "amharic": "ጥምቀት",
+     "translit": "Timket",
+     "english": "Theophany (Epiphany)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-01-19",
+     "ethiopic": "2018-05-11",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "kana_zegelila",
+     "amharic": "ቃና ዘገሊላ",
+     "translit": "Kana Zegelila",
+     "english": "Wedding at Cana",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-01-20",
+     "ethiopic": "2018-05-12",
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     }
+    },
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "gregorian": "2026-02-02",
+     "ethiopic": "2018-05-25",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "movable": true,
+     "gregorian": "2026-02-16",
+     "ethiopic": "2018-06-09",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "kidane_mihret",
+     "amharic": "ኪዳነ ምሕረት",
+     "translit": "Kidane Mihret",
+     "english": "Covenant of Mercy",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-02-23",
+     "ethiopic": "2018-06-16",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "movable": true,
+     "gregorian": "2026-03-15",
+     "ethiopic": "2018-07-06",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "movable": true,
+     "gregorian": "2026-04-05",
+     "ethiopic": "2018-07-27",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "movable": true,
+     "gregorian": "2026-04-10",
+     "ethiopic": "2018-08-02",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true,
+     "gregorian": "2026-04-12",
+     "ethiopic": "2018-08-04",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "giyorgis",
+     "amharic": "ቅዱስ ጊዮርጊስ",
+     "translit": "Qidus Giyorgis",
+     "english": "St George",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-05-01",
+     "ethiopic": "2018-08-23",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "movable": true,
+     "gregorian": "2026-05-06",
+     "ethiopic": "2018-08-28",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "lideta",
+     "amharic": "ልደታ ለማርያም",
+     "translit": "Lideta LeMaryam",
+     "english": "Nativity of the Virgin Mary",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-05-09",
+     "ethiopic": "2018-09-01",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "movable": true,
+     "gregorian": "2026-05-21",
+     "ethiopic": "2018-09-13",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "movable": true,
+     "gregorian": "2026-05-31",
+     "ethiopic": "2018-09-23",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "movable": true,
+     "gregorian": "2026-06-01",
+     "ethiopic": "2018-09-24",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "movable": true,
+     "gregorian": "2026-06-03",
+     "ethiopic": "2018-09-26",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "petros_pawlos",
+     "amharic": "ጴጥሮስ ወጳውሎስ",
+     "translit": "Petros WePawlos",
+     "english": "Sts Peter and Paul",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-07-12",
+     "ethiopic": "2018-11-05",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "gabriel",
+     "amharic": "ቅዱስ ገብርኤል",
+     "translit": "Qidus Gabriel",
+     "english": "St Gabriel the Archangel",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-07-26",
+     "ethiopic": "2018-11-19",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "buhe",
+     "amharic": "ቡሄ (ደብረ ታቦር)",
+     "translit": "Buhe",
+     "english": "Transfiguration",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-08-19",
+     "ethiopic": "2018-12-13",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "filseta",
+     "amharic": "ፍልሰታ ለማርያም",
+     "translit": "Filseta",
+     "english": "Assumption of the Virgin Mary",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-08-22",
+     "ethiopic": "2018-12-16",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/feasts/2018?type=movable": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "type": "movable",
+   "count": 11,
+   "feasts": [
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "gregorian": "2026-02-02",
+     "ethiopic": "2018-05-25",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "movable": true,
+     "gregorian": "2026-02-16",
+     "ethiopic": "2018-06-09",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "movable": true,
+     "gregorian": "2026-03-15",
+     "ethiopic": "2018-07-06",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "movable": true,
+     "gregorian": "2026-04-05",
+     "ethiopic": "2018-07-27",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "movable": true,
+     "gregorian": "2026-04-10",
+     "ethiopic": "2018-08-02",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true,
+     "gregorian": "2026-04-12",
+     "ethiopic": "2018-08-04",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "movable": true,
+     "gregorian": "2026-05-06",
+     "ethiopic": "2018-08-28",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "movable": true,
+     "gregorian": "2026-05-21",
+     "ethiopic": "2018-09-13",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "movable": true,
+     "gregorian": "2026-05-31",
+     "ethiopic": "2018-09-23",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "movable": true,
+     "gregorian": "2026-06-01",
+     "ethiopic": "2018-09-24",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "movable": true,
+     "gregorian": "2026-06-03",
+     "ethiopic": "2018-09-26",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/feasts/2018?type=fixed": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "type": "fixed",
+   "count": 12,
+   "feasts": [
+    {
+     "key": "enkutatash",
+     "amharic": "እንቁጣጣሽ",
+     "translit": "Enkutatash",
+     "english": "Ethiopian New Year",
+     "movable": false,
+     "major": true,
+     "gregorian": "2025-09-11",
+     "ethiopic": "2018-01-01",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "meskel",
+     "amharic": "መስቀል",
+     "translit": "Meskel",
+     "english": "Finding of the True Cross",
+     "movable": false,
+     "major": true,
+     "gregorian": "2025-09-27",
+     "ethiopic": "2018-01-17",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "gena",
+     "amharic": "ገና",
+     "translit": "Gena",
+     "english": "Nativity (Christmas)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-01-07",
+     "ethiopic": "2018-04-29",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "timket",
+     "amharic": "ጥምቀት",
+     "translit": "Timket",
+     "english": "Theophany (Epiphany)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-01-19",
+     "ethiopic": "2018-05-11",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "kana_zegelila",
+     "amharic": "ቃና ዘገሊላ",
+     "translit": "Kana Zegelila",
+     "english": "Wedding at Cana",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-01-20",
+     "ethiopic": "2018-05-12",
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     }
+    },
+    {
+     "key": "kidane_mihret",
+     "amharic": "ኪዳነ ምሕረት",
+     "translit": "Kidane Mihret",
+     "english": "Covenant of Mercy",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-02-23",
+     "ethiopic": "2018-06-16",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "giyorgis",
+     "amharic": "ቅዱስ ጊዮርጊስ",
+     "translit": "Qidus Giyorgis",
+     "english": "St George",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-05-01",
+     "ethiopic": "2018-08-23",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "lideta",
+     "amharic": "ልደታ ለማርያም",
+     "translit": "Lideta LeMaryam",
+     "english": "Nativity of the Virgin Mary",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-05-09",
+     "ethiopic": "2018-09-01",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "petros_pawlos",
+     "amharic": "ጴጥሮስ ወጳውሎስ",
+     "translit": "Petros WePawlos",
+     "english": "Sts Peter and Paul",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-07-12",
+     "ethiopic": "2018-11-05",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "gabriel",
+     "amharic": "ቅዱስ ገብርኤል",
+     "translit": "Qidus Gabriel",
+     "english": "St Gabriel the Archangel",
+     "movable": false,
+     "major": false,
+     "gregorian": "2026-07-26",
+     "ethiopic": "2018-11-19",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "buhe",
+     "amharic": "ቡሄ (ደብረ ታቦር)",
+     "translit": "Buhe",
+     "english": "Transfiguration",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-08-19",
+     "ethiopic": "2018-12-13",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "filseta",
+     "amharic": "ፍልሰታ ለማርያም",
+     "translit": "Filseta",
+     "english": "Assumption of the Virgin Mary",
+     "movable": false,
+     "major": true,
+     "gregorian": "2026-08-22",
+     "ethiopic": "2018-12-16",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/feasts/2020": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2020,
+   "type": "all",
+   "count": 23,
+   "feasts": [
+    {
+     "key": "enkutatash",
+     "amharic": "እንቁጣጣሽ",
+     "translit": "Enkutatash",
+     "english": "Ethiopian New Year",
+     "movable": false,
+     "major": true,
+     "gregorian": "2027-09-12",
+     "ethiopic": "2020-01-01",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "meskel",
+     "amharic": "መስቀል",
+     "translit": "Meskel",
+     "english": "Finding of the True Cross",
+     "movable": false,
+     "major": true,
+     "gregorian": "2027-09-28",
+     "ethiopic": "2020-01-17",
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     }
+    },
+    {
+     "key": "gena",
+     "amharic": "ገና",
+     "translit": "Gena",
+     "english": "Nativity (Christmas)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2028-01-08",
+     "ethiopic": "2020-04-29",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "timket",
+     "amharic": "ጥምቀት",
+     "translit": "Timket",
+     "english": "Theophany (Epiphany)",
+     "movable": false,
+     "major": true,
+     "gregorian": "2028-01-20",
+     "ethiopic": "2020-05-11",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "kana_zegelila",
+     "amharic": "ቃና ዘገሊላ",
+     "translit": "Kana Zegelila",
+     "english": "Wedding at Cana",
+     "movable": false,
+     "major": false,
+     "gregorian": "2028-01-21",
+     "ethiopic": "2020-05-12",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "movable": true,
+     "gregorian": "2028-02-07",
+     "ethiopic": "2020-05-29",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "movable": true,
+     "gregorian": "2028-02-21",
+     "ethiopic": "2020-06-13",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "kidane_mihret",
+     "amharic": "ኪዳነ ምሕረት",
+     "translit": "Kidane Mihret",
+     "english": "Covenant of Mercy",
+     "movable": false,
+     "major": false,
+     "gregorian": "2028-02-24",
+     "ethiopic": "2020-06-16",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "movable": true,
+     "gregorian": "2028-03-19",
+     "ethiopic": "2020-07-10",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "movable": true,
+     "gregorian": "2028-04-09",
+     "ethiopic": "2020-08-01",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "movable": true,
+     "gregorian": "2028-04-14",
+     "ethiopic": "2020-08-06",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true,
+     "gregorian": "2028-04-16",
+     "ethiopic": "2020-08-08",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "giyorgis",
+     "amharic": "ቅዱስ ጊዮርጊስ",
+     "translit": "Qidus Giyorgis",
+     "english": "St George",
+     "movable": false,
+     "major": false,
+     "gregorian": "2028-05-01",
+     "ethiopic": "2020-08-23",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "lideta",
+     "amharic": "ልደታ ለማርያም",
+     "translit": "Lideta LeMaryam",
+     "english": "Nativity of the Virgin Mary",
+     "movable": false,
+     "major": false,
+     "gregorian": "2028-05-09",
+     "ethiopic": "2020-09-01",
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "movable": true,
+     "gregorian": "2028-05-10",
+     "ethiopic": "2020-09-02",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "movable": true,
+     "gregorian": "2028-05-25",
+     "ethiopic": "2020-09-17",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "movable": true,
+     "gregorian": "2028-06-04",
+     "ethiopic": "2020-09-27",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "movable": true,
+     "gregorian": "2028-06-05",
+     "ethiopic": "2020-09-28",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "movable": true,
+     "gregorian": "2028-06-07",
+     "ethiopic": "2020-09-30",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "petros_pawlos",
+     "amharic": "ጴጥሮስ ወጳውሎስ",
+     "translit": "Petros WePawlos",
+     "english": "Sts Peter and Paul",
+     "movable": false,
+     "major": true,
+     "gregorian": "2028-07-12",
+     "ethiopic": "2020-11-05",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "gabriel",
+     "amharic": "ቅዱስ ገብርኤል",
+     "translit": "Qidus Gabriel",
+     "english": "St Gabriel the Archangel",
+     "movable": false,
+     "major": false,
+     "gregorian": "2028-07-26",
+     "ethiopic": "2020-11-19",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "buhe",
+     "amharic": "ቡሄ (ደብረ ታቦር)",
+     "translit": "Buhe",
+     "english": "Transfiguration",
+     "movable": false,
+     "major": true,
+     "gregorian": "2028-08-19",
+     "ethiopic": "2020-12-13",
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    {
+     "key": "filseta",
+     "amharic": "ፍልሰታ ለማርያም",
+     "translit": "Filseta",
+     "english": "Assumption of the Virgin Mary",
+     "movable": false,
+     "major": true,
+     "gregorian": "2028-08-22",
+     "ethiopic": "2020-12-16",
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/bahire-hasab/2018": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "ameteAlem": 7518,
+   "evangelist": {
+    "amharic": "ማርቆስ",
+    "translit": "Marqos",
+    "english": "Mark",
+    "yearOfCycle": 2
+   },
+   "computation": {
+    "medeb": 13,
+    "wenber": 12,
+    "abekte": 12,
+    "metqi": 18,
+    "mebajaHamer": {
+     "ethiopic": "2018-01-18",
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    "tewsakApplied": 7
+   },
+   "newYear": {
+    "gregorian": "2025-09-11",
+    "weekday": {
+     "n": 4,
+     "amharic": "ሐሙስ",
+     "translit": "Hamus",
+     "english": "Thursday"
+    },
+    "isLeapYear": false,
+    "pagumenDays": 5
+   },
+   "movableFeasts": [
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "daysFromNineveh": 0,
+     "gregorian": "2026-02-02",
+     "ethiopic": "2018-05-25",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "daysFromNineveh": 14,
+     "gregorian": "2026-02-16",
+     "ethiopic": "2018-06-09",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "daysFromNineveh": 41,
+     "gregorian": "2026-03-15",
+     "ethiopic": "2018-07-06",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "daysFromNineveh": 62,
+     "gregorian": "2026-04-05",
+     "ethiopic": "2018-07-27",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "daysFromNineveh": 67,
+     "gregorian": "2026-04-10",
+     "ethiopic": "2018-08-02",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "daysFromNineveh": 69,
+     "gregorian": "2026-04-12",
+     "ethiopic": "2018-08-04",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "daysFromNineveh": 93,
+     "gregorian": "2026-05-06",
+     "ethiopic": "2018-08-28",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "daysFromNineveh": 108,
+     "gregorian": "2026-05-21",
+     "ethiopic": "2018-09-13",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "daysFromNineveh": 118,
+     "gregorian": "2026-05-31",
+     "ethiopic": "2018-09-23",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "daysFromNineveh": 119,
+     "gregorian": "2026-06-01",
+     "ethiopic": "2018-09-24",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "daysFromNineveh": 121,
+     "gregorian": "2026-06-03",
+     "ethiopic": "2018-09-26",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/bahire-hasab/2015": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2015,
+   "ameteAlem": 7515,
+   "evangelist": {
+    "amharic": "ሉቃስ",
+    "translit": "Luqas",
+    "english": "Luke",
+    "yearOfCycle": 3
+   },
+   "computation": {
+    "medeb": 10,
+    "wenber": 9,
+    "abekte": 9,
+    "metqi": 21,
+    "mebajaHamer": {
+     "ethiopic": "2015-01-21",
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     }
+    },
+    "tewsakApplied": 8
+   },
+   "newYear": {
+    "gregorian": "2022-09-11",
+    "weekday": {
+     "n": 0,
+     "amharic": "እሑድ",
+     "translit": "Ehud",
+     "english": "Sunday"
+    },
+    "isLeapYear": true,
+    "pagumenDays": 6
+   },
+   "movableFeasts": [
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "daysFromNineveh": 0,
+     "gregorian": "2023-02-06",
+     "ethiopic": "2015-05-29",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "daysFromNineveh": 14,
+     "gregorian": "2023-02-20",
+     "ethiopic": "2015-06-13",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "daysFromNineveh": 41,
+     "gregorian": "2023-03-19",
+     "ethiopic": "2015-07-10",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "daysFromNineveh": 62,
+     "gregorian": "2023-04-09",
+     "ethiopic": "2015-08-01",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "daysFromNineveh": 67,
+     "gregorian": "2023-04-14",
+     "ethiopic": "2015-08-06",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "daysFromNineveh": 69,
+     "gregorian": "2023-04-16",
+     "ethiopic": "2015-08-08",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "daysFromNineveh": 93,
+     "gregorian": "2023-05-10",
+     "ethiopic": "2015-09-02",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "daysFromNineveh": 108,
+     "gregorian": "2023-05-25",
+     "ethiopic": "2015-09-17",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "daysFromNineveh": 118,
+     "gregorian": "2023-06-04",
+     "ethiopic": "2015-09-27",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "daysFromNineveh": 119,
+     "gregorian": "2023-06-05",
+     "ethiopic": "2015-09-28",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "daysFromNineveh": 121,
+     "gregorian": "2023-06-07",
+     "ethiopic": "2015-09-30",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/bahire-hasab/2011": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2011,
+   "ameteAlem": 7511,
+   "evangelist": {
+    "amharic": "ሉቃስ",
+    "translit": "Luqas",
+    "english": "Luke",
+    "yearOfCycle": 3
+   },
+   "computation": {
+    "medeb": 6,
+    "wenber": 5,
+    "abekte": 25,
+    "metqi": 5,
+    "mebajaHamer": {
+     "ethiopic": "2011-02-05",
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    "tewsakApplied": 6
+   },
+   "newYear": {
+    "gregorian": "2018-09-11",
+    "weekday": {
+     "n": 2,
+     "amharic": "ማክሰኞ",
+     "translit": "Maksegno",
+     "english": "Tuesday"
+    },
+    "isLeapYear": true,
+    "pagumenDays": 6
+   },
+   "movableFeasts": [
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "daysFromNineveh": 0,
+     "gregorian": "2019-02-18",
+     "ethiopic": "2011-06-11",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "daysFromNineveh": 14,
+     "gregorian": "2019-03-04",
+     "ethiopic": "2011-06-25",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "daysFromNineveh": 41,
+     "gregorian": "2019-03-31",
+     "ethiopic": "2011-07-22",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "daysFromNineveh": 62,
+     "gregorian": "2019-04-21",
+     "ethiopic": "2011-08-13",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "daysFromNineveh": 67,
+     "gregorian": "2019-04-26",
+     "ethiopic": "2011-08-18",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "daysFromNineveh": 69,
+     "gregorian": "2019-04-28",
+     "ethiopic": "2011-08-20",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "daysFromNineveh": 93,
+     "gregorian": "2019-05-22",
+     "ethiopic": "2011-09-14",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "daysFromNineveh": 108,
+     "gregorian": "2019-06-06",
+     "ethiopic": "2011-09-29",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "daysFromNineveh": 118,
+     "gregorian": "2019-06-16",
+     "ethiopic": "2011-10-09",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "daysFromNineveh": 119,
+     "gregorian": "2019-06-17",
+     "ethiopic": "2011-10-10",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "daysFromNineveh": 121,
+     "gregorian": "2019-06-19",
+     "ethiopic": "2011-10-12",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/bahire-hasab/1911": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 1911,
+   "ameteAlem": 7411,
+   "evangelist": {
+    "amharic": "ሉቃስ",
+    "translit": "Luqas",
+    "english": "Luke",
+    "yearOfCycle": 3
+   },
+   "computation": {
+    "medeb": 1,
+    "wenber": 0,
+    "abekte": 0,
+    "metqi": 0,
+    "mebajaHamer": {
+     "ethiopic": "1911-01-30",
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    "tewsakApplied": 3
+   },
+   "newYear": {
+    "gregorian": "1918-09-11",
+    "weekday": {
+     "n": 3,
+     "amharic": "ረቡዕ",
+     "translit": "Rebue",
+     "english": "Wednesday"
+    },
+    "isLeapYear": true,
+    "pagumenDays": 6
+   },
+   "movableFeasts": [
+    {
+     "key": "nineveh",
+     "amharic": "ጾመ ነነዌ",
+     "translit": "Tsome Nenewe",
+     "english": "Fast of Nineveh",
+     "daysFromNineveh": 0,
+     "gregorian": "1919-02-10",
+     "ethiopic": "1911-06-03",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "daysFromNineveh": 14,
+     "gregorian": "1919-02-24",
+     "ethiopic": "1911-06-17",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "debre_zeit",
+     "amharic": "ደብረ ዘይት",
+     "translit": "Debre Zeit",
+     "english": "Mount of Olives (mid-Lent)",
+     "daysFromNineveh": 41,
+     "gregorian": "1919-03-23",
+     "ethiopic": "1911-07-14",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "hosanna",
+     "amharic": "ሆሳዕና",
+     "translit": "Hosanna",
+     "english": "Palm Sunday",
+     "daysFromNineveh": 62,
+     "gregorian": "1919-04-13",
+     "ethiopic": "1911-08-05",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "siklet",
+     "amharic": "ስቅለት",
+     "translit": "Siklet",
+     "english": "Good Friday",
+     "daysFromNineveh": 67,
+     "gregorian": "1919-04-18",
+     "ethiopic": "1911-08-10",
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     }
+    },
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "daysFromNineveh": 69,
+     "gregorian": "1919-04-20",
+     "ethiopic": "1911-08-12",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "rikbe_kahnat",
+     "amharic": "ርክበ ካህናት",
+     "translit": "Rikbe Kahnat",
+     "english": "Assembly of the Priests",
+     "daysFromNineveh": 93,
+     "gregorian": "1919-05-14",
+     "ethiopic": "1911-09-06",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    },
+    {
+     "key": "erget",
+     "amharic": "ዕርገት",
+     "translit": "Erget",
+     "english": "Ascension",
+     "daysFromNineveh": 108,
+     "gregorian": "1919-05-29",
+     "ethiopic": "1911-09-21",
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     }
+    },
+    {
+     "key": "peraklitos",
+     "amharic": "በዓለ ጰራቅሊጦስ",
+     "translit": "Be'ale Peraklitos",
+     "english": "Pentecost",
+     "daysFromNineveh": 118,
+     "gregorian": "1919-06-08",
+     "ethiopic": "1911-10-01",
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "key": "tsome_hawaryat",
+     "amharic": "ጾመ ሐዋርያት",
+     "translit": "Tsome Hawaryat",
+     "english": "Apostles' Fast begins",
+     "daysFromNineveh": 119,
+     "gregorian": "1919-06-09",
+     "ethiopic": "1911-10-02",
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    },
+    {
+     "key": "tsome_dihnet",
+     "amharic": "ጾመ ድህነት",
+     "translit": "Tsome Dihnet",
+     "english": "Fast of Salvation begins",
+     "daysFromNineveh": 121,
+     "gregorian": "1919-06-11",
+     "ethiopic": "1911-10-04",
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     }
+    }
+   ]
+  }
+ },
+ "/v1/calendar/2018/1": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "month": 1,
+   "monthName": {
+    "n": 1,
+    "amharic": "መስከረም",
+    "translit": "Meskerem"
+   },
+   "days": 30,
+   "startsOn": {
+    "n": 4,
+    "amharic": "ሐሙስ",
+    "translit": "Hamus",
+    "english": "Thursday"
+   },
+   "calendar": [
+    {
+     "jdn": 2460930,
+     "gregorian": {
+      "date": "2025-09-11",
+      "year": 2025,
+      "month": 9,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2018-01-01",
+      "year": 2018,
+      "month": 1,
+      "day": 1,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [
+      {
+       "key": "enkutatash",
+       "amharic": "እንቁጣጣሽ",
+       "translit": "Enkutatash",
+       "english": "Ethiopian New Year",
+       "major": true,
+       "movable": false
+      }
+     ],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2460931,
+     "gregorian": {
+      "date": "2025-09-12",
+      "year": 2025,
+      "month": 9,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-01-02",
+      "year": 2018,
+      "month": 1,
+      "day": 2,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460932,
+     "gregorian": {
+      "date": "2025-09-13",
+      "year": 2025,
+      "month": 9,
+      "day": 13
+     },
+     "ethiopic": {
+      "date": "2018-01-03",
+      "year": 2018,
+      "month": 1,
+      "day": 3,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460933,
+     "gregorian": {
+      "date": "2025-09-14",
+      "year": 2025,
+      "month": 9,
+      "day": 14
+     },
+     "ethiopic": {
+      "date": "2018-01-04",
+      "year": 2018,
+      "month": 1,
+      "day": 4,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460934,
+     "gregorian": {
+      "date": "2025-09-15",
+      "year": 2025,
+      "month": 9,
+      "day": 15
+     },
+     "ethiopic": {
+      "date": "2018-01-05",
+      "year": 2018,
+      "month": 1,
+      "day": 5,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    },
+    {
+     "jdn": 2460935,
+     "gregorian": {
+      "date": "2025-09-16",
+      "year": 2025,
+      "month": 9,
+      "day": 16
+     },
+     "ethiopic": {
+      "date": "2018-01-06",
+      "year": 2018,
+      "month": 1,
+      "day": 6,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460936,
+     "gregorian": {
+      "date": "2025-09-17",
+      "year": 2025,
+      "month": 9,
+      "day": 17
+     },
+     "ethiopic": {
+      "date": "2018-01-07",
+      "year": 2018,
+      "month": 1,
+      "day": 7,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ሥላሴ",
+       "translit": "Selassie",
+       "english": "The Holy Trinity"
+      }
+     ]
+    },
+    {
+     "jdn": 2460937,
+     "gregorian": {
+      "date": "2025-09-18",
+      "year": 2025,
+      "month": 9,
+      "day": 18
+     },
+     "ethiopic": {
+      "date": "2018-01-08",
+      "year": 2018,
+      "month": 1,
+      "day": 8,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460938,
+     "gregorian": {
+      "date": "2025-09-19",
+      "year": 2025,
+      "month": 9,
+      "day": 19
+     },
+     "ethiopic": {
+      "date": "2018-01-09",
+      "year": 2018,
+      "month": 1,
+      "day": 9,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460939,
+     "gregorian": {
+      "date": "2025-09-20",
+      "year": 2025,
+      "month": 9,
+      "day": 20
+     },
+     "ethiopic": {
+      "date": "2018-01-10",
+      "year": 2018,
+      "month": 1,
+      "day": 10,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460940,
+     "gregorian": {
+      "date": "2025-09-21",
+      "year": 2025,
+      "month": 9,
+      "day": 21
+     },
+     "ethiopic": {
+      "date": "2018-01-11",
+      "year": 2018,
+      "month": 1,
+      "day": 11,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460941,
+     "gregorian": {
+      "date": "2025-09-22",
+      "year": 2025,
+      "month": 9,
+      "day": 22
+     },
+     "ethiopic": {
+      "date": "2018-01-12",
+      "year": 2018,
+      "month": 1,
+      "day": 12,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ሚካኤል",
+       "translit": "Qidus Mikael",
+       "english": "St Michael the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2460942,
+     "gregorian": {
+      "date": "2025-09-23",
+      "year": 2025,
+      "month": 9,
+      "day": 23
+     },
+     "ethiopic": {
+      "date": "2018-01-13",
+      "year": 2018,
+      "month": 1,
+      "day": 13,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460943,
+     "gregorian": {
+      "date": "2025-09-24",
+      "year": 2025,
+      "month": 9,
+      "day": 24
+     },
+     "ethiopic": {
+      "date": "2018-01-14",
+      "year": 2018,
+      "month": 1,
+      "day": 14,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ አረጋዊ",
+       "translit": "Abune Aregawi",
+       "english": "Abune Aregawi"
+      }
+     ]
+    },
+    {
+     "jdn": 2460944,
+     "gregorian": {
+      "date": "2025-09-25",
+      "year": 2025,
+      "month": 9,
+      "day": 25
+     },
+     "ethiopic": {
+      "date": "2018-01-15",
+      "year": 2018,
+      "month": 1,
+      "day": 15,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460945,
+     "gregorian": {
+      "date": "2025-09-26",
+      "year": 2025,
+      "month": 9,
+      "day": 26
+     },
+     "ethiopic": {
+      "date": "2018-01-16",
+      "year": 2018,
+      "month": 1,
+      "day": 16,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ኪዳነ ምሕረት",
+       "translit": "Kidane Mihret",
+       "english": "Covenant of Mercy"
+      }
+     ]
+    },
+    {
+     "jdn": 2460946,
+     "gregorian": {
+      "date": "2025-09-27",
+      "year": 2025,
+      "month": 9,
+      "day": 27
+     },
+     "ethiopic": {
+      "date": "2018-01-17",
+      "year": 2018,
+      "month": 1,
+      "day": 17,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [
+      {
+       "key": "meskel",
+       "amharic": "መስቀል",
+       "translit": "Meskel",
+       "english": "Finding of the True Cross",
+       "major": true,
+       "movable": false
+      }
+     ],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460947,
+     "gregorian": {
+      "date": "2025-09-28",
+      "year": 2025,
+      "month": 9,
+      "day": 28
+     },
+     "ethiopic": {
+      "date": "2018-01-18",
+      "year": 2018,
+      "month": 1,
+      "day": 18,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460948,
+     "gregorian": {
+      "date": "2025-09-29",
+      "year": 2025,
+      "month": 9,
+      "day": 29
+     },
+     "ethiopic": {
+      "date": "2018-01-19",
+      "year": 2018,
+      "month": 1,
+      "day": 19,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ገብርኤል",
+       "translit": "Qidus Gabriel",
+       "english": "St Gabriel the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2460949,
+     "gregorian": {
+      "date": "2025-09-30",
+      "year": 2025,
+      "month": 9,
+      "day": 30
+     },
+     "ethiopic": {
+      "date": "2018-01-20",
+      "year": 2018,
+      "month": 1,
+      "day": 20,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460950,
+     "gregorian": {
+      "date": "2025-10-01",
+      "year": 2025,
+      "month": 10,
+      "day": 1
+     },
+     "ethiopic": {
+      "date": "2018-01-21",
+      "year": 2018,
+      "month": 1,
+      "day": 21,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅድስት ማርያም",
+       "translit": "Qidist Maryam",
+       "english": "The Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2460951,
+     "gregorian": {
+      "date": "2025-10-02",
+      "year": 2025,
+      "month": 10,
+      "day": 2
+     },
+     "ethiopic": {
+      "date": "2018-01-22",
+      "year": 2018,
+      "month": 1,
+      "day": 22,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460952,
+     "gregorian": {
+      "date": "2025-10-03",
+      "year": 2025,
+      "month": 10,
+      "day": 3
+     },
+     "ethiopic": {
+      "date": "2018-01-23",
+      "year": 2018,
+      "month": 1,
+      "day": 23,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ጊዮርጊስ",
+       "translit": "Qidus Giyorgis",
+       "english": "St George"
+      }
+     ]
+    },
+    {
+     "jdn": 2460953,
+     "gregorian": {
+      "date": "2025-10-04",
+      "year": 2025,
+      "month": 10,
+      "day": 4
+     },
+     "ethiopic": {
+      "date": "2018-01-24",
+      "year": 2018,
+      "month": 1,
+      "day": 24,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ ተክለ ሃይማኖት",
+       "translit": "Abune Tekle Haymanot",
+       "english": "Abune Tekle Haymanot"
+      }
+     ]
+    },
+    {
+     "jdn": 2460954,
+     "gregorian": {
+      "date": "2025-10-05",
+      "year": 2025,
+      "month": 10,
+      "day": 5
+     },
+     "ethiopic": {
+      "date": "2018-01-25",
+      "year": 2018,
+      "month": 1,
+      "day": 25,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460955,
+     "gregorian": {
+      "date": "2025-10-06",
+      "year": 2025,
+      "month": 10,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2018-01-26",
+      "year": 2018,
+      "month": 1,
+      "day": 26,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460956,
+     "gregorian": {
+      "date": "2025-10-07",
+      "year": 2025,
+      "month": 10,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2018-01-27",
+      "year": 2018,
+      "month": 1,
+      "day": 27,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "መድኃኔዓለም",
+       "translit": "Medhane Alem",
+       "english": "Saviour of the World"
+      }
+     ]
+    },
+    {
+     "jdn": 2460957,
+     "gregorian": {
+      "date": "2025-10-08",
+      "year": 2025,
+      "month": 10,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-01-28",
+      "year": 2018,
+      "month": 1,
+      "day": 28,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460958,
+     "gregorian": {
+      "date": "2025-10-09",
+      "year": 2025,
+      "month": 10,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-01-29",
+      "year": 2018,
+      "month": 1,
+      "day": 29,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "በዓለ ወልድ",
+       "translit": "Be'ale Wold",
+       "english": "Commemoration of the Son"
+      }
+     ]
+    },
+    {
+     "jdn": 2460959,
+     "gregorian": {
+      "date": "2025-10-10",
+      "year": 2025,
+      "month": 10,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2018-01-30",
+      "year": 2018,
+      "month": 1,
+      "day": 30,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    }
+   ]
+  }
+ },
+ "/v1/calendar/2018/13": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "month": 13,
+   "monthName": {
+    "n": 13,
+    "amharic": "ጳጉሜን",
+    "translit": "Pagumen"
+   },
+   "days": 5,
+   "startsOn": {
+    "n": 0,
+    "amharic": "እሑድ",
+    "translit": "Ehud",
+    "english": "Sunday"
+   },
+   "calendar": [
+    {
+     "jdn": 2461290,
+     "gregorian": {
+      "date": "2026-09-06",
+      "year": 2026,
+      "month": 9,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2018-13-01",
+      "year": 2018,
+      "month": 13,
+      "day": 1,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461291,
+     "gregorian": {
+      "date": "2026-09-07",
+      "year": 2026,
+      "month": 9,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2018-13-02",
+      "year": 2018,
+      "month": 13,
+      "day": 2,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461292,
+     "gregorian": {
+      "date": "2026-09-08",
+      "year": 2026,
+      "month": 9,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-13-03",
+      "year": 2018,
+      "month": 13,
+      "day": 3,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461293,
+     "gregorian": {
+      "date": "2026-09-09",
+      "year": 2026,
+      "month": 9,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-13-04",
+      "year": 2018,
+      "month": 13,
+      "day": 4,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461294,
+     "gregorian": {
+      "date": "2026-09-10",
+      "year": 2026,
+      "month": 9,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2018-13-05",
+      "year": 2018,
+      "month": 13,
+      "day": 5,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "/v1/calendar/2015/13": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2015,
+   "month": 13,
+   "monthName": {
+    "n": 13,
+    "amharic": "ጳጉሜን",
+    "translit": "Pagumen"
+   },
+   "days": 6,
+   "startsOn": {
+    "n": 3,
+    "amharic": "ረቡዕ",
+    "translit": "Rebue",
+    "english": "Wednesday"
+   },
+   "calendar": [
+    {
+     "jdn": 2460194,
+     "gregorian": {
+      "date": "2023-09-06",
+      "year": 2023,
+      "month": 9,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2015-13-01",
+      "year": 2015,
+      "month": 13,
+      "day": 1,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2460195,
+     "gregorian": {
+      "date": "2023-09-07",
+      "year": 2023,
+      "month": 9,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2015-13-02",
+      "year": 2015,
+      "month": 13,
+      "day": 2,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460196,
+     "gregorian": {
+      "date": "2023-09-08",
+      "year": 2023,
+      "month": 9,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2015-13-03",
+      "year": 2015,
+      "month": 13,
+      "day": 3,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460197,
+     "gregorian": {
+      "date": "2023-09-09",
+      "year": 2023,
+      "month": 9,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2015-13-04",
+      "year": 2015,
+      "month": 13,
+      "day": 4,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2460198,
+     "gregorian": {
+      "date": "2023-09-10",
+      "year": 2023,
+      "month": 9,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2015-13-05",
+      "year": 2015,
+      "month": 13,
+      "day": 5,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    },
+    {
+     "jdn": 2460199,
+     "gregorian": {
+      "date": "2023-09-11",
+      "year": 2023,
+      "month": 9,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2015-13-06",
+      "year": 2015,
+      "month": 13,
+      "day": 6,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    }
+   ]
+  }
+ },
+ "/v1/calendar/2018/6": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "month": 6,
+   "monthName": {
+    "n": 6,
+    "amharic": "የካቲት",
+    "translit": "Yekatit"
+   },
+   "days": 30,
+   "startsOn": {
+    "n": 0,
+    "amharic": "እሑድ",
+    "translit": "Ehud",
+    "english": "Sunday"
+   },
+   "calendar": [
+    {
+     "jdn": 2461080,
+     "gregorian": {
+      "date": "2026-02-08",
+      "year": 2026,
+      "month": 2,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-06-01",
+      "year": 2018,
+      "month": 6,
+      "day": 1,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461081,
+     "gregorian": {
+      "date": "2026-02-09",
+      "year": 2026,
+      "month": 2,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-06-02",
+      "year": 2018,
+      "month": 6,
+      "day": 2,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461082,
+     "gregorian": {
+      "date": "2026-02-10",
+      "year": 2026,
+      "month": 2,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2018-06-03",
+      "year": 2018,
+      "month": 6,
+      "day": 3,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461083,
+     "gregorian": {
+      "date": "2026-02-11",
+      "year": 2026,
+      "month": 2,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2018-06-04",
+      "year": 2018,
+      "month": 6,
+      "day": 4,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461084,
+     "gregorian": {
+      "date": "2026-02-12",
+      "year": 2026,
+      "month": 2,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-06-05",
+      "year": 2018,
+      "month": 6,
+      "day": 5,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    },
+    {
+     "jdn": 2461085,
+     "gregorian": {
+      "date": "2026-02-13",
+      "year": 2026,
+      "month": 2,
+      "day": 13
+     },
+     "ethiopic": {
+      "date": "2018-06-06",
+      "year": 2018,
+      "month": 6,
+      "day": 6,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461086,
+     "gregorian": {
+      "date": "2026-02-14",
+      "year": 2026,
+      "month": 2,
+      "day": 14
+     },
+     "ethiopic": {
+      "date": "2018-06-07",
+      "year": 2018,
+      "month": 6,
+      "day": 7,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ሥላሴ",
+       "translit": "Selassie",
+       "english": "The Holy Trinity"
+      }
+     ]
+    },
+    {
+     "jdn": 2461087,
+     "gregorian": {
+      "date": "2026-02-15",
+      "year": 2026,
+      "month": 2,
+      "day": 15
+     },
+     "ethiopic": {
+      "date": "2018-06-08",
+      "year": 2018,
+      "month": 6,
+      "day": 8,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461088,
+     "gregorian": {
+      "date": "2026-02-16",
+      "year": 2026,
+      "month": 2,
+      "day": 16
+     },
+     "ethiopic": {
+      "date": "2018-06-09",
+      "year": 2018,
+      "month": 6,
+      "day": 9,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 1
+       }
+      ]
+     },
+     "feasts": [
+      {
+       "key": "abiy_tsome",
+       "amharic": "ዓቢይ ጾም",
+       "translit": "Abiy Tsome",
+       "english": "Great Lent begins",
+       "movable": true
+      }
+     ],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461089,
+     "gregorian": {
+      "date": "2026-02-17",
+      "year": 2026,
+      "month": 2,
+      "day": 17
+     },
+     "ethiopic": {
+      "date": "2018-06-10",
+      "year": 2018,
+      "month": 6,
+      "day": 10,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 2
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461090,
+     "gregorian": {
+      "date": "2026-02-18",
+      "year": 2026,
+      "month": 2,
+      "day": 18
+     },
+     "ethiopic": {
+      "date": "2018-06-11",
+      "year": 2018,
+      "month": 6,
+      "day": 11,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 3
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461091,
+     "gregorian": {
+      "date": "2026-02-19",
+      "year": 2026,
+      "month": 2,
+      "day": 19
+     },
+     "ethiopic": {
+      "date": "2018-06-12",
+      "year": 2018,
+      "month": 6,
+      "day": 12,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 4
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ሚካኤል",
+       "translit": "Qidus Mikael",
+       "english": "St Michael the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2461092,
+     "gregorian": {
+      "date": "2026-02-20",
+      "year": 2026,
+      "month": 2,
+      "day": 20
+     },
+     "ethiopic": {
+      "date": "2018-06-13",
+      "year": 2018,
+      "month": 6,
+      "day": 13,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 5
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461093,
+     "gregorian": {
+      "date": "2026-02-21",
+      "year": 2026,
+      "month": 2,
+      "day": 21
+     },
+     "ethiopic": {
+      "date": "2018-06-14",
+      "year": 2018,
+      "month": 6,
+      "day": 14,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 6
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ አረጋዊ",
+       "translit": "Abune Aregawi",
+       "english": "Abune Aregawi"
+      }
+     ]
+    },
+    {
+     "jdn": 2461094,
+     "gregorian": {
+      "date": "2026-02-22",
+      "year": 2026,
+      "month": 2,
+      "day": 22
+     },
+     "ethiopic": {
+      "date": "2018-06-15",
+      "year": 2018,
+      "month": 6,
+      "day": 15,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 7
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461095,
+     "gregorian": {
+      "date": "2026-02-23",
+      "year": 2026,
+      "month": 2,
+      "day": 23
+     },
+     "ethiopic": {
+      "date": "2018-06-16",
+      "year": 2018,
+      "month": 6,
+      "day": 16,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 8
+       }
+      ]
+     },
+     "feasts": [
+      {
+       "key": "kidane_mihret",
+       "amharic": "ኪዳነ ምሕረት",
+       "translit": "Kidane Mihret",
+       "english": "Covenant of Mercy",
+       "major": false,
+       "movable": false
+      }
+     ],
+     "commemorations": [
+      {
+       "amharic": "ኪዳነ ምሕረት",
+       "translit": "Kidane Mihret",
+       "english": "Covenant of Mercy"
+      }
+     ]
+    },
+    {
+     "jdn": 2461096,
+     "gregorian": {
+      "date": "2026-02-24",
+      "year": 2026,
+      "month": 2,
+      "day": 24
+     },
+     "ethiopic": {
+      "date": "2018-06-17",
+      "year": 2018,
+      "month": 6,
+      "day": 17,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 9
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461097,
+     "gregorian": {
+      "date": "2026-02-25",
+      "year": 2026,
+      "month": 2,
+      "day": 25
+     },
+     "ethiopic": {
+      "date": "2018-06-18",
+      "year": 2018,
+      "month": 6,
+      "day": 18,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 10
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461098,
+     "gregorian": {
+      "date": "2026-02-26",
+      "year": 2026,
+      "month": 2,
+      "day": 26
+     },
+     "ethiopic": {
+      "date": "2018-06-19",
+      "year": 2018,
+      "month": 6,
+      "day": 19,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 11
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ገብርኤል",
+       "translit": "Qidus Gabriel",
+       "english": "St Gabriel the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2461099,
+     "gregorian": {
+      "date": "2026-02-27",
+      "year": 2026,
+      "month": 2,
+      "day": 27
+     },
+     "ethiopic": {
+      "date": "2018-06-20",
+      "year": 2018,
+      "month": 6,
+      "day": 20,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 12
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461100,
+     "gregorian": {
+      "date": "2026-02-28",
+      "year": 2026,
+      "month": 2,
+      "day": 28
+     },
+     "ethiopic": {
+      "date": "2018-06-21",
+      "year": 2018,
+      "month": 6,
+      "day": 21,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 13
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅድስት ማርያም",
+       "translit": "Qidist Maryam",
+       "english": "The Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461101,
+     "gregorian": {
+      "date": "2026-03-01",
+      "year": 2026,
+      "month": 3,
+      "day": 1
+     },
+     "ethiopic": {
+      "date": "2018-06-22",
+      "year": 2018,
+      "month": 6,
+      "day": 22,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 14
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461102,
+     "gregorian": {
+      "date": "2026-03-02",
+      "year": 2026,
+      "month": 3,
+      "day": 2
+     },
+     "ethiopic": {
+      "date": "2018-06-23",
+      "year": 2018,
+      "month": 6,
+      "day": 23,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 15
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ጊዮርጊስ",
+       "translit": "Qidus Giyorgis",
+       "english": "St George"
+      }
+     ]
+    },
+    {
+     "jdn": 2461103,
+     "gregorian": {
+      "date": "2026-03-03",
+      "year": 2026,
+      "month": 3,
+      "day": 3
+     },
+     "ethiopic": {
+      "date": "2018-06-24",
+      "year": 2018,
+      "month": 6,
+      "day": 24,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 16
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ ተክለ ሃይማኖት",
+       "translit": "Abune Tekle Haymanot",
+       "english": "Abune Tekle Haymanot"
+      }
+     ]
+    },
+    {
+     "jdn": 2461104,
+     "gregorian": {
+      "date": "2026-03-04",
+      "year": 2026,
+      "month": 3,
+      "day": 4
+     },
+     "ethiopic": {
+      "date": "2018-06-25",
+      "year": 2018,
+      "month": 6,
+      "day": 25,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 17
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461105,
+     "gregorian": {
+      "date": "2026-03-05",
+      "year": 2026,
+      "month": 3,
+      "day": 5
+     },
+     "ethiopic": {
+      "date": "2018-06-26",
+      "year": 2018,
+      "month": 6,
+      "day": 26,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 18
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461106,
+     "gregorian": {
+      "date": "2026-03-06",
+      "year": 2026,
+      "month": 3,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2018-06-27",
+      "year": 2018,
+      "month": 6,
+      "day": 27,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 19
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "መድኃኔዓለም",
+       "translit": "Medhane Alem",
+       "english": "Saviour of the World"
+      }
+     ]
+    },
+    {
+     "jdn": 2461107,
+     "gregorian": {
+      "date": "2026-03-07",
+      "year": 2026,
+      "month": 3,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2018-06-28",
+      "year": 2018,
+      "month": 6,
+      "day": 28,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 20
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461108,
+     "gregorian": {
+      "date": "2026-03-08",
+      "year": 2026,
+      "month": 3,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-06-29",
+      "year": 2018,
+      "month": 6,
+      "day": 29,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 21
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "በዓለ ወልድ",
+       "translit": "Be'ale Wold",
+       "english": "Commemoration of the Son"
+      }
+     ]
+    },
+    {
+     "jdn": 2461109,
+     "gregorian": {
+      "date": "2026-03-09",
+      "year": 2026,
+      "month": 3,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-06-30",
+      "year": 2018,
+      "month": 6,
+      "day": 30,
+      "monthName": {
+       "amharic": "የካቲት",
+       "translit": "Yekatit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 22
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    }
+   ]
+  }
+ },
+ "/v1/date/not-a-date": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Could not parse date 'not-a-date'.",
+   "hint": "Expected YYYY-MM-DD, e.g. 2026-04-12."
+  }
+ },
+ "/v1/date/2026-02-31": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "'2026-02-31' is not a real Gregorian date."
+  }
+ },
+ "/v1/date/2018-13-06?calendar=ethiopian": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Pagumen 2018 has 5 days, got day 6.",
+   "hint": "Pagumen has 5 days, or 6 in a leap year."
+  }
+ },
+ "/v1/date/2026-04-12?calendar=martian": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Unknown calendar 'martian'.",
+   "hint": "Use 'gregorian' or 'ethiopian'."
+  }
+ },
+ "/v1/calendar/2018/14": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Ethiopian month must be 1-13, got '14'.",
+   "hint": "Month 13 is Pagumen, the short month."
+  }
+ },
+ "/v1/fasts/abc": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Ethiopian year must be an integer 1-9999, got 'abc'.",
+   "hint": "The current Ethiopian year is roughly the Gregorian year minus 8."
+  }
+ },
+ "/v1/nope": {
+  "status": 404,
+  "body": {
+   "error": "not_found",
+   "message": "No route for GET /v1/nope.",
+   "hint": "See / for the endpoint list."
+  }
+ },
+ "/v1/calendar/season?date=2026-03-04": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-03-04",
+    "ethiopic": "2018-06-25"
+   },
+   "season": {
+    "key": "abiy_tsome",
+    "amharic": "ዓቢይ ጾም",
+    "translit": "Abiy Tsome",
+    "english": "Great Lent",
+    "theme": "fasting",
+    "start": {
+     "gregorian": "2026-02-16",
+     "ethiopic": "2018-06-09"
+    },
+    "end": {
+     "gregorian": "2026-04-04",
+     "ethiopic": "2018-07-26"
+    },
+    "days": 48,
+    "dayOfSeason": 17
+   }
+  }
+ },
+ "/v1/calendar/season?date=2026-04-12": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-04-12",
+    "ethiopic": "2018-08-04"
+   },
+   "season": {
+    "key": "hamsa",
+    "amharic": "ሃምሳ (ዘመነ ትንሣኤ)",
+    "translit": "Hamsa",
+    "english": "The Fifty Days of Eastertide",
+    "theme": "feast",
+    "start": {
+     "gregorian": "2026-04-12",
+     "ethiopic": "2018-08-04"
+    },
+    "end": {
+     "gregorian": "2026-05-31",
+     "ethiopic": "2018-09-23"
+    },
+    "days": 50,
+    "dayOfSeason": 1
+   }
+  }
+ },
+ "/v1/calendar/season?date=2025-10-20": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2025-10-20",
+    "ethiopic": "2018-02-10"
+   },
+   "season": {
+    "key": "tsige",
+    "amharic": "ዘመነ ጽጌ",
+    "translit": "Zemene Tsige",
+    "english": "Season of Flowers",
+    "theme": "ordinary",
+    "start": {
+     "gregorian": "2025-10-06",
+     "ethiopic": "2018-01-26"
+    },
+    "end": {
+     "gregorian": "2025-11-14",
+     "ethiopic": "2018-03-05"
+    },
+    "days": 40,
+    "dayOfSeason": 15
+   }
+  }
+ },
+ "/v1/calendar/season?date=2026-01-10": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-01-10",
+    "ethiopic": "2018-05-02"
+   },
+   "season": {
+    "key": "astereyo",
+    "amharic": "ዘመነ አስተርእዮ",
+    "translit": "Zemene Astere'iyo",
+    "english": "Season of Epiphany",
+    "theme": "feast",
+    "start": {
+     "gregorian": "2026-01-07",
+     "ethiopic": "2018-04-29"
+    },
+    "end": {
+     "gregorian": "2026-02-01",
+     "ethiopic": "2018-05-24"
+    },
+    "days": 26,
+    "dayOfSeason": 4
+   }
+  }
+ },
+ "/v1/calendar/season?date=2018-07-30&calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-04-08",
+    "ethiopic": "2018-07-30"
+   },
+   "season": {
+    "key": "himamat",
+    "amharic": "ሰሙነ ሕማማት",
+    "translit": "Semune Himamat",
+    "english": "Holy Week",
+    "theme": "fasting",
+    "start": {
+     "gregorian": "2026-04-05",
+     "ethiopic": "2018-07-27"
+    },
+    "end": {
+     "gregorian": "2026-04-11",
+     "ethiopic": "2018-08-03"
+    },
+    "days": 7,
+    "dayOfSeason": 4
+   }
+  }
+ },
+ "/v1/calendar/geez-numeral?number=2018": {
+  "status": 200,
+  "body": {
+   "number": 2018,
+   "geez": "፳፻፲፰"
+  }
+ },
+ "/v1/calendar/geez-numeral?number=1": {
+  "status": 200,
+  "body": {
+   "number": 1,
+   "geez": "፩"
+  }
+ },
+ "/v1/calendar/geez-numeral?number=100": {
+  "status": 200,
+  "body": {
+   "number": 100,
+   "geez": "፻"
+  }
+ },
+ "/v1/calendar/geez-numeral?number=123456789": {
+  "status": 200,
+  "body": {
+   "number": 123456789,
+   "geez": "፼፼፳፫፻፵፭፼፷፯፻፹፱"
+  }
+ },
+ "/v1/calendar/geez-numeral?number=0": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Ge'ez numerals represent positive integers only, got 0. There is no zero."
+  }
+ },
+ "/v1/calendar/geez-numeral?number=abc": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Expected an integer, got 'abc'."
+  }
+ },
+ "/v1/calendar/season": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Missing 'date' query parameter.",
+   "hint": "e.g. ?date=2026-03-04"
+  }
+ },
+ "/v1/calendar/ics?year=2018&type=bogus": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Unknown type 'bogus'.",
+   "hint": "Use 'fasting', 'feasts' or 'all'."
+  }
+ },
+ "POST /v1/calendar/convert/batch #0": {
+  "status": 200,
+  "body": {
+   "calendar": "gregorian",
+   "count": 3,
+   "results": [
+    {
+     "input": "2026-04-12",
+     "jdn": 2461143,
+     "gregorian": {
+      "date": "2026-04-12",
+      "year": 2026,
+      "month": 4,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-08-04",
+      "year": 2018,
+      "month": 8,
+      "day": 4,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "input": "1994-05-22",
+     "jdn": 2449495,
+     "gregorian": {
+      "date": "1994-05-22",
+      "year": 1994,
+      "month": 5,
+      "day": 22
+     },
+     "ethiopic": {
+      "date": "1986-09-14",
+      "year": 1986,
+      "month": 9,
+      "day": 14,
+      "monthName": {
+       "amharic": "ግንቦት",
+       "translit": "Ginbot"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "input": "2023-09-11",
+     "jdn": 2460199,
+     "gregorian": {
+      "date": "2023-09-11",
+      "year": 2023,
+      "month": 9,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2015-13-06",
+      "year": 2015,
+      "month": 13,
+      "day": 6,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    }
+   ]
+  }
+ },
+ "POST /v1/calendar/convert/batch #1": {
+  "status": 200,
+  "body": {
+   "calendar": "ethiopian",
+   "count": 2,
+   "results": [
+    {
+     "input": "2018-08-04",
+     "jdn": 2461143,
+     "gregorian": {
+      "date": "2026-04-12",
+      "year": 2026,
+      "month": 4,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-08-04",
+      "year": 2018,
+      "month": 8,
+      "day": 4,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "input": "2015-13-06",
+     "jdn": 2460199,
+     "gregorian": {
+      "date": "2023-09-11",
+      "year": 2023,
+      "month": 9,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2015-13-06",
+      "year": 2015,
+      "month": 13,
+      "day": 6,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 6
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     }
+    }
+   ]
+  }
+ },
+ "POST /v1/calendar/convert/batch #2": {
+  "status": 200,
+  "body": {
+   "calendar": "gregorian",
+   "count": 4,
+   "results": [
+    {
+     "input": "2026-04-12",
+     "jdn": 2461143,
+     "gregorian": {
+      "date": "2026-04-12",
+      "year": 2026,
+      "month": 4,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-08-04",
+      "year": 2018,
+      "month": 8,
+      "day": 4,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     }
+    },
+    {
+     "input": "bogus",
+     "error": "Could not parse date 'bogus'."
+    },
+    {
+     "input": "2026-02-31",
+     "error": "'2026-02-31' is not a real Gregorian date."
+    },
+    {
+     "input": 42,
+     "error": "Each date must be a string."
+    }
+   ]
+  }
+ },
+ "POST /v1/calendar/convert/batch #3": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Body must have a non-empty 'dates' array."
+  }
+ },
+ "POST /v1/calendar/convert/batch #4": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Body must have a non-empty 'dates' array."
+  }
+ }
+}
