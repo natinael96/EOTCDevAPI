@@ -5,19 +5,30 @@ import { canonicalBookId, geezToInteger, normalizeReadingField, parseCitation } 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
 const report = {
-  version: 1,
+  version: 2,
   gitsawe: { months: 0, days: 0, services: 0, readings: 0, alternateReadings: 0 },
-  sinksar: { months: 0, days: 0, entries: 0 },
+  sinksar: {
+    months: 0, days: 0, entries: 0,
+    daysWithAnnualSummary: 0, daysWithMonthlySummary: 0,
+    annualFeasts: 0, monthlyFeasts: 0,
+  },
   bibleLinks: { resolvedBooks: 0, unresolvedBooks: 0, parsedCitations: 0, incompleteCitations: 0 },
+  reviewItems: [],
   warnings: [],
 };
 const manifest = read("data/gitsawe/manifest.json");
-const catalog = { version: 1, coverage: manifest.gitsawe.coverage, days: {} };
+const catalog = { version: 2, coverage: manifest.gitsawe.coverage, days: {} };
+
+function contextualBookId(sourceBook, fieldType, inheritedBook = null) {
+  // A bare Yohannes label inside a Gospel field means the Gospel of John. In
+  // epistle lists the same label correctly means 1 John unless numbered.
+  if (fieldType === "gospel" && /ዮሐ/.test(sourceBook || "") && !/ራእ|ራዕ/.test(sourceBook || "")) return "JHN";
+  return fieldType === "mezmur" ? "PSA" : canonicalBookId(sourceBook) || inheritedBook;
+}
 
 function normalizedReading(reading, fieldType, inheritedBook = null) {
   const sourceBook = reading.book || reading.reading_type || "";
-  const book = fieldType === "mezmur" ? "PSA"
-    : canonicalBookId(sourceBook) || inheritedBook;
+  const book = contextualBookId(sourceBook, fieldType, inheritedBook);
   const citation = parseCitation(reading.chapter_verse);
   return {
     sourceBook,
@@ -103,16 +114,29 @@ for (const file of fs.readdirSync(path.join(root, "data/gitsawe")).filter((x) =>
           // A Psalm field is unambiguous even when its printed book label is
           // damaged. In epistle lists, `ዓዲ` means "again" and inherits the
           // immediately preceding book (normally a second passage from Acts).
-          const book = field.type === "mezmur" ? "PSA"
-            : canonicalBookId(sourceBook) || (normalizeReadingField(sourceBook).alternate ? previousBook : null);
+          const book = contextualBookId(sourceBook, field.type,
+            normalizeReadingField(sourceBook).alternate ? previousBook : null);
           if (book) report.bibleLinks.resolvedBooks++;
           else {
             report.bibleLinks.unresolvedBooks++;
             report.warnings.push(`${file} day ${index + 1} ${serviceName}: unresolved book '${sourceBook || ""}'`);
+            report.reviewItems.push({
+              kind: "unresolved_bible_book", file, ethiopianMonth: data.month_index,
+              ethiopianDay: index + 1, service: serviceName, sourceField,
+              sourceBook: sourceBook || null, sourceCitation: reading.chapter_verse || null,
+            });
           }
           const citation = parseCitation(reading.chapter_verse);
           if (citation.chapter && citation.verseStart) report.bibleLinks.parsedCitations++;
-          else report.bibleLinks.incompleteCitations++;
+          else {
+            report.bibleLinks.incompleteCitations++;
+            report.reviewItems.push({
+              kind: "incomplete_citation", file, ethiopianMonth: data.month_index,
+              ethiopianDay: index + 1, service: serviceName, sourceField,
+              sourceBook: sourceBook || null, bibleBook: book || null,
+              sourceCitation: citation.source,
+            });
+          }
           if (book) previousBook = book;
         }
       }
@@ -132,6 +156,32 @@ for (let month = 1; month <= 13; month++) {
     report.sinksar.entries += day.entries.length;
     if (day.day !== index + 1) report.warnings.push(`sinksar/${month}.json: expected day ${index + 1}, found ${day.day}`);
     const catalogDay = catalog.days[`${month}-${day.day}`];
+    const summaryItems = (entry, kind) => (entry?.text || "").split(/\r?\n/)
+      .map((line) => line.trim()).filter(Boolean)
+      .map((line, itemIndex) => ({
+        id: `${month}-${day.day}-${kind}-${itemIndex + 1}`,
+        title: line.replace(/^[፩-፼]+\s*[.፡።፣፤፥፦:)\]-]*\s*/, "").trim(),
+        sourceText: line,
+      }));
+    const annualEntry = day.entries.find((entry) => entry.title.startsWith("📌") && entry.title.includes("ዓመታዊ"));
+    const monthlyEntry = day.entries.find((entry) => entry.title.startsWith("📌") && entry.title.includes("ወርኀዊ በዓላት"));
+    const annualFeasts = summaryItems(annualEntry, "annual");
+    const monthlyFeasts = summaryItems(monthlyEntry, "monthly");
+    report.sinksar.annualFeasts += annualFeasts.length;
+    report.sinksar.monthlyFeasts += monthlyFeasts.length;
+    if (annualEntry) report.sinksar.daysWithAnnualSummary++;
+    if (monthlyEntry) report.sinksar.daysWithMonthlySummary++;
+    if (annualEntry) {
+      const beforeDay = annualEntry.title.split("ቀን", 1)[0];
+      const tokens = beforeDay.match(/[፩-፼]+|\d+/g) || [];
+      const sourceDay = tokens.length ? (/^\d+$/.test(tokens.at(-1)) ? Number(tokens.at(-1)) : geezToInteger(tokens.at(-1))) : null;
+      if (sourceDay !== day.day) report.reviewItems.push({
+        kind: "sinksar_day_heading_mismatch", file: `data/sinksar/${month}.json`,
+        ethiopianMonth: month, catalogDay: day.day, sourceHeadingDay: sourceDay,
+        sourceEntryId: `${month}-${day.day}-${day.entries.indexOf(annualEntry) + 1}`,
+        heading: annualEntry.title,
+      });
+    }
     if (catalogDay) catalogDay.sinksar = {
       entryCount: day.entries.length,
       entries: day.entries.map((entry, entryIndex) => ({
@@ -142,6 +192,16 @@ for (let month = 1; month <= 13; month++) {
           : "narrative",
         title: entry.title,
       })),
+      annualFeasts: {
+        sourceEntryId: annualEntry ? `${month}-${day.day}-${day.entries.indexOf(annualEntry) + 1}` : null,
+        heading: annualEntry?.title || null,
+        items: annualFeasts,
+      },
+      monthlyFeasts: {
+        sourceEntryId: monthlyEntry ? `${month}-${day.day}-${day.entries.indexOf(monthlyEntry) + 1}` : null,
+        heading: monthlyEntry?.title || null,
+        items: monthlyFeasts,
+      },
       fullTextAvailable: false,
       reason: "Full-text publication rights are not yet recorded.",
     };
@@ -158,6 +218,7 @@ console.log(`wrote ${path.relative(root, out)}`);
 console.log(`wrote ${path.relative(root, catalogOut)}`);
 console.log(`Gitsawe: ${report.gitsawe.days} days, ${report.gitsawe.readings} readings`);
 console.log(`Sinksar: ${report.sinksar.days} days, ${report.sinksar.entries} entries`);
+console.log(`Sinksar summaries: ${report.sinksar.annualFeasts} annual, ${report.sinksar.monthlyFeasts} monthly feast items`);
 console.log(`Bible book links: ${report.bibleLinks.resolvedBooks} resolved, ${report.bibleLinks.unresolvedBooks} unresolved`);
 console.log(`Warnings: ${report.warnings.length}`);
 

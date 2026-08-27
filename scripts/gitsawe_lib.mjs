@@ -91,11 +91,12 @@ export function parseCitation(raw) {
   const chapterMatch = left.replace(/^\s*ም\s*[·.:፡]?/, "").match(/[፩-፼]+/);
   const verseValues = [...right.matchAll(/[፩-፼]+/g)]
     .map((match) => geezToInteger(match[0])).filter(Boolean);
+  const toEndOfChapter = /ፍ\s*[፡፣።፥፤,.:·]?\s*ም/.test(source);
   return {
     source,
     chapter: chapterMatch ? geezToInteger(chapterMatch[0]) : null,
     verseStart: verseValues[0] || null,
-    verseEnd: verseValues.at(-1) || null,
-    toEndOfChapter: /ፍ\s*[፡.:·]?\s*ም/.test(source),
+    verseEnd: toEndOfChapter ? null : (verseValues.at(-1) || null),
+    toEndOfChapter,
   };
 }

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "gitsawe": {
     "months": 13,
     "days": 366,
@@ -10,7 +10,11 @@
   "sinksar": {
     "months": 13,
     "days": 366,
-    "entries": 2308
+    "entries": 2308,
+    "daysWithAnnualSummary": 362,
+    "daysWithMonthlySummary": 338,
+    "annualFeasts": 1542,
+    "monthlyFeasts": 1905
   },
   "bibleLinks": {
     "resolvedBooks": 3339,
@@ -18,6 +22,435 @@
     "parsedCitations": 3319,
     "incompleteCitations": 23
   },
+  "reviewItems": [
+    {
+      "kind": "incomplete_citation",
+      "file": "01-meskerem.json",
+      "ethiopianMonth": 1,
+      "ethiopianDay": 1,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ቆሮ· ፪",
+      "bibleBook": "2CO",
+      "sourceCitation": "ም ቍ ፩ – ፲፩"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "02-tikimt.json",
+      "ethiopianMonth": 2,
+      "ethiopianDay": 22,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፲፰ ም· ፫ – ፬"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "03-hidar.json",
+      "ethiopianMonth": 3,
+      "ethiopianDay": 22,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ያዕቆብ ፩",
+      "bibleBook": "JAS",
+      "sourceCitation": "ም· ቍ· ፪ – ፲፯"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "03-hidar.json",
+      "ethiopianMonth": 3,
+      "ethiopianDay": 30,
+      "service": "ዘነግህ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፶ ም· ፩ – ፪"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "04-tahsas.json",
+      "ethiopianMonth": 4,
+      "ethiopianDay": 27,
+      "service": "ዘነግህ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፪ ም· ፪ – ፫"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 14,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ገላትያ",
+      "bibleBook": "GAL",
+      "sourceCitation": "ም· ፩ ·፲፭–ፍ፡ም፡"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 17,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ወንጌል",
+      "sourceBook": "ማቴዎስ",
+      "bibleBook": "MAT",
+      "sourceCitation": "ም· ፭ ጥ· ፩ – ፲፫"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 23,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፶ ቍ· ቍ· ፲፬ – ፲፯"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 26,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፷፭ ፋ · ፲፫ – ፲፭"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "file": "06-yekatit.json",
+      "ethiopianMonth": 6,
+      "ethiopianDay": 1,
+      "service": "ዘሠርክ",
+      "sourceField": "ወንጌል",
+      "sourceBook": null,
+      "sourceCitation": "ም· ፫ ቍ· ፺፭ – ፺፮"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "06-yekatit.json",
+      "ethiopianMonth": 6,
+      "ethiopianDay": 25,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ግብ፡ ሐዋ፡",
+      "bibleBook": "ACT",
+      "sourceCitation": "ም· ፱ · ፩ – ፲"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "07-megabit.json",
+      "ethiopianMonth": 7,
+      "ethiopianDay": 4,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ዮሐ ፪",
+      "bibleBook": "2JN",
+      "sourceCitation": "ም· ፩ · ፩ – ፍ፡ም፡"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "07-megabit.json",
+      "ethiopianMonth": 7,
+      "ethiopianDay": 9,
+      "service": "ዘነግህ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፸፪ – ፸፫"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "file": "07-megabit.json",
+      "ethiopianMonth": 7,
+      "ethiopianDay": 30,
+      "service": "ዘነግህ",
+      "sourceField": "ወንጌል",
+      "sourceBook": null,
+      "sourceCitation": "ም· ፲፮ ቍ· ፲፪ – ፲፬"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "08-miyazya.json",
+      "ethiopianMonth": 8,
+      "ethiopianDay": 2,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ዘቅዳሴ ሮሜ",
+      "bibleBook": "ROM",
+      "sourceCitation": "ም· ፲፩ · ፲፫ – ፳፭"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "08-miyazya.json",
+      "ethiopianMonth": 8,
+      "ethiopianDay": 11,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ወንጌል",
+      "sourceBook": "ማቴዎስ",
+      "bibleBook": "MAT",
+      "sourceCitation": "ቍ· ፲፫ ቍ· ፲፬ – ፳፬"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "08-miyazya.json",
+      "ethiopianMonth": 8,
+      "ethiopianDay": 13,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ወንጌል",
+      "sourceBook": "ማቴዎስ",
+      "bibleBook": "MAT",
+      "sourceCitation": "ም· ፳፬ ቍ· ቍ· ፫ – ፲፩"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 1,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceBook": "መዝ·",
+      "bibleBook": "PSA",
+      "sourceCitation": "፹፮ · ፩ – ፪"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 3,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ሮሜ",
+      "bibleBook": "ROM",
+      "sourceCitation": "ም· ፲፮ · ፳፩ – ፍ፡ም፡"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 4,
+      "service": "ዘሠርክ",
+      "sourceField": "ወንጌል",
+      "sourceBook": null,
+      "sourceCitation": "ም· ፲፬ ቍ· ፴፯ – ፵"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 9,
+      "service": "ዘነግህ",
+      "sourceField": "ወንጌል",
+      "sourceBook": "ማርቆስ",
+      "bibleBook": "MRK",
+      "sourceCitation": "ም· ፲፮ ፬  ፳፮ –"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 11,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ግብ፡ ሐዋ፡",
+      "bibleBook": "ACT",
+      "sourceCitation": "ም· ፳፮ – ፳፬ – ፴"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "09-ginbot.json",
+      "ethiopianMonth": 9,
+      "ethiopianDay": 25,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ጴጥ ፩",
+      "bibleBook": "1PE",
+      "sourceCitation": "ም· ፬ · ፲፪ – ፍ፡ም፡"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "10-sene.json",
+      "ethiopianMonth": 10,
+      "ethiopianDay": 16,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceBook": null,
+      "bibleBook": "PSA",
+      "sourceCitation": ""
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "11-hamle.json",
+      "ethiopianMonth": 11,
+      "ethiopianDay": 13,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ጴጥ ፩",
+      "bibleBook": "1PE",
+      "sourceCitation": "ም· ፩ ጥ· ፲፫ – ፍ፡ም፡"
+    },
+    {
+      "kind": "incomplete_citation",
+      "file": "12-nehase.json",
+      "ethiopianMonth": 12,
+      "ethiopianDay": 7,
+      "service": "ዘቅዳሴ",
+      "sourceField": "epistles_and_acts",
+      "sourceBook": "ጴጥ ፩",
+      "bibleBook": "1PE",
+      "sourceCitation": "ም· ፪ ጥ· ፯ – ፳፭"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/1.json",
+      "ethiopianMonth": 1,
+      "catalogDay": 20,
+      "sourceHeadingDay": 19,
+      "sourceEntryId": "1-20-5",
+      "heading": "📌 መስከረም ፲፱ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/2.json",
+      "ethiopianMonth": 2,
+      "catalogDay": 27,
+      "sourceHeadingDay": 26,
+      "sourceEntryId": "2-27-3",
+      "heading": "📌 ጥቅምት ፳፮ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 2,
+      "sourceHeadingDay": 1,
+      "sourceEntryId": "4-2-6",
+      "heading": "📌 ታኅሣሥ ፩ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 3,
+      "sourceHeadingDay": 4,
+      "sourceEntryId": "4-3-3",
+      "heading": "📌 ታኅሣሥ ፬ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 5,
+      "sourceHeadingDay": 4,
+      "sourceEntryId": "4-5-3",
+      "heading": "📌 ታኅሣሥ ፬ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 8,
+      "sourceHeadingDay": 7,
+      "sourceEntryId": "4-8-5",
+      "heading": "📌 ታኅሣሥ ፯ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 10,
+      "sourceHeadingDay": 9,
+      "sourceEntryId": "4-10-3",
+      "heading": "📌 ታኅሣሥ ፱ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 11,
+      "sourceHeadingDay": 12,
+      "sourceEntryId": "4-11-7",
+      "heading": "📌 ታኅሣሥ ፲፪ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 26,
+      "sourceHeadingDay": 25,
+      "sourceEntryId": "4-26-4",
+      "heading": "📌 ታኅሣሥ ፳፭ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 29,
+      "sourceHeadingDay": 28,
+      "sourceEntryId": "4-29-4",
+      "heading": "📌 ታኅሣሥ ፳፰ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/4.json",
+      "ethiopianMonth": 4,
+      "catalogDay": 30,
+      "sourceHeadingDay": 28,
+      "sourceEntryId": "4-30-4",
+      "heading": "📌 ታኅሣሥ ፳፰ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/5.json",
+      "ethiopianMonth": 5,
+      "catalogDay": 21,
+      "sourceHeadingDay": 20,
+      "sourceEntryId": "5-21-6",
+      "heading": "📌 ጥር ፳ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/7.json",
+      "ethiopianMonth": 7,
+      "catalogDay": 29,
+      "sourceHeadingDay": 28,
+      "sourceEntryId": "7-29-2",
+      "heading": "📌 መጋቢት ፳፰ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/8.json",
+      "ethiopianMonth": 8,
+      "catalogDay": 4,
+      "sourceHeadingDay": 3,
+      "sourceEntryId": "8-4-4",
+      "heading": "📌 ሚያዝያ ፫ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/8.json",
+      "ethiopianMonth": 8,
+      "catalogDay": 5,
+      "sourceHeadingDay": 6,
+      "sourceEntryId": "8-5-5",
+      "heading": "📌 ሚያዝያ ፮ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    },
+    {
+      "kind": "sinksar_day_heading_mismatch",
+      "file": "data/sinksar/11.json",
+      "ethiopianMonth": 11,
+      "catalogDay": 21,
+      "sourceHeadingDay": 20,
+      "sourceEntryId": "11-21-4",
+      "heading": "📌 ሐምሌ ፳ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"
+    }
+  ],
   "warnings": [
     "06-yekatit.json day 1 ዘሠርክ: unresolved book ''",
     "07-megabit.json day 30 ዘነግህ: unresolved book ''",
