@@ -1,5 +1,9 @@
 # EOTCDev API -- both implementations, one command each.
 
+# Python interpreter: the local venv when present, system python3 otherwise
+# (CI installs dependencies into the runner's Python and has no venv).
+PY := $(if $(wildcard py/.venv/bin/python),./.venv/bin/python,python3)
+
 .PHONY: help setup-check install install-ts install-py test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck
 
 help:
@@ -27,7 +31,7 @@ test-ts:            ## Run the TypeScript suite
 	cd ts && npx vitest run
 
 test-py:            ## Run the Python suite
-	cd py && ./.venv/bin/python -m pytest -q
+	cd py && $(PY) -m pytest -q
 
 test: spec test-ts test-py   ## Regenerate fixtures, then test both implementations
 
@@ -49,7 +53,7 @@ dev-ts:             ## Serve the Hono app on Cloudflare Workers locally
 	cd ts && npx wrangler dev
 
 dev-py:             ## Serve the FastAPI app locally
-	cd py && ./.venv/bin/uvicorn eotc.api:app --reload --port 8000
+	cd py && $(PY) -m uvicorn eotc.api:app --reload --port 8000
 
 deploy:             ## Deploy the Worker to Cloudflare
 	cd ts && npx wrangler deploy
