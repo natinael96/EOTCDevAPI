@@ -28,6 +28,7 @@ from .fasts import fast_periods
 from .feasts import fixed_feasts
 from .geez import to_geez
 from .ical import build_ics
+from .gitsawe import fixed_gitsawe_on, gitsawe_coverage
 from .seasons import season_of
 
 VERSION = "0.1.0"
@@ -160,6 +161,7 @@ async def index() -> dict[str, Any]:
             "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
+            "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
             "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}",
         },
         "examples": [
@@ -201,6 +203,40 @@ async def fasting(date: str, calendar: str = Query("gregorian")) -> dict[str, An
     d = describe_day(parse_date(date, calendar.lower()))
     return {"jdn": d["jdn"], "gregorian": d["gregorian"]["date"],
             "ethiopic": d["ethiopic"]["date"], "weekday": d["weekday"], **d["fasting"]}
+
+
+@app.get("/v1/gitsawe/{date}", summary="Fixed-cycle Gitsawe appointments for a date")
+async def gitsawe(date: str, calendar: str = Query("gregorian")) -> dict[str, Any]:
+    jdn = parse_date(date, calendar.lower())
+    described = describe_day(jdn)
+    fixed = fixed_gitsawe_on(described["ethiopic"]["month"], described["ethiopic"]["day"])
+    if fixed is None:
+        raise ApiError(404, "No fixed-cycle Gitsawe record for this date.")
+    movable_feasts = [feast["key"] for feast in described["feasts"] if feast["movable"]]
+    is_sunday = described["weekday"]["n"] == 0
+    return {
+        "date": {
+            "gregorian": described["gregorian"]["date"],
+            "ethiopic": described["ethiopic"]["date"],
+            "weekday": described["weekday"],
+        },
+        "coverage": gitsawe_coverage(),
+        "resolution": "fixed_candidate_only",
+        "resolutionFactors": {
+            "isSunday": is_sunday,
+            "movableFeasts": movable_feasts,
+            "knownPrecedenceConflict": is_sunday or bool(movable_feasts),
+            "note": "Sunday and movable Gitsawe cycles are not yet transcribed; precedence is not resolved.",
+        },
+        "gitsawe": fixed["gitsawe"],
+        "sinksar": fixed["sinksar"],
+        "bible": {
+            "textIncluded": False,
+            "localEditions": ["gez-1980", "am-1980"],
+            "license": "CC-BY-NC-ND-4.0",
+            "note": "Canonical references identify passages; Bible verse text is not bundled with the MIT API.",
+        },
+    }
 
 
 @app.get("/v1/fasts/{year}", summary="Fasting periods of an Ethiopian year")

@@ -41,6 +41,9 @@ jobs:
       - name: Validate JSON data
         run: make validate-json
 
+      - name: Validate Gitsawe content and links
+        run: make gitsawe
+
       - name: Verify generated specifications
         run: make check-generated
 

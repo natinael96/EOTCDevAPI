@@ -24,6 +24,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["eotc"]
 
+[tool.setuptools.package-data]
+eotc = ["gitsawe_catalog.js"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]

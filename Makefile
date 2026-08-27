@@ -1,6 +1,6 @@
 # EOTCDev API -- both implementations, one command each.
 
-.PHONY: help install test test-ts test-py spec validate-json check-generated ci dev-ts dev-py deploy typecheck
+.PHONY: help install test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck
 
 help:
 	@grep -E '^[a-z-]+:.*?##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -27,10 +27,13 @@ typecheck:          ## Typecheck the TypeScript
 validate-json:      ## Parse every JSON data and specification file
 	python3 scripts/validate_json.py
 
-check-generated: spec   ## Fail when generated specification fixtures are stale
-	git diff --exit-code -- spec
+gitsawe:            ## Compile and validate the Gitsawe catalog and links
+	node scripts/compile_gitsawe.mjs
 
-ci: validate-json check-generated test-ts test-py typecheck   ## Run the complete CI verification suite
+check-generated: spec gitsawe   ## Fail when generated fixtures or Gitsawe artifacts are stale
+	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js
+
+ci: validate-json gitsawe check-generated test-ts test-py typecheck   ## Run the complete CI verification suite
 
 dev-ts:             ## Serve the Hono app on Cloudflare Workers locally
 	cd ts && npx wrangler dev

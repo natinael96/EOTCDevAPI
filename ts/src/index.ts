@@ -19,6 +19,7 @@ import { describeDay, iso, ethIso } from './core/day.ts';
 import { toGeez } from './core/geez.ts';
 import { seasonOf } from './core/seasons.ts';
 import { buildIcs } from './core/ical.ts';
+import { fixedGitsaweOn, gitsaweCoverage } from './core/gitsawe.ts';
 
 const app = new Hono();
 
@@ -111,6 +112,7 @@ app.get('/', (c) =>
       'GET /v1/calendar/ics': 'iCalendar feed. ?year=2018&type=fasting|feasts|all',
       'GET /v1/calendar/season': 'Liturgical season of a date. ?date=&calendar=',
       'GET /v1/calendar/geez-numeral': "Arabic to Ge'ez numerals. ?number=2018",
+      'GET /v1/gitsawe/{date}': 'Fixed-cycle Gitsawe with Sinksar and canonical Bible links.',
       'POST /v1/calendar/convert/batch': 'Convert many dates at once. body: {dates:[], calendar?}',
     },
     examples: [
@@ -155,6 +157,38 @@ app.get('/v1/fasting/:date', (c) => {
   return c.json({
     jdn: d.jdn, gregorian: d.gregorian.date, ethiopic: d.ethiopic.date,
     weekday: d.weekday, ...d.fasting,
+  });
+});
+
+app.get('/v1/gitsawe/:date', (c) => {
+  const jdn = parseDate(c.req.param('date'), cal(c));
+  const described = describeDay(jdn);
+  const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
+  if (!fixed) throw new ApiError(404, 'No fixed-cycle Gitsawe record for this date.');
+  const movableFeasts = described.feasts.filter((feast) => feast.movable).map((feast) => feast.key);
+  const isSunday = described.weekday.n === 0;
+  return c.json({
+    date: {
+      gregorian: described.gregorian.date,
+      ethiopic: described.ethiopic.date,
+      weekday: described.weekday,
+    },
+    coverage: gitsaweCoverage(),
+    resolution: 'fixed_candidate_only',
+    resolutionFactors: {
+      isSunday,
+      movableFeasts,
+      knownPrecedenceConflict: isSunday || movableFeasts.length > 0,
+      note: 'Sunday and movable Gitsawe cycles are not yet transcribed; precedence is not resolved.',
+    },
+    gitsawe: fixed.gitsawe,
+    sinksar: fixed.sinksar,
+    bible: {
+      textIncluded: false,
+      localEditions: ['gez-1980', 'am-1980'],
+      license: 'CC-BY-NC-ND-4.0',
+      note: 'Canonical references identify passages; Bible verse text is not bundled with the MIT API.',
+    },
   });
 });
 

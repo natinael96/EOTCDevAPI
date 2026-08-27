@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "gitsawe": {
+    "title": "መጽሐፈ ግጻዌ ወመዝሙር ከነምልክቱ",
+    "publisher": "አክሱም ማተሚያ ቤት፣ አዲስ አበባ፣ ኢትዮጵያ",
+    "editor": "ገብረሥላሴ ብርሃኑ",
+    "editionNote": "ተነትመ በ፻፻፱ወ፺ ዓ.ም. (ሽፋን ላይ YK AZ 2010 E.C.)",
+    "coverage": {
+      "fixedCycle": "transcribed",
+      "movableCycle": "not_transcribed",
+      "sundayCycle": "not_transcribed",
+      "occasionalCycle": "not_transcribed",
+      "bahireHasabTables": "not_transcribed"
+    },
+    "licenseStatus": "unverified"
+  },
+  "sinksar": {
+    "coverage": "366_possible_month_days",
+    "licenseStatus": "unverified"
+  },
+  "bible": {
+    "localEditions": ["am-1980", "gez-1980"],
+    "license": "CC-BY-NC-ND-4.0",
+    "bundledWithMitApi": false
+  }
+}

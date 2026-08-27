@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "gitsawe": {
+    "months": 13,
+    "days": 366,
+    "services": 1097,
+    "readings": 3342,
+    "alternateReadings": 45
+  },
+  "sinksar": {
+    "months": 13,
+    "days": 366,
+    "entries": 2308
+  },
+  "bibleLinks": {
+    "resolvedBooks": 3339,
+    "unresolvedBooks": 3,
+    "parsedCitations": 3319,
+    "incompleteCitations": 23
+  },
+  "warnings": [
+    "06-yekatit.json day 1 ዘሠርክ: unresolved book ''",
+    "07-megabit.json day 30 ዘነግህ: unresolved book ''",
+    "09-ginbot.json day 4 ዘሠርክ: unresolved book ''"
+  ]
+}

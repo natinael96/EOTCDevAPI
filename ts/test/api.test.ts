@@ -79,6 +79,29 @@ describe('fasting', () => {
   });
 });
 
+describe('Gitsawe content and links', () => {
+  it('joins fixed Gitsawe, Sinksar summaries, and Bible references', async () => {
+    const { status, body } = await get('/v1/gitsawe/2018-12-22?calendar=ethiopian');
+    expect(status).toBe(200);
+    expect(body.date.ethiopic).toBe('2018-12-22');
+    expect(body.resolution).toBe('fixed_candidate_only');
+    expect(body.gitsawe.services.liturgy.epistlesAndActs).toHaveLength(3);
+    expect(body.gitsawe.services.liturgy.gospels[0].bibleBook).toBeTruthy();
+    expect(body.sinksar.entryCount).toBeGreaterThan(0);
+    expect(body.sinksar.fullTextAvailable).toBe(false);
+    expect(body.bible.textIncluded).toBe(false);
+  });
+
+  it('flags Fasika Sunday as requiring unresolved precedence', async () => {
+    const { body } = await get('/v1/gitsawe/2026-04-12');
+    expect(body.resolutionFactors.isSunday).toBe(true);
+    expect(body.resolutionFactors.movableFeasts).toContain('fasika');
+    expect(body.resolutionFactors.knownPrecedenceConflict).toBe(true);
+    expect(body.coverage.movableCycle).toBe('not_transcribed');
+    expect(body.coverage.sundayCycle).toBe('not_transcribed');
+  });
+});
+
 describe('year endpoints', () => {
   it('lists fasting periods', async () => {
     const { body } = await get('/v1/fasts/2018');

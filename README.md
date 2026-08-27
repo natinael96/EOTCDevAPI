@@ -1,7 +1,8 @@
 # EOTCDev API
 
 An open, free REST API for the **Ethiopian Orthodox Tewahedo Church calendar** —
-Ethiopian↔Gregorian date conversion, fasting-day status, fasting periods, and feast dates.
+Ethiopian↔Gregorian date conversion, fasting-day status, fasting periods, feast dates,
+and a date-level bridge between the Gitsawe, Sinksar, and Bible.
 
 Coptic developers have [`coptic.io`](https://coptic.io) and `katameros-api` to build on.
 EOTC has content mega-apps but no open backend. This is that backend: **infrastructure, not another app.**
@@ -51,6 +52,7 @@ Change one implementation without the other and a build fails.
 | `GET /v1/calendar/ics` | **iCalendar feed** — subscribe in Google/Apple/Outlook. `?year=&type=fasting\|feasts\|all` |
 | `GET /v1/calendar/season` | Liturgical season of a date (`theme` key for UI theming) |
 | `GET /v1/calendar/geez-numeral` | Arabic → Ge'ez numerals (`2018` → `፳፻፲፰`) |
+| `GET /v1/gitsawe/{date}` | Gitsawe appointments + Sinksar commemorations + Bible references for a date |
 | `POST /v1/calendar/convert/batch` | Convert up to 366 non-contiguous dates in one call |
 
 Years are **Amete Mihret** (the ordinary Ethiopian year, ≈ Gregorian − 8). Dates are `YYYY-MM-DD`.
@@ -69,6 +71,27 @@ curl /v1/fasting/2026-03-04
 ```
 
 The API answers *why*, not just yes/no — which fast, how long, and how far into it you are.
+
+### Gitsawe, Sinksar, and Bible
+
+```bash
+curl /v1/gitsawe/2026-08-28
+```
+
+The Gitsawe route links the three sources by Ethiopian month and day:
+
+- the fixed-date **Gitsawe** appointment, separated into Matins (`ዘነግህ`),
+  Liturgy (`ዘቅዳሴ`), and Vespers (`ዘሠርክ`), including alternate (`ዓዲ`) readings;
+- that day's **Sinksar** commemoration summaries;
+- normalized **Bible references**, while preserving the citation exactly as printed.
+
+It intentionally reports `resolution: "fixed_candidate_only"`. The source's fixed cycle is
+fully transcribed, but its movable-feast, Sunday, Athanasius occasional-reading, and Bahire
+Hasab sections are not yet transcribed. The response exposes known movable-feast conflicts
+instead of pretending the fixed appointment is always the final service order. Bible verse
+text is not bundled: the available local editions are CC BY-NC-ND, while this API is MIT.
+See [`docs/GITSAWE_DATA_MODEL.md`](docs/GITSAWE_DATA_MODEL.md) for the source model,
+coverage, precedence boundary, and citation-confidence rules.
 
 ### Subscribe to the fasting calendar — no code at all
 
@@ -139,9 +162,10 @@ make deploy      # ship the Worker
 ## Project layout
 
 ```
-spec/       conformance.json, responses.json, routes.json  -- the shared contract
-ts/src/core/    ethiopic · bahirehasab · fasts · feasts · day
-py/eotc/        the same five modules, in Python
+spec/           conformance.json, responses.json, routes.json -- the shared contract
+data/gitsawe/   Gitsawe transcriptions, source manifest, and generated quality report
+ts/src/core/    ethiopic · bahirehasab · fasts · feasts · day · gitsawe
+py/eotc/        matching Python modules plus the shared generated Gitsawe catalog
 ```
 
 The `core` modules have **zero dependencies** in both languages. Vendor them directly
