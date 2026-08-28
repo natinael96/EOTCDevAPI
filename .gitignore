@@ -10,3 +10,6 @@ dist/
 
 # Third-party scripture data (CC BY-NC-ND, not ours to relicense under MIT)
 data/bible/
+
+# Edition-dependent validation output (needs licensed data absent from the repo)
+data/sinq-gitsawe/local-validation-report.json

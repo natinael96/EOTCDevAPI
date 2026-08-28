@@ -34,51 +34,6 @@
   },
   "reviewItems": [
     {
-      "kind": "chapter_out_of_range",
-      "where": "daily 08-01 kidassie",
-      "sourceSlot": "firstDeacon",
-      "bibleBook": "HEB",
-      "chapter": 15,
-      "chapterCount": 13,
-      "versification": "am-1980"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 06-02 kidassie",
-      "sourceSlot": "secondKahn",
-      "bibleBook": "ACT",
-      "chapter": 76,
-      "chapterCount": 28,
-      "versification": "am-1980"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 13-02 kidassie",
-      "sourceSlot": "firstDeacon",
-      "bibleBook": "2CO",
-      "chapter": 14,
-      "chapterCount": 13,
-      "versification": "am-1980"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 16-02 kidassie",
-      "sourceSlot": "firstDeacon",
-      "bibleBook": "EPH",
-      "chapter": 8,
-      "chapterCount": 6,
-      "versification": "am-1980"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 25-02 kidassie",
-      "sourceSlot": "firstDeacon",
-      "bibleBook": "EPH",
-      "chapter": 7,
-      "chapterCount": 6,
-      "versification": "am-1980"
-    },
-    {
       "kind": "slot_family_mismatch",
       "where": "daily 08-03 kidassie",
       "sourceSlot": "secondDeacon",
@@ -125,24 +80,6 @@
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ወንጌል 1",
       "bibleBook": "JHN"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 17-05 kidassie",
-      "sourceSlot": "wengel",
-      "bibleBook": "MRK",
-      "chapter": 17,
-      "chapterCount": 16,
-      "versification": "am-1980"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "daily 22-05 kidassie",
-      "sourceSlot": "firstDeacon",
-      "bibleBook": "EPH",
-      "chapter": 7,
-      "chapterCount": 6,
-      "versification": "am-1980"
     },
     {
       "kind": "unresolved_bible_book",
@@ -385,15 +322,6 @@
       "bibleBook": "JHN"
     },
     {
-      "kind": "chapter_out_of_range",
-      "where": "daily 16-12 kidassie",
-      "sourceSlot": "secondDeacon",
-      "bibleBook": "2JN",
-      "chapter": 2,
-      "chapterCount": 1,
-      "versification": "am-1980"
-    },
-    {
       "kind": "slot_family_mismatch",
       "where": "daily 18-12 kidassie",
       "sourceSlot": "secondDeacon",
@@ -402,30 +330,12 @@
       "bibleBook": "JHN"
     },
     {
-      "kind": "chapter_out_of_range",
-      "where": "seasonal 06-abiyTsom kidassie",
-      "sourceSlot": "secondDeacon",
-      "bibleBook": "2PE",
-      "chapter": 5,
-      "chapterCount": 3,
-      "versification": "am-1980"
-    },
-    {
       "kind": "slot_family_mismatch",
       "where": "seasonal 05-tnsae kidassie",
       "sourceSlot": "secondDeacon",
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ራዕይ",
       "bibleBook": "REV"
-    },
-    {
-      "kind": "chapter_out_of_range",
-      "where": "seasonal 06-tnsae kidassie",
-      "sourceSlot": "wengel",
-      "bibleBook": "JHN",
-      "chapter": 24,
-      "chapterCount": 21,
-      "versification": "am-1980"
     },
     {
       "kind": "slot_family_mismatch",

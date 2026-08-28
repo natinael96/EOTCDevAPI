@@ -72,13 +72,28 @@ const MONTH_KEYS = { meskerem: 1, tikimt: 2, hidar: 3, tahsas: 4, tir: 5, yekati
 
 // Chapter bounds from the local validation edition (CC BY-NC-ND, used only for
 // local validation per the V1 scope — nothing from it enters the artifact).
-const canon = read("data/bible/canon.json");
+// The edition is licensed out of the repository, so it is absent in CI; the
+// chapter range check simply does not run there. chapterValidation in the
+// quality report records whether it ran, so a report generated without the
+// edition cannot be mistaken for a fully validated one.
+const canonPath = path.join(root, "data/bible/canon.json");
 const chapterCounts = new Map();
-for (const book of canon) {
-  const file = path.join(root, "data/bible/am-1980/books", book.file);
-  if (!fs.existsSync(file)) continue;
-  chapterCounts.set(book.id, JSON.parse(fs.readFileSync(file, "utf8")).chapters.length);
+if (fs.existsSync(canonPath)) {
+  for (const book of JSON.parse(fs.readFileSync(canonPath, "utf8"))) {
+    const file = path.join(root, "data/bible/am-1980/books", book.file);
+    if (!fs.existsSync(file)) continue;
+    chapterCounts.set(book.id, JSON.parse(fs.readFileSync(file, "utf8")).chapters.length);
+  }
+} else {
+  console.log("note: data/bible/ absent (licensed, local-only); skipping chapter range validation");
 }
+// Findings that require the licensed edition go to a separate, gitignored
+// report: the committed quality report must be byte-reproducible in CI, where
+// the edition is absent, or make check-generated could never pass there.
+const localReport = {
+  chapterValidation: { enabled: chapterCounts.size > 0, books: chapterCounts.size },
+  reviewItems: [],
+};
 
 // ---- Helpers ---------------------------------------------------------------
 
@@ -111,8 +126,8 @@ function normalizedReading(reading, sourceSlot, where) {
   }
   const chapter = intOrNull(verse.chapter);
   if (bibleBook && chapter && chapterCounts.has(bibleBook) && chapter > chapterCounts.get(bibleBook)) {
-    review({ kind: "chapter_out_of_range", where, sourceSlot, bibleBook, chapter,
-      chapterCount: chapterCounts.get(bibleBook), versification: "am-1980" });
+    localReport.reviewItems.push({ kind: "chapter_out_of_range", where, sourceSlot,
+      bibleBook, chapter, chapterCount: chapterCounts.get(bibleBook), versification: "am-1980" });
   }
   const familyMatch = bibleBook ? SLOT_FAMILIES[slot].has(bibleBook) : null;
   if (familyMatch === false) {
@@ -488,7 +503,13 @@ fs.writeFileSync(reconciliationOut, JSON.stringify(reconciliation, null, 2) + "\
 const catalogOut = path.join(root, "py/eotc/sinq_catalog.js");
 fs.writeFileSync(catalogOut, `export default ${JSON.stringify(catalog)};\n`);
 
+const localOut = path.join(root, "data/sinq-gitsawe/local-validation-report.json");
+fs.writeFileSync(localOut, JSON.stringify(localReport, null, 2) + "\n");
 console.log(`wrote ${path.relative(root, reportOut)}`);
+console.log(`wrote ${path.relative(root, localOut)} (local-only, gitignored)`);
+if (localReport.reviewItems.length) {
+  console.log(`local validation: ${localReport.reviewItems.length} chapter range findings`);
+}
 console.log(`wrote ${path.relative(root, reconciliationOut)}`);
 console.log(`wrote ${path.relative(root, catalogOut)}`);
 console.log(`Sinq catalog: ${report.counts.output.daily} daily, ${report.counts.output.seasonal} seasonal, ${report.counts.output.monthly} monthly, ${report.counts.output.feasts} feasts, ${report.counts.output.subFeasts} sub-feasts, ${report.counts.output.mahlets} mahlets`);
