@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gitsawe, readings &amp; Sinksar — EOTCDev API Documentation</title>
-<meta name="description" content="The lectionary endpoints: /v1/gitsawe, /v1/readings, /v1/sinksar — resolution semantics, reading structure, and the Bible reference model.">
+<title>Gitsawe, readings &amp; Sinksar · EOTCDev API Documentation</title>
+<meta name="description" content="The lectionary endpoints /v1/gitsawe, /v1/readings, and /v1/sinksar: resolution semantics, reading structure, and the Bible reference model.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
@@ -45,19 +45,19 @@
     <h1>Gitsawe, readings &amp; Sinksar</h1>
     <p class="lede">The date-level bridge between the Gitsawe lectionary
     (<span class="geez">ግጻዌ</span>), the Sinksar (<span class="geez">ስንክሳር</span>), and the
-    Bible — with resolution semantics that say exactly what the API knows and doesn't.</p>
+    Bible, with resolution semantics that say exactly what the API knows and doesn't.</p>
 
     <div class="endpoint" id="gitsawe"><span class="method">GET</span><code class="path">/v1/gitsawe/<i>{date}</i></code></div>
     <p>The complete bridge for one date: fixed-cycle Gitsawe appointments, Sinksar summary
     metadata, the annual and monthly feast lists, and normalized Bible references.</p>
     <pre><span class="p">$</span> curl <span class="s">"…/v1/gitsawe/2018-08-04?calendar=ethiopian"</span></pre>
 
-    <h3 id="resolution">Resolution semantics — read this first</h3>
+    <h3 id="resolution">Resolution semantics: read this first</h3>
     <p>The response currently reports:</p>
     <pre>{ <span class="k">"resolution"</span>: <span class="s">"fixed_candidate_only"</span> }</pre>
     <p>This is an important, deliberate restriction. Only the <strong>fixed</strong> Gitsawe
     cycle is transcribed so far. On a Sunday or a movable feast, the printed source may
-    appoint a different service order that takes precedence — and rather than pretending the
+    appoint a different service order that takes precedence. Rather than pretending the
     fixed appointment always wins, the API tells you when it knows a conflict is possible:</p>
     <pre>{
   <span class="k">"coverage"</span>: {
@@ -89,7 +89,7 @@
     </table>
     <p>Each service holds <code>psalms</code>, <code>gospels</code>,
     <code>epistlesAndActs</code>, and the appointed <code>anaphora</code>
-    (<span class="geez">ቅዳሴ</span> — a chant name, not a Bible passage). Readings preserve
+    (<span class="geez">ቅዳሴ</span>, a chant name, not a Bible passage). Readings preserve
     the source and the normalized layer side by side:</p>
     <pre>{
   <span class="k">"sourceField"</span>: <span class="s">"ወንጌል"</span>,
@@ -107,11 +107,11 @@
 }</pre>
     <p><strong>The source citation is never overwritten by normalization.</strong>
     <code>alternate: true</code> marks a reading the source introduces with
-    <span class="geez">ዓዲ</span> ("again") — an additional or repeated appointment. Do not
+    <span class="geez">ዓዲ</span> ("again"): an additional or repeated appointment. Do not
     discard it just because another reading of the same type exists.</p>
 
     <div class="endpoint" id="readings"><span class="method">GET</span><code class="path">/v1/readings/<i>{date}</i></code></div>
-    <p>The recommended endpoint when you need <em>only</em> the appointed Bible readings —
+    <p>The recommended endpoint when you need <em>only</em> the appointed Bible readings:
     no Sinksar entries, no source detail unrelated to reading selection. Acts is separated
     from the other epistles for easier rendering:</p>
     <pre><span class="p">$</span> curl <span class="s">"…/v1/readings/2018-12-22?calendar=ethiopian"</span>
@@ -127,7 +127,7 @@
 }</pre>
 
     <div class="endpoint" id="sinksar"><span class="method">GET</span><code class="path">/v1/sinksar/<i>{date}</i></code></div>
-    <p>The focused view of the day's Sinksar commemorations — the annual
+    <p>The focused view of the day's Sinksar commemorations: the annual
     (<span class="geez">ዓመታዊ</span>) and monthly (<span class="geez">ወርኀዊ በዓላት</span>) lists
     without the full Gitsawe payload.</p>
     <pre><span class="p">$</span> curl <span class="s">"…/v1/sinksar/2018-01-01?calendar=ethiopian"</span>
@@ -161,7 +161,7 @@
     </table>
     <p>The compiler currently extracts 1,542 annual and 1,905 monthly feast items across the
     year. A day may legitimately lack one of the two lists; absence is a <code>null</code>
-    heading and an empty items array — never an error.</p>
+    heading and an empty items array, never an error.</p>
 
     <h2 id="bible-model">The Bible reference model<a class="anchor" href="#bible-model">¶</a></h2>
     <p>Canonical references use stable book IDs:</p>
@@ -173,7 +173,7 @@
         numbered otherwise.</li>
       <li><strong>Confidence is explicit:</strong> <code>confirmed</code>,
         <code>probable</code>, <code>ambiguous</code>, or <code>unresolved</code>. Most
-        citation-only links are <code>probable</code> — do not present them as manually
+        citation-only links are <code>probable</code>; do not present them as manually
         confirmed textual equivalence.</li>
       <li><strong>"To end of chapter":</strong> when the source says
         <span class="geez">ፍጻሜ ምዕራፍ</span>, the reference carries
@@ -182,7 +182,7 @@
     </ul>
     <div class="callout"><b>Why no verse text?</b> The available local editions
     (<code>am-1980</code>, <code>gez-1980</code>) are CC BY-NC-ND 4.0; this API is MIT. The
-    API therefore serves references, structure, and citations — never the restricted text.
+    API therefore serves references, structure, and citations, never the restricted text.
     Applications that display verse text must obtain a compatible edition and honour its
     attribution, noncommercial, and no-derivatives terms.</div>
 
@@ -194,7 +194,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

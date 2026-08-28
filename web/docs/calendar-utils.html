@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calendar utilities — EOTCDev API Documentation</title>
+<title>Calendar utilities · EOTCDev API Documentation</title>
 <meta name="description" content="Month calendars, liturgical seasons, Ge'ez numerals, and the iCalendar feed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,14 +47,14 @@
     you can subscribe to without writing any code at all.</p>
 
     <div class="endpoint" id="month"><span class="method">GET</span><code class="path">/v1/calendar/<i>{year}</i>/<i>{month}</i></code></div>
-    <p>One Ethiopian month, fully described day by day — the right call for rendering a
+    <p>One Ethiopian month, fully described day by day, the right call for rendering a
     calendar view.</p>
     <pre><span class="p">$</span> curl …<span class="s">/v1/calendar/2018/8</span></pre>
     <ul>
       <li>Months are <code>1–13</code>. Months 1–12 have 30 days; Pagumen (13) has 5, or 6 in
         a leap year.</li>
       <li>The response includes the localized month name, day count, the weekday the month
-        opens on, and a complete date description for every day — fasting and feasts
+        opens on, and a complete date description for every day, fasting and feasts
         included.</li>
     </ul>
 
@@ -63,13 +63,13 @@
     <table>
       <thead><tr><th>Parameter</th><th>Required</th><th>Default</th></tr></thead>
       <tbody>
-        <tr><td><code>date</code></td><td>Yes</td><td>—</td></tr>
+        <tr><td><code>date</code></td><td>Yes</td><td>–</td></tr>
         <tr><td><code>calendar</code></td><td>No</td><td><code>gregorian</code></td></tr>
       </tbody>
     </table>
     <pre><span class="p">$</span> curl <span class="s">"…/v1/calendar/season?date=2026-03-04"</span></pre>
     <p>Returns the season key, localized names, Gregorian and Ethiopian boundaries, total
-    days, the day-within-season, and a <code>theme</code> key — a stable identifier apps can
+    days, the day-within-season, and a <code>theme</code> key, a stable identifier apps can
     map to their own colours and imagery for season-aware UI.</p>
 
     <div class="endpoint" id="geez"><span class="method">GET</span><code class="path">/v1/calendar/geez-numeral</code></div>
@@ -80,7 +80,7 @@
     ፻ (hundred) and ፼ (ten-thousand) composition rules, verified against fixture vectors.</p>
 
     <div class="endpoint" id="ics"><span class="method">GET</span><code class="path">/v1/calendar/ics</code></div>
-    <p>An iCalendar feed — the no-code integration path.</p>
+    <p>An iCalendar feed: the no-code integration path.</p>
     <table>
       <thead><tr><th>Parameter</th><th>Required</th><th>Values</th></tr></thead>
       <tbody>
@@ -91,7 +91,7 @@
     <pre><span class="p">$</span> curl <span class="s">"…/v1/calendar/ics?year=2018&amp;type=fasting"</span> -o eotc-2018.ics</pre>
     <p>Paste the URL into Google Calendar ("From URL"), Apple Calendar, or Outlook and every
     fast or feast appears as an all-day event. The response is <code>text/calendar</code> and
-    <strong>byte-deterministic</strong> — the same query always produces identical bytes, so
+    <strong>byte-deterministic</strong>: the same query always produces identical bytes, so
     the feed caches cleanly and diffs meaningfully.</p>
 
     <div class="pager">
@@ -102,7 +102,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

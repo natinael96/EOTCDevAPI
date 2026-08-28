@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Errors &amp; rate limits — EOTCDev API Documentation</title>
+<title>Errors &amp; rate limits · EOTCDev API Documentation</title>
 <meta name="description" content="The uniform error contract, status codes, and rate-limit behavior.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +44,7 @@
     <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Errors &amp; rate limits</div>
     <h1>Errors &amp; rate limits</h1>
     <p class="lede">One error shape everywhere, in both implementations, asserted
-    byte-for-byte by the shared fixtures — including the error bodies.</p>
+    byte-for-byte by the shared fixtures, including the error bodies.</p>
 
     <h2 id="shape">The error shape<a class="anchor" href="#shape">¶</a></h2>
     <p>Every error is JSON with a stable machine-readable <code>error</code> code, a
@@ -55,7 +55,7 @@
   <span class="k">"hint"</span>: <span class="s">"Expected YYYY-MM-DD, e.g. 2026-04-12."</span>
 }</pre>
 
-    <h2 id="bad-request">400 — bad request<a class="anchor" href="#bad-request">¶</a></h2>
+    <h2 id="bad-request">400 Bad Request<a class="anchor" href="#bad-request">¶</a></h2>
     <p>Malformed dates, impossible dates, unknown calendars, out-of-range values:</p>
     <pre>HTTP/1.1 400 Bad Request
 
@@ -64,17 +64,17 @@
   <span class="k">"message"</span>: <span class="s">"'2026-02-31' is not a real Gregorian date."</span>
 }</pre>
     <p>Batch conversion is the exception by design: an invalid <em>item</em> gets a per-item
-    <code>error</code> while valid items still convert — the request as a whole only fails on
+    <code>error</code> while valid items still convert; the request as a whole only fails on
     a malformed body (see <a href="dates.html#batch">batch conversion</a>).</p>
 
-    <h2 id="not-found">404 — not found<a class="anchor" href="#not-found">¶</a></h2>
+    <h2 id="not-found">404 Not Found<a class="anchor" href="#not-found">¶</a></h2>
     <pre>{
   <span class="k">"error"</span>: <span class="s">"not_found"</span>,
   <span class="k">"message"</span>: <span class="s">"No route for GET /v1/nope."</span>,
   <span class="k">"hint"</span>: <span class="s">"See / for the endpoint list."</span>
 }</pre>
 
-    <h2 id="rate-limited">429 — rate limited<a class="anchor" href="#rate-limited">¶</a></h2>
+    <h2 id="rate-limited">429 Too Many Requests<a class="anchor" href="#rate-limited">¶</a></h2>
     <pre>HTTP/1.1 429 Too Many Requests
 Retry-After: 1
 Cache-Control: no-store
@@ -85,22 +85,22 @@ Cache-Control: no-store
   <span class="k">"retryAfter"</span>: 1
 }</pre>
     <p><strong>Client rule:</strong> wait the number of seconds in <code>Retry-After</code>,
-    then retry once. Never retry in a tight loop — the token bucket refills continuously
+    then retry once. Never retry in a tight loop: the token bucket refills continuously
     (10 tokens/second toward a 60-token burst), so a short wait always recovers capacity.
     <code>/v1/health</code> is exempt from application rate limiting and is the right probe
     for liveness checks.</p>
 
-    <h2 id="internal">500 — internal<a class="anchor" href="#internal">¶</a></h2>
+    <h2 id="internal">500 Internal Error<a class="anchor" href="#internal">¶</a></h2>
     <pre>{ <span class="k">"error"</span>: <span class="s">"internal"</span>, <span class="k">"message"</span>: <span class="s">"Unexpected error."</span> }</pre>
     <p>No stack trace is ever exposed. If you can reproduce a 500,
     <a href="https://github.com/natinael96/EOTCDevAPI/issues">open an issue</a> with the
-    request path — the fixtures make regressions easy to pin down.</p>
+    request path; the fixtures make regressions easy to pin down.</p>
 
     <h2 id="status-summary">Status summary<a class="anchor" href="#status-summary">¶</a></h2>
     <table>
       <thead><tr><th>Status</th><th>Code</th><th>When</th></tr></thead>
       <tbody>
-        <tr><td><code>200</code></td><td>—</td><td>Success; cached publicly for 24 h</td></tr>
+        <tr><td><code>200</code></td><td>–</td><td>Success; cached publicly for 24 h</td></tr>
         <tr><td><code>400</code></td><td><code>bad_request</code></td><td>Unparseable or impossible input</td></tr>
         <tr><td><code>404</code></td><td><code>not_found</code></td><td>Unknown route, or no record for a valid date</td></tr>
         <tr><td><code>429</code></td><td><code>rate_limited</code></td><td>Token bucket exhausted; honour <code>Retry-After</code></td></tr>
@@ -116,7 +116,7 @@ Cache-Control: no-store
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

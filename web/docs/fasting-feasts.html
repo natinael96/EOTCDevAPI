@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fasting &amp; feasts — EOTCDev API Documentation</title>
-<meta name="description" content="Reference for /v1/fasting, /v1/fasts, and /v1/feasts — including the weekly-fast exceptions.">
+<title>Fasting &amp; feasts · EOTCDev API Documentation</title>
+<meta name="description" content="Reference for /v1/fasting, /v1/fasts, and /v1/feasts, including the weekly-fast exceptions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
@@ -43,7 +43,7 @@
   <main>
     <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Fasting &amp; feasts</div>
     <h1>Fasting &amp; feasts</h1>
-    <p class="lede">The API answers <em>why</em>, not just yes or no — which fast, how long it
+    <p class="lede">The API answers <em>why</em>, not just yes or no: which fast, how long it
     is, how far into it the date falls, and which rule produced the answer.</p>
 
     <div class="endpoint" id="fasting"><span class="method">GET</span><code class="path">/v1/fasting/<i>{date}</i></code></div>
@@ -67,19 +67,19 @@
       <tbody>
         <tr><td><code>isFasting</code></td><td>The final answer for the date, after all rules and exceptions</td></tr>
         <tr><td><code>weeklyFast</code></td><td>The Wednesday/Friday rule is what applies</td></tr>
-        <tr><td><code>fastFreeSeason</code></td><td>Weekly fasting is suspended — the fifty days from Fasika to Pentecost (ሃምሳ)</td></tr>
+        <tr><td><code>fastFreeSeason</code></td><td>Weekly fasting is suspended for the fifty days from Fasika to Pentecost (ሃምሳ)</td></tr>
         <tr><td><code>feastOverride</code></td><td>A great feast of the Lord (Gena, Timket) overrides the weekly fast</td></tr>
         <tr><td><code>periods</code></td><td>Named fasting periods active on the date, with <code>dayOfPeriod</code> progress</td></tr>
       </tbody>
     </table>
     <div class="callout"><b>The weekly fast is not absolute.</b> Wednesdays and Fridays are
-    fasting days — except during the fifty days of ሃምሳ, and except when a great feast of the
+    fasting days, except during the fifty days of ሃምሳ, and except when a great feast of the
     Lord falls on one. Both exceptions are implemented and flagged, never silently applied.
     Regional practice varies for some minor rules; where reviewed sources disagree, the API
     does not claim one custom as universal.</div>
 
     <div class="endpoint" id="fasts"><span class="method">GET</span><code class="path">/v1/fasts/<i>{year}</i></code></div>
-    <p>All seven canonical fasting periods of an Ethiopian year — the answer to
+    <p>All seven canonical fasting periods of an Ethiopian year, the answer to
     "when does Lent start this year?"</p>
     <pre><span class="p">$</span> curl …<span class="s">/v1/fasts/2018</span></pre>
     <p>Each period includes:</p>
@@ -110,7 +110,7 @@
 
     <div class="callout"><b>Gena is not always January 7.</b> Ethiopian year 2016 began on
     September 12, 2023 (2015 was a leap year), so every date until the following Gregorian
-    leap day shifted by one: Tahsas 29 fell on <b>January 8, 2024</b> — and Lalibela observed
+    leap day shifted by one: Tahsas 29 fell on <b>January 8, 2024</b>, and Lalibela observed
     it there. Timket shifts identically. Popular sources hardcode January 7; this API returns
     the true calendar arithmetic, which is why <code>/v1/feasts</code> resolves dates per
     year instead of publishing a fixed Gregorian table.</div>
@@ -123,7 +123,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

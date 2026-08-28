@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EOTCDev API — the Ethiopian Orthodox calendar, as infrastructure</title>
+<title>EOTCDev API: the Ethiopian Orthodox calendar, as infrastructure</title>
 <meta name="description" content="An open, free REST API for the Ethiopian Orthodox Tewahedo Church calendar: date conversion, fasting, feasts, Bahire Hasab, and the Gitsawe lectionary. No auth, no keys, no database.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -209,7 +209,7 @@
   <div>
     <div class="rubricline">ባሕረ ሐሳብ&ensp;·&ensp;ግጻዌ&ensp;·&ensp;ስንክሳር&ensp;·&ensp;በዓላት</div>
     <h1>The Ethiopian Orthodox calendar, as <em>infrastructure</em>.</h1>
-    <p class="lede">An open, free REST API for the Tewahedo Church year — date conversion,
+    <p class="lede">An open, free REST API for the Tewahedo Church year: date conversion,
     fasting, feasts, the full Bahire Hasab computation, and a date-level bridge between
     the Gitsawe, Sinksar, and Bible. No auth. No API key. No database.</p>
     <div class="cta">
@@ -220,7 +220,7 @@
   <div>
     <div class="term">
       <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="term-title">sh — Easter Sunday, 2026</span></div>
+        <span class="term-title">sh · Easter Sunday, 2026</span></div>
       <pre><span class="p">$</span> curl https://eotcdev-api.workers.dev<span class="s">/v1/date/2026-04-12</span>
 {
   <span class="k">"gregorian"</span>: { <span class="k">"date"</span>: <span class="s">"2026-04-12"</span> },
@@ -233,7 +233,7 @@
                <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span> }]
 }</pre>
     </div>
-    <div class="fixture-note">real bytes — spec/responses.json, asserted by both test suites</div>
+    <div class="fixture-note">real bytes from spec/responses.json, asserted by both test suites</div>
   </div>
 </div>
 
@@ -243,7 +243,7 @@
     <span class="today-date geez" id="t-eth">…</span>
     <span class="today-sub" id="t-greg"></span>
     <span class="today-fasika" id="t-fasika"></span>
-    <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date — or just <code>curl /v1/today</code>.</span></noscript>
+    <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
   </div>
   <div class="wrap today-sinksar" id="t-sinksar">
     <div class="sk-col">
@@ -278,23 +278,23 @@
 
     <div class="group"><h3>Calendar</h3>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/today</span><span class="desc">Today, fully described. <i style="font:12px var(--mono);color:var(--faint)">?tz=Africa/Addis_Ababa</i></span></div>
-      <div class="ep"><span class="method">GET</span><span class="path">/v1/date/<i>{date}</i></span><span class="desc">Describe any date — both calendars, weekday, fasting, feasts</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/date/<i>{date}</i></span><span class="desc">Describe any date: both calendars, weekday, fasting, feasts</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/convert/<i>{date}</i></span><span class="desc">Convert between Ethiopian and Gregorian</span></div>
       <div class="ep"><span class="method post">POST</span><span class="path">/v1/calendar/convert/batch</span><span class="desc">Convert up to 366 non-contiguous dates in one call</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/<i>{year}</i>/<i>{month}</i></span><span class="desc">One Ethiopian month, day by day</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/season</span><span class="desc">Liturgical season of a date, with a UI theme key</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/geez-numeral</span><span class="desc">Arabic → Ge'ez numerals (2018 → ፳፻፲፰)</span></div>
-      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/ics</span><span class="desc">iCalendar feed — subscribe in Google, Apple, or Outlook</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/ics</span><span class="desc">iCalendar feed. Subscribe in Google, Apple, or Outlook</span></div>
     </div>
 
     <div class="group"><h3>Fasting &amp; feasts</h3>
-      <div class="ep"><span class="method">GET</span><span class="path">/v1/fasting/<i>{date}</i></span><span class="desc">Is it a fasting day — and <em>why</em>: which fast, how long, day N of it</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/fasting/<i>{date}</i></span><span class="desc">Is it a fasting day, and <em>why</em>: which fast, how long, day N of it</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/fasts/<i>{year}</i></span><span class="desc">All seven canonical fasts with start and end in both calendars</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/feasts/<i>{year}</i></span><span class="desc">Every feast of a year. <i style="font:12px var(--mono);color:var(--faint)">?type=movable|fixed</i></span></div>
     </div>
 
     <div class="group"><h3>Computation</h3>
-      <div class="ep"><span class="method">GET</span><span class="path">/v1/bahire-hasab/<i>{year}</i></span><span class="desc">The full ባሕረ ሐሳብ — every intermediate value, not just answers</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bahire-hasab/<i>{year}</i></span><span class="desc">The full ባሕረ ሐሳብ: every intermediate value, not just answers</span></div>
     </div>
 
     <div class="group"><h3>Gitsawe &amp; readings</h3>
@@ -313,7 +313,7 @@
 <section id="bahirehasab">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">፪</span><h2>Bahire Hasab, shown working</h2></div>
-    <p class="sec-sub">Movable feasts come from ባሕረ ሐሳብ — “the sea of thought” — the traditional
+    <p class="sec-sub">Movable feasts come from ባሕረ ሐሳብ, “the sea of thought”: the traditional
     computation the Church has run for centuries. The API exposes every intermediate value,
     so you can check its work.</p>
 
@@ -323,12 +323,12 @@
       <span class="link-box"><span class="geez">ወንበር</span>Wenber</span><span class="arr">→</span>
       <span class="link-box"><span class="geez">አበቅቴ · መጥቅዕ</span>Abekte &amp; Metqi</span><span class="arr">→</span>
       <span class="link-box"><span class="geez">መባጃ ሐመር</span>Mebaja Hamer</span><span class="arr">→</span>
-      <span class="link-box linchpin"><span class="geez">ጾመ ነነዌ</span>Nineveh — the linchpin</span><span class="arr">→</span>
+      <span class="link-box linchpin"><span class="geez">ጾመ ነነዌ</span>Nineveh, the linchpin</span><span class="arr">→</span>
       <span class="link-box">every movable feast, a fixed Tewsak offset later</span>
     </div>
 
     <p class="proof"><b>The correctness argument:</b> Fasika is computed two completely independent
-    ways — the traditional chain above, and the Alexandrian computus — and the test suite asserts
+    ways: the traditional chain above and the Alexandrian computus. The test suite asserts
     they agree for every year from 1800 to 2200 EC. Two methods with nothing in common but the
     answer, agreeing for four centuries, is not a coincidence.</p>
   </div>
@@ -341,14 +341,14 @@
     <div class="notes">
       <div class="note-card">
         <h4><span class="geez">ገና</span> is not always January 7</h4>
-        <p>Ethiopian year 2016 began on Sept 12, 2023 — 2015 was a leap year — so every date until
+        <p>Ethiopian year 2016 began on Sept 12, 2023 (2015 was a leap year), so every date until
         the next Gregorian leap day shifted by one. Tahsas 29 fell on <b>January 8, 2024</b>, and
         Lalibela observed it there. Timket shifts identically. This API returns the true
         calendar arithmetic, not the approximation.</p>
       </div>
       <div class="note-card">
         <h4>The weekly fast is not absolute</h4>
-        <p>Wednesdays and Fridays are fasting days — except during the fifty days from Fasika to
+        <p>Wednesdays and Fridays are fasting days, except during the fifty days from Fasika to
         Pentecost (<span class="geez">ሃምሳ</span>), and except when a great feast of the Lord falls on one.
         Both exceptions are implemented and flagged in the response as
         <code>fastFreeSeason</code> and <code>feastOverride</code>.</p>
@@ -363,7 +363,7 @@
     <div class="ics" style="margin-top:26px">
       <div>
         <div class="ics-url" id="ics-url">https://&lt;host&gt;/v1/calendar/ics?year=2018&amp;type=fasting</div>
-        <p>Paste into Google Calendar (“From URL”), Apple Calendar, or Outlook — every fast becomes
+        <p>Paste into Google Calendar (“From URL”), Apple Calendar, or Outlook, and every fast becomes
         an all-day event. The feed is byte-deterministic, so it caches cleanly.</p>
       </div>
       <a class="btn ghost" href="#" id="ics-copy" onclick="navigator.clipboard.writeText(document.getElementById('ics-url').textContent);this.textContent='Copied';return false;">Copy URL</a>
@@ -377,7 +377,7 @@
     <p class="sec-sub">Infrastructure you can trust has to say what it knows, what it inferred,
     and what it doesn't have yet.</p>
     <div class="honesty">
-      <p><b>The calendar core is pure arithmetic</b> — zero dependencies in both languages,
+      <p><b>The calendar core is pure arithmetic</b>: zero dependencies in both languages,
       verified against a shared fixture of 9,154 vectors. Vendor the modules directly if you'd
       rather not make a network call.</p>
       <p><b>The Gitsawe fixed cycle</b> is transcribed from a printed edition
@@ -388,10 +388,10 @@
       reviewed, <code>/v1/gitsawe</code> answers <code>resolution: "fixed_candidate_only"</code>
       and exposes known conflicts instead of pretending the fixed appointment always wins.</p>
       <p><b>Restricted text stays out.</b> Bible verse bodies and unreviewed liturgical text are
-      excluded from the MIT runtime until publication rights are recorded — references,
+      excluded from the MIT runtime until publication rights are recorded; references,
       structure, and metadata are served instead.</p>
       <p><b>Corrections are welcome.</b> Feast dates, commemorations, and regional variations in
-      fasting practice — please <a href="https://github.com/natinael96/EOTCDevAPI/issues">open an
+      fasting practice. Please <a href="https://github.com/natinael96/EOTCDevAPI/issues">open an
       issue with a source</a>. A fixture diff is a behaviour change, and reviewing it is the point.</p>
     </div>
   </div>
@@ -399,13 +399,13 @@
 
 <footer>
   <div class="wrap foot">
-    <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed, open to all builders.</span>
+    <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed, open to all builders.</span>
     <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
   </div>
 </footer>
 
 <script>
-// Ported from ts/src/core/ethiopic.ts + bahirehasab.ts — same JDN arithmetic,
+// Ported from ts/src/core/ethiopic.ts + bahirehasab.ts: same JDN arithmetic,
 // same epoch, same computus. Kept tiny; the API remains the source of truth.
 (function () {
   var EPOCH = 1723856;
@@ -457,16 +457,16 @@
     WD_AM[wd] + "፣ " + MONTHS_AM[e.month - 1] + " " + toGeez(e.day) + " ቀን፣ " + toGeez(e.year) + " ዓ.ም.";
   document.getElementById("t-greg").textContent =
     WD_EN[wd] + ", " + now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
-    + " — " + e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0") + " EC";
+    + " · " + e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0") + " EC";
 
   var f = fasikaJDN(e.year);
   if (f < jdn) f = fasikaJDN(e.year + 1);
   var days = f - jdn;
   document.getElementById("t-fasika").innerHTML = days === 0
-    ? "<b>ትንሣኤ — Fasika is today.</b>"
+    ? "<b>ትንሣኤ · Fasika is today.</b>"
     : "ትንሣኤ · Fasika in <b>" + days + " day" + (days === 1 ? "" : "s") + "</b>";
 
-  // Today's Sinksar commemorations — same data the API's /v1/sinksar serves.
+  // Today's Sinksar commemorations: same data the API's /v1/sinksar serves.
   fetch("sinksar.json").then(function (r) { return r.json(); }).then(function (sk) {
     var day = sk[e.month + "-" + e.day];
     if (!day || (!day.annual.length && !day.monthly.length)) return;

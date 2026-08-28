@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Getting started — EOTCDev API Documentation</title>
+<title>Getting started · EOTCDev API Documentation</title>
 <meta name="description" content="Running the API, date conventions, response behavior, and rate limits.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,13 +43,13 @@
   <main>
     <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Getting started</div>
     <h1>Getting started</h1>
-    <p class="lede">Conventions that apply to every endpoint — dates, calendars, years,
-    timezones, caching, CORS — plus how to run the API yourself.</p>
+    <p class="lede">Conventions that apply to every endpoint: dates, calendars, years,
+    timezones, caching, and CORS, plus how to run the API yourself.</p>
 
     <h2 id="dates">Date format &amp; input calendar<a class="anchor" href="#dates">¶</a></h2>
     <p>Dates are always <code>YYYY-MM-DD</code>, in either calendar:</p>
     <pre>2026-04-12   <span class="cm">Gregorian</span>
-2018-08-04   <span class="cm">Ethiopian — the same day</span></pre>
+2018-08-04   <span class="cm">Ethiopian, the same day</span></pre>
     <p>Endpoints that accept a date default to <strong>Gregorian input</strong>. Pass an
     Ethiopian date with the <code>calendar</code> query parameter:</p>
     <pre><span class="p">$</span> curl <span class="s">"…/v1/date/2018-08-04?calendar=ethiopian"</span></pre>
@@ -59,7 +59,7 @@
 
     <h2 id="years">Ethiopian years<a class="anchor" href="#years">¶</a></h2>
     <p>Year parameters are <strong>Amete Mihret</strong> (ዓመተ ምሕረት), the ordinary Ethiopian
-    era — roughly the Gregorian year minus seven or eight, depending on the date. Years
+    era, roughly the Gregorian year minus seven or eight, depending on the date. Years
     <code>1</code> through <code>9999</code> are accepted arithmetically; correctness fixtures
     emphasize the documented 1800–2200 EC verification range. The broad range is an
     arithmetic capability, not a claim that historical liturgical practice is uniform
@@ -83,7 +83,7 @@ Retry-After: &lt;seconds&gt;</pre>
       <li><strong>CORS:</strong> any origin; <code>GET</code>, <code>POST</code>, <code>OPTIONS</code>.</li>
       <li><strong>Encoding:</strong> JSON is UTF-8; Amharic and Ge'ez text is served without
         ASCII escaping.</li>
-      <li><strong>Additive fields:</strong> new optional fields may appear at any time — parse
+      <li><strong>Additive fields:</strong> new optional fields may appear at any time; parse
         by name, ignore what you don't know.</li>
     </ul>
 
@@ -97,7 +97,7 @@ Retry-After: &lt;seconds&gt;</pre>
         <tr><td>Cloudflare backstop</td><td>600 requests per 60 seconds, edge-local, against sustained abuse</td></tr>
       </tbody>
     </table>
-    <p>On <code>429</code>, wait the number of seconds in <code>Retry-After</code> — do not
+    <p>On <code>429</code>, wait the number of seconds in <code>Retry-After</code>; do not
     retry in a tight loop. <code>/v1/health</code> is excluded from application rate limiting.
     See <a href="errors.html#rate-limited">Errors &amp; rate limits</a> for the response shape.</p>
 
@@ -107,7 +107,7 @@ Retry-After: &lt;seconds&gt;</pre>
 <span class="p">$</span> make install       <span class="cm"># both toolchains, locked dependencies</span>
 <span class="p">$</span> make test          <span class="cm"># regenerate fixtures, run both suites</span>
 <span class="p">$</span> make dev-ts        <span class="cm"># Hono on Workers, locally</span>
-<span class="p">$</span> make dev-py        <span class="cm"># FastAPI on :8000 — Swagger UI at /docs</span></pre>
+<span class="p">$</span> make dev-py        <span class="cm"># FastAPI on :8000, Swagger UI at /docs</span></pre>
     <p>The FastAPI app serves interactive OpenAPI documentation at <code>/docs</code> and the
     schema at <code>/v1/openapi.json</code>. The supported development versions are recorded
     in <code>.nvmrc</code> and <code>.python-version</code>.</p>
@@ -123,13 +123,13 @@ Retry-After: &lt;seconds&gt;</pre>
     </table>
     <p>The Python limiter is process-local: for multiple workers or hosts, enforce the policy
     at a trusted reverse proxy instead, and leave capacity unset. The application deliberately
-    does not trust caller-supplied <code>X-Forwarded-For</code> — configure trusted-proxy
+    does not trust caller-supplied <code>X-Forwarded-For</code>; configure trusted-proxy
     handling at the server layer so the client address is authoritative.</p>
 
     <h3 id="vendor">Or skip the server entirely</h3>
     <p>The calendar core (<code>ts/src/core/</code>, <code>py/eotc/</code>) has
     <strong>zero dependencies</strong> in both languages. Vendor the modules directly into
-    your application if you would rather not make a network call — the same fixtures that
+    your application if you would rather not make a network call; the same fixtures that
     hold the two runtimes identical protect your copy too.</p>
 
     <div class="pager">
@@ -140,7 +140,7 @@ Retry-After: &lt;seconds&gt;</pre>
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

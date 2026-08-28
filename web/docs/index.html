@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Introduction — EOTCDev API Documentation</title>
+<title>Introduction · EOTCDev API Documentation</title>
 <meta name="description" content="What the EOTCDev API is, how it is built, and how to make your first call.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +44,7 @@
     <div class="crumb"><a href="../">EOTCDev API</a> / Documentation</div>
     <h1>Introduction</h1>
     <p class="lede">An open, free REST API for the Ethiopian Orthodox Tewahedo Church
-    calendar — Ethiopian↔Gregorian conversion, fasting, feasts, the full Bahire Hasab
+    calendar: Ethiopian↔Gregorian conversion, fasting, feasts, the full Bahire Hasab
     computation, and a date-level bridge between the Gitsawe, Sinksar, and Bible.</p>
 
     <h2 id="philosophy">Infrastructure, not another app<a class="anchor" href="#philosophy">¶</a></h2>
@@ -70,11 +70,11 @@
   <span class="k">"fasting"</span>:   { <span class="k">"isFasting"</span>: false, <span class="k">"reason"</span>: <span class="s">"Not a fasting day."</span> },
   <span class="k">"feasts"</span>:    [ { <span class="k">"amharic"</span>: <span class="s">"ትንሣኤ"</span>, <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span> } ]
 }</pre>
-    <p>Every date-shaped response carries <strong>both calendars, in both scripts</strong> —
-    Amharic, transliteration, and English together — so clients never make a second call or
+    <p>Every date-shaped response carries <strong>both calendars, in both scripts</strong>:
+    Amharic, transliteration, and English together, so clients never make a second call or
     maintain their own name tables.</p>
     <div class="callout"><b>Base URL.</b> Examples in these docs use the public Worker host.
-    Self-hosting? Substitute your own host — the paths and responses are identical, held so
+    Self-hosting? Substitute your own host; the paths and responses are identical, held so
     by the conformance fixtures described below.</div>
 
     <h2 id="implementations">Two implementations, one behaviour<a class="anchor" href="#implementations">¶</a></h2>
@@ -86,10 +86,10 @@
         <tr><td><code>py/</code></td><td>Python + FastAPI</td><td>Any host; automatic Swagger UI at <code>/docs</code></td></tr>
       </tbody>
     </table>
-    <p>They are not a port and a copy — they are <strong>held identical by tests</strong>:</p>
+    <p>They are not a port and a copy; they are <strong>held identical by tests</strong>:</p>
     <ul>
-      <li><code>spec/conformance.json</code> — 9,154 golden calculation vectors both suites assert;</li>
-      <li><code>spec/responses.json</code> — every route's exact HTTP response. The Python suite
+      <li><code>spec/conformance.json</code>: 9,154 golden calculation vectors both suites assert;</li>
+      <li><code>spec/responses.json</code>: every route's exact HTTP response. The Python suite
         replays every fixture route and asserts byte-identical JSON, including error bodies
         and status codes.</li>
     </ul>
@@ -99,7 +99,7 @@
     <h2 id="versioning">Versioning &amp; compatibility<a class="anchor" href="#versioning">¶</a></h2>
     <ul>
       <li>Existing <code>/v1</code> fields will not be removed or change meaning in a minor release.</li>
-      <li>New optional fields and endpoints may be added to <code>/v1</code> at any time —
+      <li>New optional fields and endpoints may be added to <code>/v1</code> at any time;
         <strong>parse fields by name and tolerate additive fields.</strong></li>
       <li>A breaking response or resolver change requires <code>/v2</code> with a documented
         migration path.</li>
@@ -112,7 +112,7 @@
       <li>No user accounts, API keys, or personal data; no database stores client activity.</li>
       <li>Rate-limit keys live only in process/edge memory.</li>
       <li>Error responses never expose stack traces.</li>
-      <li>CORS is intentionally open — this is public infrastructure.</li>
+      <li>CORS is intentionally open; this is public infrastructure.</li>
       <li>Restricted Bible and Sinksar narrative text is excluded from public runtime
         artifacts (see <a href="data-sources.html">Data &amp; sources</a>).</li>
     </ul>
@@ -124,7 +124,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

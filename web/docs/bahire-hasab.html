@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bahire Hasab — EOTCDev API Documentation</title>
-<meta name="description" content="The traditional Ethiopian computus, exposed with every intermediate value — and how it is verified.">
+<title>Bahire Hasab · EOTCDev API Documentation</title>
+<meta name="description" content="The traditional Ethiopian computus, exposed with every intermediate value, and how it is verified.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
@@ -43,7 +43,7 @@
   <main>
     <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Bahire Hasab</div>
     <h1>Bahire Hasab <span class="geez" style="font-size:0.7em;color:var(--rubric)">ባሕረ ሐሳብ</span></h1>
-    <p class="lede">"The sea of thought" — the traditional computation that locates every
+    <p class="lede">"The sea of thought": the traditional computation that locates every
     movable fast and feast of the church year. The API exposes the whole calculation,
     not just the answers, so you can check its work.</p>
 
@@ -66,16 +66,16 @@
 }</pre>
 
     <h2 id="chain">The traditional chain<a class="anchor" href="#chain">¶</a></h2>
-    <pre>Amete Alem <span class="cm">(ዓመተ ዓለም — years since creation, EC + 5500)</span>
+    <pre>Amete Alem <span class="cm">(ዓመተ ዓለም, years since creation, EC + 5500)</span>
   → Medeb <span class="cm">(መደብ)</span>
   → Wenber <span class="cm">(ወንበር)</span>
   → Abekte &amp; Metqi <span class="cm">(አበቅቴ · መጥቅዕ)</span>
   → Mebaja Hamer <span class="cm">(መባጃ ሐመር)</span>
   → weekday + Tewsak <span class="cm">(ተውሳክ)</span>
-  → ጾመ ነነዌ <span class="cm">(the Nineveh fast — the linchpin)</span>
+  → ጾመ ነነዌ <span class="cm">(the Nineveh fast, the linchpin)</span>
   → every other movable feast</pre>
     <p><strong>Nineveh is the anchor.</strong> Once its Monday is fixed, all ten remaining
-    movable feasts sit a fixed Tewsak offset after it — Great Lent begins 14 days later,
+    movable feasts sit a fixed Tewsak offset after it: Great Lent begins 14 days later,
     Hosanna 62, Siklet 67, Fasika 69, Erget 108, Peraklitos 118. Each feast in
     <code>movableFeasts</code> includes its offset from Nineveh so the structure is visible,
     not just the result.</p>
@@ -94,9 +94,9 @@
     Bahire Hasab chain above, and the Alexandrian computus (Meeus' Julian-calendar
     algorithm). The test suite asserts they agree for <strong>every year from 1800 to 2200
     EC</strong>. Two methods with nothing in common but the answer, agreeing for four
-    centuries, is not a coincidence — it is the strongest guarantee this project can offer
+    centuries, is not a coincidence; it is the strongest guarantee this project can offer
     without a church-court ruling.</p>
-    <div class="callout plain">The evangelist of the year (ወንጌላዊ — Matthew, Mark, Luke, or
+    <div class="callout plain">The evangelist of the year (ወንጌላዊ: Matthew, Mark, Luke, or
     John, cycling with <code>Amete Alem mod 4</code>) is included in the response for
     completeness; the new-year block states whether the year is a leap year (Year of Luke,
     <code>year mod 4 = 3</code>) and therefore whether Pagumen has 5 or 6 days.</div>
@@ -109,7 +109,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 

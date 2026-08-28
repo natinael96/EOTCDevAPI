@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dates &amp; conversion — EOTCDev API Documentation</title>
+<title>Dates &amp; conversion · EOTCDev API Documentation</title>
 <meta name="description" content="Reference for /v1/today, /v1/date, /v1/convert, and batch conversion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,21 +84,21 @@
   <span class="k">"commemorations"</span>: []
 }</pre>
     <ul>
-      <li><code>jdn</code> is the Julian Day Number — a calendar-agnostic integer count of
+      <li><code>jdn</code> is the Julian Day Number, a calendar-agnostic integer count of
         days, useful for date arithmetic on the client.</li>
       <li><code>weekday.n</code> is <code>0</code>&nbsp;=&nbsp;Sunday through
         <code>6</code>&nbsp;=&nbsp;Saturday, matching JavaScript's <code>Date.getDay()</code>.</li>
-      <li>All names come localized — Amharic, transliteration, English — in every response.</li>
+      <li>All names come localized (Amharic, transliteration, English) in every response.</li>
     </ul>
 
     <div class="endpoint" id="convert"><span class="method">GET</span><code class="path">/v1/convert/<i>{date}</i></code></div>
-    <p>The smaller conversion-only form: JDN, both dates, and the weekday — no fasting or
+    <p>The smaller conversion-only form: JDN, both dates, and the weekday, with no fasting or
     feast computation. Use it when that's all you need; it's cheaper to read and cache-friendly.</p>
     <pre><span class="p">$</span> curl …<span class="s">/v1/convert/2026-08-27</span>
 <span class="p">$</span> curl <span class="s">"…/v1/convert/2018-12-21?calendar=ethiopian"</span></pre>
 
     <div class="endpoint" id="batch"><span class="method post">POST</span><code class="path">/v1/calendar/convert/batch</code></div>
-    <p>Converts 1–366 <em>non-contiguous</em> dates in one request — a year of birthdays, a
+    <p>Converts 1–366 <em>non-contiguous</em> dates in one request: a year of birthdays, a
     list of appointment dates, an arbitrary selection.</p>
     <pre><span class="p">$</span> curl -X POST …<span class="s">/v1/calendar/convert/batch</span> \
     -H <span class="s">"Content-Type: application/json"</span> \
@@ -114,10 +114,10 @@
   ]
 }</pre>
     <div class="callout"><b>Per-item errors.</b> An invalid entry never rejects the valid
-    ones — it receives its own <code>error</code> in place. The whole request fails only when
+    ones; it receives its own <code>error</code> in place. The whole request fails only when
     <code>dates</code> is missing, empty, not an array, or longer than 366 elements.</div>
     <p>For a <em>contiguous</em> range, prefer
-    <a href="calendar-utils.html#month"><code>/v1/calendar/{year}/{month}</code></a> — one call
+    <a href="calendar-utils.html#month"><code>/v1/calendar/{year}/{month}</code></a>: one call
     per Ethiopian month, fully described.</p>
 
     <div class="pager">
@@ -128,7 +128,7 @@
 </div>
 
 <footer><div class="foot">
-  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
   <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
 </div></footer>
 
