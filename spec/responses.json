@@ -18,14 +18,23 @@
     "GET /v1/fasting/{date}": "Is it a fasting day, and why. ?calendar=gregorian|ethiopian",
     "GET /v1/fasts/{year}": "All fasting periods of an Ethiopian year.",
     "GET /v1/feasts/{year}": "All feasts. ?type=all|movable|fixed",
+    "GET /v1/feasts/{year}/{key}": "One feast resolved for a year, by key, name, or alias.",
+    "GET /v1/feasts/search": "Find a feast by any of its names, homophone-aware. ?q=&year=",
+    "GET /v1/upcoming": "Upcoming feasts and fasts. ?days=30&type=all|feasts|fasts",
     "GET /v1/bahire-hasab/{year}": "The full ባሕረ ሐሳብ computation.",
     "GET /v1/calendar/{year}/{month}": "One Ethiopian month, day by day.",
+    "GET /v1/calendar/range": "Describe a date range, up to 366 days. ?start=&end=&calendar=",
     "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
     "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
     "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
     "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
     "GET /v1/sinksar/{date}": "The day's Sinksar annual and monthly commemoration lists.",
     "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
+    "GET /v1/bible/books": "The canon: book metadata and verse counts. ?testament=&section=",
+    "GET /v1/bible/books/{id}": "One book with per-chapter verse counts.",
+    "GET /v1/bible/editions": "Bible editions registry and licensing.",
+    "GET /v1/bible/parse": "Parse a citation into a canonical reference. ?q=",
+    "GET /v1/bible/{edition}/{book}/{chapter}": "Chapter reference; verse text only on licensed self-hosts.",
     "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}"
    },
    "examples": [
@@ -6601,6 +6610,4156 @@
   "body": {
    "error": "bad_request",
    "message": "'2026-02-31' is not a real Gregorian date."
+  }
+ },
+ "/v1/bible/books": {
+  "status": 200,
+  "body": {
+   "versification": "am-1980",
+   "canonNote": "Books follow the EOTC 81-book canon counting tradition; this edition divides them into the files listed here.",
+   "count": 93,
+   "books": [
+    {
+     "id": "GEN",
+     "order": 1,
+     "slug": "genesis",
+     "testament": "old",
+     "section": "Pentateuch",
+     "names": {
+      "english": "Genesis",
+      "amharic": "ኦሪት ዘፍጥረት",
+      "amharicAbbreviation": "ዘፍጥ"
+     },
+     "chapters": 50
+    },
+    {
+     "id": "EXO",
+     "order": 2,
+     "slug": "exodus",
+     "testament": "old",
+     "section": "Pentateuch",
+     "names": {
+      "english": "Exodus",
+      "amharic": "ኦሪት ዘጸአት",
+      "amharicAbbreviation": "ዘጸአ"
+     },
+     "chapters": 40
+    },
+    {
+     "id": "LEV",
+     "order": 3,
+     "slug": "leviticus",
+     "testament": "old",
+     "section": "Pentateuch",
+     "names": {
+      "english": "Leviticus",
+      "amharic": "ኦሪት ዘሌዋውያን",
+      "amharicAbbreviation": "ዘሌዋ"
+     },
+     "chapters": 27
+    },
+    {
+     "id": "NUM",
+     "order": 4,
+     "slug": "numbers",
+     "testament": "old",
+     "section": "Pentateuch",
+     "names": {
+      "english": "Numbers",
+      "amharic": "ኦሪት ዘኊልቊ",
+      "amharicAbbreviation": "ዘኊል"
+     },
+     "chapters": 36
+    },
+    {
+     "id": "DEU",
+     "order": 5,
+     "slug": "deuteronomy",
+     "testament": "old",
+     "section": "Pentateuch",
+     "names": {
+      "english": "Deuteronomy",
+      "amharic": "ኦሪት ዘዳግም",
+      "amharicAbbreviation": "ዘዳግ"
+     },
+     "chapters": 34
+    },
+    {
+     "id": "JOS",
+     "order": 6,
+     "slug": "joshua",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Joshua",
+      "amharic": "መጽሐፈ ኢያሱ ወልደ ነዌ",
+      "amharicAbbreviation": "ኢያሱ"
+     },
+     "chapters": 24
+    },
+    {
+     "id": "JDG",
+     "order": 7,
+     "slug": "judges",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Judges",
+      "amharic": "መጽሐፈ መሳፍንት",
+      "amharicAbbreviation": "መሳፍ"
+     },
+     "chapters": 21
+    },
+    {
+     "id": "RUT",
+     "order": 8,
+     "slug": "ruth",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Ruth",
+      "amharic": "መጽሐፈ ሩት",
+      "amharicAbbreviation": "ሩት"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "1SA",
+     "order": 9,
+     "slug": "1-samuel",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "1 Samuel",
+      "amharic": "መጽሐፈ ሳሙኤል ቀዳማዊ",
+      "amharicAbbreviation": "1ሳሙ"
+     },
+     "chapters": 31
+    },
+    {
+     "id": "2SA",
+     "order": 10,
+     "slug": "2-samuel",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "2 Samuel",
+      "amharic": "መጽሐፈ ሳሙኤል ካልዕ",
+      "amharicAbbreviation": "2ሳሙ"
+     },
+     "chapters": 24
+    },
+    {
+     "id": "1KI",
+     "order": 11,
+     "slug": "1-kings",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "1 Kings",
+      "amharic": "መጽሐፈ ነገሥት ቀዳማዊ",
+      "amharicAbbreviation": "1ነገ"
+     },
+     "chapters": 22
+    },
+    {
+     "id": "2KI",
+     "order": 12,
+     "slug": "2-kings",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "2 Kings",
+      "amharic": "መጽሐፈ ነገሥት ካልዕ",
+      "amharicAbbreviation": "2ነገ"
+     },
+     "chapters": 25
+    },
+    {
+     "id": "1CH",
+     "order": 13,
+     "slug": "1-chronicles",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "1 Chronicles",
+      "amharic": "መጽሐፈ ዜና መዋዕል ቀዳማዊ",
+      "amharicAbbreviation": "1ዜና"
+     },
+     "chapters": 29
+    },
+    {
+     "id": "2CH",
+     "order": 14,
+     "slug": "2-chronicles",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "2 Chronicles",
+      "amharic": "መጽሐፈ ዜና መዋዕል ካልዕ",
+      "amharicAbbreviation": "2ዜና"
+     },
+     "chapters": 36
+    },
+    {
+     "id": "EZR",
+     "order": 15,
+     "slug": "ezra",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Ezra",
+      "amharic": "መጽሐፈ ዕዝራ",
+      "amharicAbbreviation": "ዕዝራ"
+     },
+     "chapters": 10
+    },
+    {
+     "id": "NEH",
+     "order": 16,
+     "slug": "nehemiah",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Nehemiah",
+      "amharic": "መጽሐፈ ነህምያ",
+      "amharicAbbreviation": "ነህም"
+     },
+     "chapters": 13
+    },
+    {
+     "id": "EST",
+     "order": 17,
+     "slug": "esther",
+     "testament": "old",
+     "section": "Historical",
+     "names": {
+      "english": "Esther",
+      "amharic": "መጽሐፈ አስቴር",
+      "amharicAbbreviation": "አስቴ"
+     },
+     "chapters": 10
+    },
+    {
+     "id": "JOB",
+     "order": 18,
+     "slug": "job",
+     "testament": "old",
+     "section": "PoetryWisdom",
+     "names": {
+      "english": "Job",
+      "amharic": "መጽሐፈ ኢዮብ",
+      "amharicAbbreviation": "ኢዮብ"
+     },
+     "chapters": 42
+    },
+    {
+     "id": "PSA",
+     "order": 19,
+     "slug": "psalms",
+     "testament": "old",
+     "section": "PoetryWisdom",
+     "names": {
+      "english": "Psalms",
+      "amharic": "መዝሙረ ዳዊት",
+      "amharicAbbreviation": "መዝሙ"
+     },
+     "chapters": 150
+    },
+    {
+     "id": "PRO",
+     "order": 20,
+     "slug": "proverbs",
+     "testament": "old",
+     "section": "PoetryWisdom",
+     "names": {
+      "english": "Proverbs",
+      "amharic": "መጽሐፈ ምሳሌ",
+      "amharicAbbreviation": "ምሳሌ"
+     },
+     "chapters": 31
+    },
+    {
+     "id": "ECC",
+     "order": 21,
+     "slug": "ecclesiastes",
+     "testament": "old",
+     "section": "PoetryWisdom",
+     "names": {
+      "english": "Ecclesiastes",
+      "amharic": "መጽሐፈ መክብብ",
+      "amharicAbbreviation": "መክብ"
+     },
+     "chapters": 12
+    },
+    {
+     "id": "SNG",
+     "order": 22,
+     "slug": "song-of-solomon",
+     "testament": "old",
+     "section": "PoetryWisdom",
+     "names": {
+      "english": "Song of Solomon",
+      "amharic": "መኃልየ መኃልይ ዘሰሎሞን",
+      "amharicAbbreviation": "መኃል"
+     },
+     "chapters": 8
+    },
+    {
+     "id": "ISA",
+     "order": 23,
+     "slug": "isaiah",
+     "testament": "old",
+     "section": "MajorProphet",
+     "names": {
+      "english": "Isaiah",
+      "amharic": "ትንቢተ ኢሳይያስ",
+      "amharicAbbreviation": "ኢሳይ"
+     },
+     "chapters": 66
+    },
+    {
+     "id": "JER",
+     "order": 24,
+     "slug": "jeremiah",
+     "testament": "old",
+     "section": "MajorProphet",
+     "names": {
+      "english": "Jeremiah",
+      "amharic": "ትንቢተ ኤርምያስ",
+      "amharicAbbreviation": "ኤርም"
+     },
+     "chapters": 52
+    },
+    {
+     "id": "LAM",
+     "order": 25,
+     "slug": "lamentations",
+     "testament": "old",
+     "section": "MajorProphet",
+     "names": {
+      "english": "Lamentations",
+      "amharic": "ሰቆቃወ ኤርምያስ",
+      "amharicAbbreviation": "ሰቆ.ኤ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "EZK",
+     "order": 26,
+     "slug": "ezekiel",
+     "testament": "old",
+     "section": "MajorProphet",
+     "names": {
+      "english": "Ezekiel",
+      "amharic": "ትንቢተ ሕዝቅኤል",
+      "amharicAbbreviation": "ሕዝቅ"
+     },
+     "chapters": 48
+    },
+    {
+     "id": "DAN",
+     "order": 27,
+     "slug": "daniel",
+     "testament": "old",
+     "section": "MajorProphet",
+     "names": {
+      "english": "Daniel",
+      "amharic": "ትንቢተ ዳንኤል",
+      "amharicAbbreviation": "ዳንኤ"
+     },
+     "chapters": 12
+    },
+    {
+     "id": "HOS",
+     "order": 28,
+     "slug": "hosea",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Hosea",
+      "amharic": "ትንቢተ ሆሴዕ",
+      "amharicAbbreviation": "ሆሴዕ"
+     },
+     "chapters": 14
+    },
+    {
+     "id": "JOL",
+     "order": 29,
+     "slug": "joel",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Joel",
+      "amharic": "ትንቢተ ኢዩኤል",
+      "amharicAbbreviation": "ኢዩኤ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "AMO",
+     "order": 30,
+     "slug": "amos",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Amos",
+      "amharic": "ትንቢተ አሞጽ",
+      "amharicAbbreviation": "አሞጽ"
+     },
+     "chapters": 9
+    },
+    {
+     "id": "OBA",
+     "order": 31,
+     "slug": "obadiah",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Obadiah",
+      "amharic": "ትንቢተ አብድዩ",
+      "amharicAbbreviation": "አብድ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "JON",
+     "order": 32,
+     "slug": "jonah",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Jonah",
+      "amharic": "ትንቢተ ዮናስ",
+      "amharicAbbreviation": "ዮናስ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "MIC",
+     "order": 33,
+     "slug": "micah",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Micah",
+      "amharic": "ትንቢተ ሚክያስ",
+      "amharicAbbreviation": "ሚክያ"
+     },
+     "chapters": 7
+    },
+    {
+     "id": "NAM",
+     "order": 34,
+     "slug": "nahum",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Nahum",
+      "amharic": "ትንቢተ ናሆም",
+      "amharicAbbreviation": "ናሆም"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "HAB",
+     "order": 35,
+     "slug": "habakkuk",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Habakkuk",
+      "amharic": "ትንቢተ ዕንባቆም",
+      "amharicAbbreviation": "ዕንባ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "ZEP",
+     "order": 36,
+     "slug": "zephaniah",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Zephaniah",
+      "amharic": "ትንቢተ ሶፎንያስ",
+      "amharicAbbreviation": "ሶፎን"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "HAG",
+     "order": 37,
+     "slug": "haggai",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Haggai",
+      "amharic": "ትንቢተ ሐጌ",
+      "amharicAbbreviation": "ሐጌ"
+     },
+     "chapters": 2
+    },
+    {
+     "id": "ZEC",
+     "order": 38,
+     "slug": "zechariah",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Zechariah",
+      "amharic": "ትንቢተ ዘካርያስ",
+      "amharicAbbreviation": "ዘካር"
+     },
+     "chapters": 14
+    },
+    {
+     "id": "MAL",
+     "order": 39,
+     "slug": "malachi",
+     "testament": "old",
+     "section": "MinorProphet",
+     "names": {
+      "english": "Malachi",
+      "amharic": "ትንቢተ ሚልክያስ",
+      "amharicAbbreviation": "ሚልክ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "TOB",
+     "order": 40,
+     "slug": "tobit",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Tobit",
+      "amharic": "መጽሐፈ ጦቢት",
+      "amharicAbbreviation": "ጦቢት"
+     },
+     "chapters": 14
+    },
+    {
+     "id": "JDT",
+     "order": 41,
+     "slug": "yodit",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Judith",
+      "amharic": "መጽሐፈ ዮዲት",
+      "amharicAbbreviation": "ዮዲት"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "ESG",
+     "order": 42,
+     "slug": "esther-greek",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Esther (Greek)",
+      "amharic": "መጽሐፈ አስቴር",
+      "amharicAbbreviation": "አስቴር"
+     },
+     "chapters": 11
+    },
+    {
+     "id": "WIS",
+     "order": 43,
+     "slug": "wisdom-of-solomon",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Wisdom of Solomon",
+      "amharic": "መጽሐፈ ጥበብ",
+      "amharicAbbreviation": "ጥበብ"
+     },
+     "chapters": 19
+    },
+    {
+     "id": "SIR",
+     "order": 44,
+     "slug": "sirach",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Sirach",
+      "amharic": "መጽሐፈ ሲራክ",
+      "amharicAbbreviation": "ሲራክ"
+     },
+     "chapters": 51
+    },
+    {
+     "id": "BAR",
+     "order": 45,
+     "slug": "baruch",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Baruch",
+      "amharic": "መጽሐፈ ባሮክ",
+      "amharicAbbreviation": "ባሮክ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "LJE",
+     "order": 46,
+     "slug": "teref-ermias",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Rest of Jeremiah",
+      "amharic": "ተረፈ ኤርምያስ",
+      "amharicAbbreviation": "ተረ.ኤ"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "S3Y",
+     "order": 47,
+     "slug": "seleste-dekik",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Song of the Three Holy Children",
+      "amharic": "መጽሐፈ ሠለስቱ ደቂቅ",
+      "amharicAbbreviation": "ሠለስ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "SUS",
+     "order": 48,
+     "slug": "susanna",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Susanna",
+      "amharic": "መጽሐፈ ሶስና",
+      "amharicAbbreviation": "ሶስና"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "1MA",
+     "order": 49,
+     "slug": "1-maccabees",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "1 Maccabees (Ethiopic)",
+      "amharic": "መጽሐፈ መቃብያን ቀዳማዊ",
+      "amharicAbbreviation": "1መቃ"
+     },
+     "chapters": 36
+    },
+    {
+     "id": "2MA",
+     "order": 50,
+     "slug": "2-maccabees",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "2 Maccabees (Ethiopic)",
+      "amharic": "መጽሐፈ መቃብያን ካልእ",
+      "amharicAbbreviation": "2መቃ"
+     },
+     "chapters": 21
+    },
+    {
+     "id": "1ES",
+     "order": 51,
+     "slug": "ezra-sutuel",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Ezra Sutuel",
+      "amharic": "መጽሐፈ ዕዝራ ሱቱኤል",
+      "amharicAbbreviation": "ዕዝ.ሱ"
+     },
+     "chapters": 12
+    },
+    {
+     "id": "MAN",
+     "order": 52,
+     "slug": "prayer-of-manasseh",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Prayer of Manasseh",
+      "amharic": "ጸሎተ ምናሴ",
+      "amharicAbbreviation": "ምናሴ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "3MA",
+     "order": 53,
+     "slug": "3-maccabees",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "3 Maccabees (Ethiopic)",
+      "amharic": "መጽሐፈ መቃብያን ሣልስ",
+      "amharicAbbreviation": "3መቃ"
+     },
+     "chapters": 10
+    },
+    {
+     "id": "2ES",
+     "order": 54,
+     "slug": "ezra-kalie",
+     "testament": "deuterocanonical",
+     "section": "Deuterocanonical",
+     "names": {
+      "english": "Ezra Kalie",
+      "amharic": "መጽሐፈ ዕዝራ ካልዕ",
+      "amharicAbbreviation": "ዕዝ.ካ"
+     },
+     "chapters": 9
+    },
+    {
+     "id": "DAG",
+     "order": 56,
+     "slug": "teref-daniel",
+     "testament": "deuterocanonical",
+     "section": null,
+     "names": {
+      "english": "Rest of Daniel",
+      "amharic": "ተረፈ ዳንኤል",
+      "amharicAbbreviation": "ተረ.ዳ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "JUB",
+     "order": 57,
+     "slug": "kufale",
+     "testament": "deuterocanonical",
+     "section": null,
+     "names": {
+      "english": "Jubilees",
+      "amharic": "መጽሐፈ ኩፋሌ",
+      "amharicAbbreviation": "ኩፋሌ"
+     },
+     "chapters": 32
+    },
+    {
+     "id": "ENO",
+     "order": 58,
+     "slug": "enoch",
+     "testament": "deuterocanonical",
+     "section": null,
+     "names": {
+      "english": "Enoch",
+      "amharic": "መጽሐፈ ሄኖክ",
+      "amharicAbbreviation": "ሄኖክ"
+     },
+     "chapters": 42
+    },
+    {
+     "id": "MAT",
+     "order": 59,
+     "slug": "matthew",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Matthew",
+      "amharic": "የማቴዎስ ወንጌል",
+      "amharicAbbreviation": "ማቴዎ"
+     },
+     "chapters": 28
+    },
+    {
+     "id": "MRK",
+     "order": 60,
+     "slug": "mark",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Mark",
+      "amharic": "የማርቆስ ወንጌል",
+      "amharicAbbreviation": "ማርቆ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "LUK",
+     "order": 61,
+     "slug": "luke",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Luke",
+      "amharic": "የሉቃስ ወንጌል",
+      "amharicAbbreviation": "ሉቃስ"
+     },
+     "chapters": 24
+    },
+    {
+     "id": "JHN",
+     "order": 62,
+     "slug": "john",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "John",
+      "amharic": "የዮሐንስ ወንጌል",
+      "amharicAbbreviation": "ዮሐን"
+     },
+     "chapters": 21
+    },
+    {
+     "id": "ACT",
+     "order": 63,
+     "slug": "acts",
+     "testament": "new",
+     "section": "Acts",
+     "names": {
+      "english": "Acts",
+      "amharic": "የሐዋርያት ሥራ",
+      "amharicAbbreviation": "የሐዋ"
+     },
+     "chapters": 28
+    },
+    {
+     "id": "ROM",
+     "order": 64,
+     "slug": "romans",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Romans",
+      "amharic": "ወደ ሮሜ ሰዎች",
+      "amharicAbbreviation": "ሮሜ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "1CO",
+     "order": 65,
+     "slug": "1-corinthians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Corinthians",
+      "amharic": "1ኛ ወደ ቆሮንቶስ ሰዎች",
+      "amharicAbbreviation": "1ቆሮ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "2CO",
+     "order": 66,
+     "slug": "2-corinthians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Corinthians",
+      "amharic": "2ኛ ወደ ቆሮንቶስ ሰዎች",
+      "amharicAbbreviation": "2ቆሮ"
+     },
+     "chapters": 13
+    },
+    {
+     "id": "GAL",
+     "order": 67,
+     "slug": "galatians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Galatians",
+      "amharic": "ወደ ገላትያ ሰዎች",
+      "amharicAbbreviation": "ገላት"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "EPH",
+     "order": 68,
+     "slug": "ephesians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Ephesians",
+      "amharic": "ወደ ኤፌሶን ሰዎች",
+      "amharicAbbreviation": "ኤፌሶ"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "PHP",
+     "order": 69,
+     "slug": "philippians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Philippians",
+      "amharic": "ወደ ፊልጵስዩስ ሰዎች",
+      "amharicAbbreviation": "ፊልጵ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "COL",
+     "order": 70,
+     "slug": "colossians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Colossians",
+      "amharic": "ወደ ቆላስይስ ሰዎች",
+      "amharicAbbreviation": "ቆላስ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "1TH",
+     "order": 71,
+     "slug": "1-thessalonians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Thessalonians",
+      "amharic": "1ኛ ወደ ተሰሎንቄ ሰዎች",
+      "amharicAbbreviation": "1ተሰ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2TH",
+     "order": 72,
+     "slug": "2-thessalonians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Thessalonians",
+      "amharic": "2ኛ ወደ ተሰሎንቄ ሰዎች",
+      "amharicAbbreviation": "2ተሰ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "1TI",
+     "order": 73,
+     "slug": "1-timothy",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Timothy",
+      "amharic": "1ኛ ወደ ጢሞቴዎስ",
+      "amharicAbbreviation": "1ጢሞ"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "2TI",
+     "order": 74,
+     "slug": "2-timothy",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Timothy",
+      "amharic": "2ኛ ወደ ጢሞቴዎስ",
+      "amharicAbbreviation": "2ጢሞ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "TIT",
+     "order": 75,
+     "slug": "titus",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Titus",
+      "amharic": "ወደ ቲቶ",
+      "amharicAbbreviation": "ቲቶ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "PHM",
+     "order": 76,
+     "slug": "philemon",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Philemon",
+      "amharic": "ወደ ፊልሞና",
+      "amharicAbbreviation": "ፊልሞ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "HEB",
+     "order": 77,
+     "slug": "hebrews",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "Hebrews",
+      "amharic": "ወደ ዕብራውያን",
+      "amharicAbbreviation": "ዕብራ"
+     },
+     "chapters": 13
+    },
+    {
+     "id": "JAS",
+     "order": 78,
+     "slug": "james",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "James",
+      "amharic": "የያዕቆብ መልእክት",
+      "amharicAbbreviation": "ያዕቆ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "1PE",
+     "order": 79,
+     "slug": "1-peter",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "1 Peter",
+      "amharic": "1ኛ የጴጥሮስ መልእክት",
+      "amharicAbbreviation": "1ጴጥ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2PE",
+     "order": 80,
+     "slug": "2-peter",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "2 Peter",
+      "amharic": "2ኛ የጴጥሮስ መልእክት",
+      "amharicAbbreviation": "2ጴጥ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "1JN",
+     "order": 81,
+     "slug": "1-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "1 John",
+      "amharic": "1ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "1ዮሐ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2JN",
+     "order": 82,
+     "slug": "2-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "2 John",
+      "amharic": "2ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "2ዮሐ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "3JN",
+     "order": 83,
+     "slug": "3-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "3 John",
+      "amharic": "3ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "3ዮሐ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "JUD",
+     "order": 84,
+     "slug": "jude",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "Jude",
+      "amharic": "የይሁዳ መልእክት",
+      "amharicAbbreviation": "ይሁዳ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "REV",
+     "order": 85,
+     "slug": "revelation",
+     "testament": "new",
+     "section": "Revelation",
+     "names": {
+      "english": "Revelation",
+      "amharic": "የዮሐንስ ራዕይ",
+      "amharicAbbreviation": "ራዕይ"
+     },
+     "chapters": 22
+    },
+    {
+     "id": "OTH",
+     "order": 86,
+     "slug": "1-covenant",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Covenant I",
+      "amharic": "መጽሐፈ ኪዳን ቀዳማዊ",
+      "amharicAbbreviation": "1ኪዳን"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXG",
+     "order": 87,
+     "slug": "sirate-tsion",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Order of Zion",
+      "amharic": "መጽሐፈ ሥርዓተ ጽዮን",
+      "amharicAbbreviation": "ጽዮን"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXA",
+     "order": 88,
+     "slug": "josippon",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Josippon",
+      "amharic": "መጽሐፈ ዮሴፍ ወልደ ኮርዮን",
+      "amharicAbbreviation": "ዮሴፍ"
+     },
+     "chapters": 72
+    },
+    {
+     "id": "XXC",
+     "order": 89,
+     "slug": "didascalia",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Didascalia",
+      "amharic": "መጽሐፈ ዲድስቅልያ",
+      "amharicAbbreviation": "ዲድስ"
+     },
+     "chapters": 43
+    },
+    {
+     "id": "XXB",
+     "order": 90,
+     "slug": "1-clement",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Clement",
+      "amharic": "መጽሐፈ ቀሌምንጦስ",
+      "amharicAbbreviation": "ቀለሜን"
+     },
+     "chapters": 12
+    },
+    {
+     "id": "XXD",
+     "order": 91,
+     "slug": "tizaz",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Commandments",
+      "amharic": "መጽሐፈ ትእዛዝ",
+      "amharicAbbreviation": "ትእዛዝ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXE",
+     "order": 92,
+     "slug": "abtilis",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Abtilis",
+      "amharic": "መጽሐፈ አብጥሊስ",
+      "amharicAbbreviation": "አብጥ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXF",
+     "order": 93,
+     "slug": "gitsew",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Gitsew",
+      "amharic": "መጽሐፈ ግጽው",
+      "amharicAbbreviation": "ግጽው"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "LAO",
+     "order": 94,
+     "slug": "2-covenant",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Covenant II",
+      "amharic": "መጽሐፈ ኪዳን ካልዕ",
+      "amharicAbbreviation": "2ኪዳን"
+     },
+     "chapters": 1
+    }
+   ]
+  }
+ },
+ "/v1/bible/books?testament=new": {
+  "status": 200,
+  "body": {
+   "versification": "am-1980",
+   "canonNote": "Books follow the EOTC 81-book canon counting tradition; this edition divides them into the files listed here.",
+   "count": 36,
+   "books": [
+    {
+     "id": "MAT",
+     "order": 59,
+     "slug": "matthew",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Matthew",
+      "amharic": "የማቴዎስ ወንጌል",
+      "amharicAbbreviation": "ማቴዎ"
+     },
+     "chapters": 28
+    },
+    {
+     "id": "MRK",
+     "order": 60,
+     "slug": "mark",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Mark",
+      "amharic": "የማርቆስ ወንጌል",
+      "amharicAbbreviation": "ማርቆ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "LUK",
+     "order": 61,
+     "slug": "luke",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "Luke",
+      "amharic": "የሉቃስ ወንጌል",
+      "amharicAbbreviation": "ሉቃስ"
+     },
+     "chapters": 24
+    },
+    {
+     "id": "JHN",
+     "order": 62,
+     "slug": "john",
+     "testament": "new",
+     "section": "Gospel",
+     "names": {
+      "english": "John",
+      "amharic": "የዮሐንስ ወንጌል",
+      "amharicAbbreviation": "ዮሐን"
+     },
+     "chapters": 21
+    },
+    {
+     "id": "ACT",
+     "order": 63,
+     "slug": "acts",
+     "testament": "new",
+     "section": "Acts",
+     "names": {
+      "english": "Acts",
+      "amharic": "የሐዋርያት ሥራ",
+      "amharicAbbreviation": "የሐዋ"
+     },
+     "chapters": 28
+    },
+    {
+     "id": "ROM",
+     "order": 64,
+     "slug": "romans",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Romans",
+      "amharic": "ወደ ሮሜ ሰዎች",
+      "amharicAbbreviation": "ሮሜ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "1CO",
+     "order": 65,
+     "slug": "1-corinthians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Corinthians",
+      "amharic": "1ኛ ወደ ቆሮንቶስ ሰዎች",
+      "amharicAbbreviation": "1ቆሮ"
+     },
+     "chapters": 16
+    },
+    {
+     "id": "2CO",
+     "order": 66,
+     "slug": "2-corinthians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Corinthians",
+      "amharic": "2ኛ ወደ ቆሮንቶስ ሰዎች",
+      "amharicAbbreviation": "2ቆሮ"
+     },
+     "chapters": 13
+    },
+    {
+     "id": "GAL",
+     "order": 67,
+     "slug": "galatians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Galatians",
+      "amharic": "ወደ ገላትያ ሰዎች",
+      "amharicAbbreviation": "ገላት"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "EPH",
+     "order": 68,
+     "slug": "ephesians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Ephesians",
+      "amharic": "ወደ ኤፌሶን ሰዎች",
+      "amharicAbbreviation": "ኤፌሶ"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "PHP",
+     "order": 69,
+     "slug": "philippians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Philippians",
+      "amharic": "ወደ ፊልጵስዩስ ሰዎች",
+      "amharicAbbreviation": "ፊልጵ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "COL",
+     "order": 70,
+     "slug": "colossians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Colossians",
+      "amharic": "ወደ ቆላስይስ ሰዎች",
+      "amharicAbbreviation": "ቆላስ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "1TH",
+     "order": 71,
+     "slug": "1-thessalonians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Thessalonians",
+      "amharic": "1ኛ ወደ ተሰሎንቄ ሰዎች",
+      "amharicAbbreviation": "1ተሰ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2TH",
+     "order": 72,
+     "slug": "2-thessalonians",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Thessalonians",
+      "amharic": "2ኛ ወደ ተሰሎንቄ ሰዎች",
+      "amharicAbbreviation": "2ተሰ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "1TI",
+     "order": 73,
+     "slug": "1-timothy",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "1 Timothy",
+      "amharic": "1ኛ ወደ ጢሞቴዎስ",
+      "amharicAbbreviation": "1ጢሞ"
+     },
+     "chapters": 6
+    },
+    {
+     "id": "2TI",
+     "order": 74,
+     "slug": "2-timothy",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "2 Timothy",
+      "amharic": "2ኛ ወደ ጢሞቴዎስ",
+      "amharicAbbreviation": "2ጢሞ"
+     },
+     "chapters": 4
+    },
+    {
+     "id": "TIT",
+     "order": 75,
+     "slug": "titus",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Titus",
+      "amharic": "ወደ ቲቶ",
+      "amharicAbbreviation": "ቲቶ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "PHM",
+     "order": 76,
+     "slug": "philemon",
+     "testament": "new",
+     "section": "PaulineEpistle",
+     "names": {
+      "english": "Philemon",
+      "amharic": "ወደ ፊልሞና",
+      "amharicAbbreviation": "ፊልሞ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "HEB",
+     "order": 77,
+     "slug": "hebrews",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "Hebrews",
+      "amharic": "ወደ ዕብራውያን",
+      "amharicAbbreviation": "ዕብራ"
+     },
+     "chapters": 13
+    },
+    {
+     "id": "JAS",
+     "order": 78,
+     "slug": "james",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "James",
+      "amharic": "የያዕቆብ መልእክት",
+      "amharicAbbreviation": "ያዕቆ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "1PE",
+     "order": 79,
+     "slug": "1-peter",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "1 Peter",
+      "amharic": "1ኛ የጴጥሮስ መልእክት",
+      "amharicAbbreviation": "1ጴጥ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2PE",
+     "order": 80,
+     "slug": "2-peter",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "2 Peter",
+      "amharic": "2ኛ የጴጥሮስ መልእክት",
+      "amharicAbbreviation": "2ጴጥ"
+     },
+     "chapters": 3
+    },
+    {
+     "id": "1JN",
+     "order": 81,
+     "slug": "1-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "1 John",
+      "amharic": "1ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "1ዮሐ"
+     },
+     "chapters": 5
+    },
+    {
+     "id": "2JN",
+     "order": 82,
+     "slug": "2-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "2 John",
+      "amharic": "2ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "2ዮሐ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "3JN",
+     "order": 83,
+     "slug": "3-john",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "3 John",
+      "amharic": "3ኛ የዮሐንስ መልእክት",
+      "amharicAbbreviation": "3ዮሐ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "JUD",
+     "order": 84,
+     "slug": "jude",
+     "testament": "new",
+     "section": "GeneralEpistle",
+     "names": {
+      "english": "Jude",
+      "amharic": "የይሁዳ መልእክት",
+      "amharicAbbreviation": "ይሁዳ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "REV",
+     "order": 85,
+     "slug": "revelation",
+     "testament": "new",
+     "section": "Revelation",
+     "names": {
+      "english": "Revelation",
+      "amharic": "የዮሐንስ ራዕይ",
+      "amharicAbbreviation": "ራዕይ"
+     },
+     "chapters": 22
+    },
+    {
+     "id": "OTH",
+     "order": 86,
+     "slug": "1-covenant",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Covenant I",
+      "amharic": "መጽሐፈ ኪዳን ቀዳማዊ",
+      "amharicAbbreviation": "1ኪዳን"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXG",
+     "order": 87,
+     "slug": "sirate-tsion",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Order of Zion",
+      "amharic": "መጽሐፈ ሥርዓተ ጽዮን",
+      "amharicAbbreviation": "ጽዮን"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXA",
+     "order": 88,
+     "slug": "josippon",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Josippon",
+      "amharic": "መጽሐፈ ዮሴፍ ወልደ ኮርዮን",
+      "amharicAbbreviation": "ዮሴፍ"
+     },
+     "chapters": 72
+    },
+    {
+     "id": "XXC",
+     "order": 89,
+     "slug": "didascalia",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Didascalia",
+      "amharic": "መጽሐፈ ዲድስቅልያ",
+      "amharicAbbreviation": "ዲድስ"
+     },
+     "chapters": 43
+    },
+    {
+     "id": "XXB",
+     "order": 90,
+     "slug": "1-clement",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Clement",
+      "amharic": "መጽሐፈ ቀሌምንጦስ",
+      "amharicAbbreviation": "ቀለሜን"
+     },
+     "chapters": 12
+    },
+    {
+     "id": "XXD",
+     "order": 91,
+     "slug": "tizaz",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Commandments",
+      "amharic": "መጽሐፈ ትእዛዝ",
+      "amharicAbbreviation": "ትእዛዝ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXE",
+     "order": 92,
+     "slug": "abtilis",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Abtilis",
+      "amharic": "መጽሐፈ አብጥሊስ",
+      "amharicAbbreviation": "አብጥ"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "XXF",
+     "order": 93,
+     "slug": "gitsew",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Gitsew",
+      "amharic": "መጽሐፈ ግጽው",
+      "amharicAbbreviation": "ግጽው"
+     },
+     "chapters": 1
+    },
+    {
+     "id": "LAO",
+     "order": 94,
+     "slug": "2-covenant",
+     "testament": "new",
+     "section": null,
+     "names": {
+      "english": "Book of the Covenant II",
+      "amharic": "መጽሐፈ ኪዳን ካልዕ",
+      "amharicAbbreviation": "2ኪዳን"
+     },
+     "chapters": 1
+    }
+   ]
+  }
+ },
+ "/v1/bible/books/JHN": {
+  "status": 200,
+  "body": {
+   "id": "JHN",
+   "order": 62,
+   "slug": "john",
+   "testament": "new",
+   "section": "Gospel",
+   "names": {
+    "english": "John",
+    "amharic": "የዮሐንስ ወንጌል",
+    "amharicAbbreviation": "ዮሐን"
+   },
+   "chapters": 21,
+   "versification": "am-1980",
+   "verseCounts": [
+    52,
+    25,
+    36,
+    54,
+    47,
+    71,
+    53,
+    59,
+    41,
+    42,
+    57,
+    50,
+    38,
+    31,
+    27,
+    33,
+    26,
+    40,
+    42,
+    31,
+    25
+   ],
+   "textEditions": {
+    "am-1980": true,
+    "gez-1980": true
+   }
+  }
+ },
+ "/v1/bible/books/psalms": {
+  "status": 200,
+  "body": {
+   "id": "PSA",
+   "order": 19,
+   "slug": "psalms",
+   "testament": "old",
+   "section": "PoetryWisdom",
+   "names": {
+    "english": "Psalms",
+    "amharic": "መዝሙረ ዳዊት",
+    "amharicAbbreviation": "መዝሙ"
+   },
+   "chapters": 150,
+   "versification": "am-1980",
+   "verseCounts": [
+    6,
+    12,
+    8,
+    8,
+    12,
+    10,
+    17,
+    9,
+    20,
+    18,
+    7,
+    8,
+    6,
+    10,
+    5,
+    11,
+    15,
+    50,
+    14,
+    9,
+    13,
+    31,
+    6,
+    10,
+    22,
+    12,
+    14,
+    9,
+    11,
+    12,
+    24,
+    11,
+    22,
+    22,
+    28,
+    12,
+    40,
+    22,
+    13,
+    17,
+    13,
+    11,
+    5,
+    26,
+    17,
+    11,
+    9,
+    14,
+    20,
+    23,
+    19,
+    9,
+    6,
+    7,
+    23,
+    13,
+    11,
+    11,
+    17,
+    12,
+    8,
+    12,
+    11,
+    10,
+    13,
+    20,
+    7,
+    35,
+    36,
+    5,
+    24,
+    20,
+    28,
+    23,
+    10,
+    12,
+    20,
+    72,
+    13,
+    19,
+    16,
+    8,
+    18,
+    12,
+    13,
+    17,
+    7,
+    18,
+    52,
+    17,
+    16,
+    15,
+    5,
+    23,
+    11,
+    13,
+    12,
+    9,
+    9,
+    5,
+    8,
+    28,
+    22,
+    35,
+    45,
+    48,
+    43,
+    13,
+    31,
+    7,
+    10,
+    10,
+    9,
+    8,
+    18,
+    19,
+    2,
+    29,
+    176,
+    7,
+    8,
+    9,
+    4,
+    8,
+    5,
+    6,
+    5,
+    6,
+    8,
+    8,
+    3,
+    18,
+    3,
+    3,
+    21,
+    26,
+    9,
+    8,
+    24,
+    13,
+    10,
+    7,
+    12,
+    15,
+    21,
+    10,
+    20,
+    14,
+    9,
+    6
+   ],
+   "textEditions": {
+    "am-1980": true,
+    "gez-1980": true
+   }
+  }
+ },
+ "/v1/bible/editions": {
+  "status": 200,
+  "body": {
+   "count": 2,
+   "editions": [
+    {
+     "id": "am-1980",
+     "title": "መጽሐፍ ቅዱስ ሰማንያ አሐዱ በአማርኛ",
+     "titleEnglish": "Amharic Bible, 81 books, 1980 EC edition",
+     "language": "am",
+     "script": "Ethi",
+     "year": 1980,
+     "era": "EC",
+     "canon": "eotc-81",
+     "publisher": "የኢትዮጵያ መጽሐፍ ቅዱስ ማኅበር",
+     "license": "CC-BY-NC-ND-4.0",
+     "source": "EOTCOpenSource/80-weahadu",
+     "note": "Verse text is not bundled with the MIT runtime; self-hosted deployments with the edition present locally can serve it."
+    },
+    {
+     "id": "gez-1980",
+     "title": "መጽሐፍ ቅዱስ ሰማንያ አሐዱ በግእዝ",
+     "titleEnglish": "Ge'ez Bible, 81 books, 1980 EC edition",
+     "language": "gez",
+     "script": "Ethi",
+     "year": 1980,
+     "era": "EC",
+     "canon": "eotc-81",
+     "publisher": "የኢትዮጵያ መጽሐፍ ቅዱስ ማኅበር",
+     "license": "CC-BY-NC-ND-4.0",
+     "source": "EOTCOpenSource/80-weahadu",
+     "note": "Verse text is not bundled with the MIT runtime; self-hosted deployments with the edition present locally can serve it."
+    }
+   ]
+  }
+ },
+ "/v1/bible/parse?q=%E1%8B%AE%E1%88%90%E1%8A%95%E1%88%B5%20%E1%88%9D%C2%B7%20%E1%8D%AB%20%E1%89%8D%20%E1%8D%B2%E1%8D%AE": {
+  "status": 200,
+  "body": {
+   "input": "ዮሐንስ ም· ፫ ቍ ፲፮",
+   "resolved": true,
+   "book": {
+    "id": "JHN",
+    "names": {
+     "english": "John",
+     "amharic": "የዮሐንስ ወንጌል",
+     "amharicAbbreviation": "ዮሐን"
+    },
+    "matchedOn": "amharicAbbreviation",
+    "confidence": "partial"
+   },
+   "chapter": 3,
+   "verseStart": 16,
+   "verseEnd": null,
+   "toEndOfChapter": false,
+   "withinBounds": true,
+   "versification": "am-1980"
+  }
+ },
+ "/v1/bible/parse?q=%E1%8B%A8%E1%88%9B%E1%88%AD%E1%89%86%E1%88%B5%20%E1%8B%88%E1%8A%95%E1%8C%8C%E1%88%8D%2012%3A38-43": {
+  "status": 200,
+  "body": {
+   "input": "የማርቆስ ወንጌል 12:38-43",
+   "resolved": true,
+   "book": {
+    "id": "MRK",
+    "names": {
+     "english": "Mark",
+     "amharic": "የማርቆስ ወንጌል",
+     "amharicAbbreviation": "ማርቆ"
+    },
+    "matchedOn": "amharic",
+    "confidence": "exact"
+   },
+   "chapter": 12,
+   "verseStart": 38,
+   "verseEnd": 43,
+   "toEndOfChapter": false,
+   "withinBounds": true,
+   "versification": "am-1980"
+  }
+ },
+ "/v1/bible/parse?q=1%20Peter%202%3A9": {
+  "status": 200,
+  "body": {
+   "input": "1 Peter 2:9",
+   "resolved": true,
+   "book": {
+    "id": "1PE",
+    "names": {
+     "english": "1 Peter",
+     "amharic": "1ኛ የጴጥሮስ መልእክት",
+     "amharicAbbreviation": "1ጴጥ"
+    },
+    "matchedOn": "slug",
+    "confidence": "exact"
+   },
+   "chapter": 2,
+   "verseStart": 9,
+   "verseEnd": null,
+   "toEndOfChapter": false,
+   "withinBounds": true,
+   "versification": "am-1980"
+  }
+ },
+ "/v1/bible/parse?q=%E1%88%98%E1%8B%9D%E1%88%99%E1%88%A8%20%E1%8B%B3%E1%8B%8A%E1%89%B5%20%E1%8D%BB%E1%8D%B5%E1%8D%A9%20%E1%89%8D%20%E1%8D%AE%20%E2%80%93%20%E1%8D%AF": {
+  "status": 200,
+  "body": {
+   "input": "መዝሙረ ዳዊት ፻፵፩ ቍ ፮ – ፯",
+   "resolved": true,
+   "book": {
+    "id": "PSA",
+    "names": {
+     "english": "Psalms",
+     "amharic": "መዝሙረ ዳዊት",
+     "amharicAbbreviation": "መዝሙ"
+    },
+    "matchedOn": "amharic",
+    "confidence": "partial"
+   },
+   "chapter": 141,
+   "verseStart": 6,
+   "verseEnd": 7,
+   "toEndOfChapter": false,
+   "withinBounds": true,
+   "versification": "am-1980"
+  }
+ },
+ "/v1/bible/parse?q=nonsense%20xyz": {
+  "status": 200,
+  "body": {
+   "input": "nonsense xyz",
+   "resolved": false,
+   "book": null,
+   "chapter": null,
+   "verseStart": null,
+   "verseEnd": null,
+   "toEndOfChapter": false,
+   "withinBounds": null,
+   "versification": "am-1980"
+  }
+ },
+ "/v1/bible/am-1980/JHN/3": {
+  "status": 200,
+  "body": {
+   "edition": {
+    "id": "am-1980",
+    "title": "መጽሐፍ ቅዱስ ሰማንያ አሐዱ በአማርኛ",
+    "license": "CC-BY-NC-ND-4.0",
+    "source": "EOTCOpenSource/80-weahadu"
+   },
+   "book": {
+    "id": "JHN",
+    "names": {
+     "english": "John",
+     "amharic": "የዮሐንስ ወንጌል",
+     "amharicAbbreviation": "ዮሐን"
+    }
+   },
+   "chapter": 3,
+   "verseCount": 36,
+   "verses": null,
+   "textAvailable": false,
+   "reason": "Verse text is not bundled with the public MIT runtime; the edition is CC BY-NC-ND.",
+   "selfHost": "Self-hosted Python deployments with the edition present locally can serve text; see the documentation."
+  }
+ },
+ "/v1/bible/am-1980/JHN/99": {
+  "status": 404,
+  "body": {
+   "error": "not_found",
+   "message": "JHN has 21 chapters; there is no chapter 99."
+  }
+ },
+ "/v1/bible/xx-0000/JHN/3": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Unknown edition 'xx-0000'.",
+   "hint": "Known editions: am-1980, gez-1980."
+  }
+ },
+ "/v1/calendar/range?start=2026-04-01&end=2026-04-30": {
+  "status": 200,
+  "body": {
+   "start": {
+    "gregorian": "2026-04-01",
+    "ethiopic": "2018-07-23"
+   },
+   "end": {
+    "gregorian": "2026-04-30",
+    "ethiopic": "2018-08-22"
+   },
+   "count": 30,
+   "days": [
+    {
+     "jdn": 2461132,
+     "gregorian": {
+      "date": "2026-04-01",
+      "year": 2026,
+      "month": 4,
+      "day": 1
+     },
+     "ethiopic": {
+      "date": "2018-07-23",
+      "year": 2018,
+      "month": 7,
+      "day": 23,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 45
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ጊዮርጊስ",
+       "translit": "Qidus Giyorgis",
+       "english": "St George"
+      }
+     ]
+    },
+    {
+     "jdn": 2461133,
+     "gregorian": {
+      "date": "2026-04-02",
+      "year": 2026,
+      "month": 4,
+      "day": 2
+     },
+     "ethiopic": {
+      "date": "2018-07-24",
+      "year": 2018,
+      "month": 7,
+      "day": 24,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 46
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ ተክለ ሃይማኖት",
+       "translit": "Abune Tekle Haymanot",
+       "english": "Abune Tekle Haymanot"
+      }
+     ]
+    },
+    {
+     "jdn": 2461134,
+     "gregorian": {
+      "date": "2026-04-03",
+      "year": 2026,
+      "month": 4,
+      "day": 3
+     },
+     "ethiopic": {
+      "date": "2018-07-25",
+      "year": 2018,
+      "month": 7,
+      "day": 25,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 47
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461135,
+     "gregorian": {
+      "date": "2026-04-04",
+      "year": 2026,
+      "month": 4,
+      "day": 4
+     },
+     "ethiopic": {
+      "date": "2018-07-26",
+      "year": 2018,
+      "month": 7,
+      "day": 26,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 48
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461136,
+     "gregorian": {
+      "date": "2026-04-05",
+      "year": 2026,
+      "month": 4,
+      "day": 5
+     },
+     "ethiopic": {
+      "date": "2018-07-27",
+      "year": 2018,
+      "month": 7,
+      "day": 27,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 49
+       }
+      ]
+     },
+     "feasts": [
+      {
+       "key": "hosanna",
+       "amharic": "ሆሳዕና",
+       "translit": "Hosanna",
+       "english": "Palm Sunday",
+       "movable": true
+      }
+     ],
+     "commemorations": [
+      {
+       "amharic": "መድኃኔዓለም",
+       "translit": "Medhane Alem",
+       "english": "Saviour of the World"
+      }
+     ]
+    },
+    {
+     "jdn": 2461137,
+     "gregorian": {
+      "date": "2026-04-06",
+      "year": 2026,
+      "month": 4,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2018-07-28",
+      "year": 2018,
+      "month": 7,
+      "day": 28,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 50
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461138,
+     "gregorian": {
+      "date": "2026-04-07",
+      "year": 2026,
+      "month": 4,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2018-07-29",
+      "year": 2018,
+      "month": 7,
+      "day": 29,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 51
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "በዓለ ወልድ",
+       "translit": "Be'ale Wold",
+       "english": "Commemoration of the Son"
+      }
+     ]
+    },
+    {
+     "jdn": 2461139,
+     "gregorian": {
+      "date": "2026-04-08",
+      "year": 2026,
+      "month": 4,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-07-30",
+      "year": 2018,
+      "month": 7,
+      "day": 30,
+      "monthName": {
+       "amharic": "መጋቢት",
+       "translit": "Megabit"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 52
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461140,
+     "gregorian": {
+      "date": "2026-04-09",
+      "year": 2026,
+      "month": 4,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-08-01",
+      "year": 2018,
+      "month": 8,
+      "day": 1,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 53
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461141,
+     "gregorian": {
+      "date": "2026-04-10",
+      "year": 2026,
+      "month": 4,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2018-08-02",
+      "year": 2018,
+      "month": 8,
+      "day": 2,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 54
+       }
+      ]
+     },
+     "feasts": [
+      {
+       "key": "siklet",
+       "amharic": "ስቅለት",
+       "translit": "Siklet",
+       "english": "Good Friday",
+       "movable": true
+      }
+     ],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461142,
+     "gregorian": {
+      "date": "2026-04-11",
+      "year": 2026,
+      "month": 4,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2018-08-03",
+      "year": 2018,
+      "month": 8,
+      "day": 3,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ዓቢይ ጾም (Great Lent)",
+      "periods": [
+       {
+        "key": "abiy_tsome",
+        "amharic": "ዓቢይ ጾም",
+        "translit": "Abiy Tsome (Hudade)",
+        "english": "Great Lent",
+        "start": "2026-02-16",
+        "end": "2026-04-11",
+        "days": 55,
+        "movable": true,
+        "dayOfPeriod": 55
+       }
+      ]
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461143,
+     "gregorian": {
+      "date": "2026-04-12",
+      "year": 2026,
+      "month": 4,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2018-08-04",
+      "year": 2018,
+      "month": 8,
+      "day": 4,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [
+      {
+       "key": "fasika",
+       "amharic": "ትንሣኤ",
+       "translit": "Tinsae/Fasika",
+       "english": "Easter (Resurrection)",
+       "movable": true
+      }
+     ],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461144,
+     "gregorian": {
+      "date": "2026-04-13",
+      "year": 2026,
+      "month": 4,
+      "day": 13
+     },
+     "ethiopic": {
+      "date": "2018-08-05",
+      "year": 2018,
+      "month": 8,
+      "day": 5,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    },
+    {
+     "jdn": 2461145,
+     "gregorian": {
+      "date": "2026-04-14",
+      "year": 2026,
+      "month": 4,
+      "day": 14
+     },
+     "ethiopic": {
+      "date": "2018-08-06",
+      "year": 2018,
+      "month": 8,
+      "day": 6,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461146,
+     "gregorian": {
+      "date": "2026-04-15",
+      "year": 2026,
+      "month": 4,
+      "day": 15
+     },
+     "ethiopic": {
+      "date": "2018-08-07",
+      "year": 2018,
+      "month": 8,
+      "day": 7,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ሥላሴ",
+       "translit": "Selassie",
+       "english": "The Holy Trinity"
+      }
+     ]
+    },
+    {
+     "jdn": 2461147,
+     "gregorian": {
+      "date": "2026-04-16",
+      "year": 2026,
+      "month": 4,
+      "day": 16
+     },
+     "ethiopic": {
+      "date": "2018-08-08",
+      "year": 2018,
+      "month": 8,
+      "day": 8,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461148,
+     "gregorian": {
+      "date": "2026-04-17",
+      "year": 2026,
+      "month": 4,
+      "day": 17
+     },
+     "ethiopic": {
+      "date": "2018-08-09",
+      "year": 2018,
+      "month": 8,
+      "day": 9,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461149,
+     "gregorian": {
+      "date": "2026-04-18",
+      "year": 2026,
+      "month": 4,
+      "day": 18
+     },
+     "ethiopic": {
+      "date": "2018-08-10",
+      "year": 2018,
+      "month": 8,
+      "day": 10,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461150,
+     "gregorian": {
+      "date": "2026-04-19",
+      "year": 2026,
+      "month": 4,
+      "day": 19
+     },
+     "ethiopic": {
+      "date": "2018-08-11",
+      "year": 2018,
+      "month": 8,
+      "day": 11,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461151,
+     "gregorian": {
+      "date": "2026-04-20",
+      "year": 2026,
+      "month": 4,
+      "day": 20
+     },
+     "ethiopic": {
+      "date": "2018-08-12",
+      "year": 2018,
+      "month": 8,
+      "day": 12,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ሚካኤል",
+       "translit": "Qidus Mikael",
+       "english": "St Michael the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2461152,
+     "gregorian": {
+      "date": "2026-04-21",
+      "year": 2026,
+      "month": 4,
+      "day": 21
+     },
+     "ethiopic": {
+      "date": "2018-08-13",
+      "year": 2018,
+      "month": 8,
+      "day": 13,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461153,
+     "gregorian": {
+      "date": "2026-04-22",
+      "year": 2026,
+      "month": 4,
+      "day": 22
+     },
+     "ethiopic": {
+      "date": "2018-08-14",
+      "year": 2018,
+      "month": 8,
+      "day": 14,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቡነ አረጋዊ",
+       "translit": "Abune Aregawi",
+       "english": "Abune Aregawi"
+      }
+     ]
+    },
+    {
+     "jdn": 2461154,
+     "gregorian": {
+      "date": "2026-04-23",
+      "year": 2026,
+      "month": 4,
+      "day": 23
+     },
+     "ethiopic": {
+      "date": "2018-08-15",
+      "year": 2018,
+      "month": 8,
+      "day": 15,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461155,
+     "gregorian": {
+      "date": "2026-04-24",
+      "year": 2026,
+      "month": 4,
+      "day": 24
+     },
+     "ethiopic": {
+      "date": "2018-08-16",
+      "year": 2018,
+      "month": 8,
+      "day": 16,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ኪዳነ ምሕረት",
+       "translit": "Kidane Mihret",
+       "english": "Covenant of Mercy"
+      }
+     ]
+    },
+    {
+     "jdn": 2461156,
+     "gregorian": {
+      "date": "2026-04-25",
+      "year": 2026,
+      "month": 4,
+      "day": 25
+     },
+     "ethiopic": {
+      "date": "2018-08-17",
+      "year": 2018,
+      "month": 8,
+      "day": 17,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461157,
+     "gregorian": {
+      "date": "2026-04-26",
+      "year": 2026,
+      "month": 4,
+      "day": 26
+     },
+     "ethiopic": {
+      "date": "2018-08-18",
+      "year": 2018,
+      "month": 8,
+      "day": 18,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461158,
+     "gregorian": {
+      "date": "2026-04-27",
+      "year": 2026,
+      "month": 4,
+      "day": 27
+     },
+     "ethiopic": {
+      "date": "2018-08-19",
+      "year": 2018,
+      "month": 8,
+      "day": 19,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅዱስ ገብርኤል",
+       "translit": "Qidus Gabriel",
+       "english": "St Gabriel the Archangel"
+      }
+     ]
+    },
+    {
+     "jdn": 2461159,
+     "gregorian": {
+      "date": "2026-04-28",
+      "year": 2026,
+      "month": 4,
+      "day": 28
+     },
+     "ethiopic": {
+      "date": "2018-08-20",
+      "year": 2018,
+      "month": 8,
+      "day": 20,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461160,
+     "gregorian": {
+      "date": "2026-04-29",
+      "year": 2026,
+      "month": 4,
+      "day": 29
+     },
+     "ethiopic": {
+      "date": "2018-08-21",
+      "year": 2018,
+      "month": 8,
+      "day": 21,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ቅድስት ማርያም",
+       "translit": "Qidist Maryam",
+       "english": "The Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461161,
+     "gregorian": {
+      "date": "2026-04-30",
+      "year": 2026,
+      "month": 4,
+      "day": 30
+     },
+     "ethiopic": {
+      "date": "2018-08-22",
+      "year": 2018,
+      "month": 8,
+      "day": 22,
+      "monthName": {
+       "amharic": "ሚያዝያ",
+       "translit": "Miyazya"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": true,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    }
+   ]
+  }
+ },
+ "/v1/calendar/range?start=2018-13-01&end=2019-01-05&calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "start": {
+    "gregorian": "2026-09-06",
+    "ethiopic": "2018-13-01"
+   },
+   "end": {
+    "gregorian": "2026-09-15",
+    "ethiopic": "2019-01-05"
+   },
+   "count": 10,
+   "days": [
+    {
+     "jdn": 2461290,
+     "gregorian": {
+      "date": "2026-09-06",
+      "year": 2026,
+      "month": 9,
+      "day": 6
+     },
+     "ethiopic": {
+      "date": "2018-13-01",
+      "year": 2018,
+      "month": 13,
+      "day": 1,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461291,
+     "gregorian": {
+      "date": "2026-09-07",
+      "year": 2026,
+      "month": 9,
+      "day": 7
+     },
+     "ethiopic": {
+      "date": "2018-13-02",
+      "year": 2018,
+      "month": 13,
+      "day": 2,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461292,
+     "gregorian": {
+      "date": "2026-09-08",
+      "year": 2026,
+      "month": 9,
+      "day": 8
+     },
+     "ethiopic": {
+      "date": "2018-13-03",
+      "year": 2018,
+      "month": 13,
+      "day": 3,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461293,
+     "gregorian": {
+      "date": "2026-09-09",
+      "year": 2026,
+      "month": 9,
+      "day": 9
+     },
+     "ethiopic": {
+      "date": "2018-13-04",
+      "year": 2018,
+      "month": 13,
+      "day": 4,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 3,
+      "amharic": "ረቡዕ",
+      "translit": "Rebue",
+      "english": "Wednesday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Wednesday fast",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461294,
+     "gregorian": {
+      "date": "2026-09-10",
+      "year": 2026,
+      "month": 9,
+      "day": 10
+     },
+     "ethiopic": {
+      "date": "2018-13-05",
+      "year": 2018,
+      "month": 13,
+      "day": 5,
+      "monthName": {
+       "amharic": "ጳጉሜን",
+       "translit": "Pagumen"
+      },
+      "isLeapYear": false,
+      "daysInMonth": 5
+     },
+     "weekday": {
+      "n": 4,
+      "amharic": "ሐሙስ",
+      "translit": "Hamus",
+      "english": "Thursday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    },
+    {
+     "jdn": 2461295,
+     "gregorian": {
+      "date": "2026-09-11",
+      "year": 2026,
+      "month": 9,
+      "day": 11
+     },
+     "ethiopic": {
+      "date": "2019-01-01",
+      "year": 2019,
+      "month": 1,
+      "day": 1,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 5,
+      "amharic": "ዓርብ",
+      "translit": "Arb",
+      "english": "Friday"
+     },
+     "fasting": {
+      "isFasting": true,
+      "weeklyFast": true,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "ጾመ ድህነት -- the weekly Friday fast",
+      "periods": []
+     },
+     "feasts": [
+      {
+       "key": "enkutatash",
+       "amharic": "እንቁጣጣሽ",
+       "translit": "Enkutatash",
+       "english": "Ethiopian New Year",
+       "major": true,
+       "movable": false
+      }
+     ],
+     "commemorations": [
+      {
+       "amharic": "ልደታ ለማርያም",
+       "translit": "Lideta LeMaryam",
+       "english": "Nativity of the Virgin Mary"
+      }
+     ]
+    },
+    {
+     "jdn": 2461296,
+     "gregorian": {
+      "date": "2026-09-12",
+      "year": 2026,
+      "month": 9,
+      "day": 12
+     },
+     "ethiopic": {
+      "date": "2019-01-02",
+      "year": 2019,
+      "month": 1,
+      "day": 2,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 6,
+      "amharic": "ቅዳሜ",
+      "translit": "Kidame",
+      "english": "Saturday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461297,
+     "gregorian": {
+      "date": "2026-09-13",
+      "year": 2026,
+      "month": 9,
+      "day": 13
+     },
+     "ethiopic": {
+      "date": "2019-01-03",
+      "year": 2019,
+      "month": 1,
+      "day": 3,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 0,
+      "amharic": "እሑድ",
+      "translit": "Ehud",
+      "english": "Sunday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461298,
+     "gregorian": {
+      "date": "2026-09-14",
+      "year": 2026,
+      "month": 9,
+      "day": 14
+     },
+     "ethiopic": {
+      "date": "2019-01-04",
+      "year": 2019,
+      "month": 1,
+      "day": 4,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 1,
+      "amharic": "ሰኞ",
+      "translit": "Segno",
+      "english": "Monday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": []
+    },
+    {
+     "jdn": 2461299,
+     "gregorian": {
+      "date": "2026-09-15",
+      "year": 2026,
+      "month": 9,
+      "day": 15
+     },
+     "ethiopic": {
+      "date": "2019-01-05",
+      "year": 2019,
+      "month": 1,
+      "day": 5,
+      "monthName": {
+       "amharic": "መስከረም",
+       "translit": "Meskerem"
+      },
+      "isLeapYear": true,
+      "daysInMonth": 30
+     },
+     "weekday": {
+      "n": 2,
+      "amharic": "ማክሰኞ",
+      "translit": "Maksegno",
+      "english": "Tuesday"
+     },
+     "fasting": {
+      "isFasting": false,
+      "weeklyFast": false,
+      "fastFreeSeason": false,
+      "feastOverride": false,
+      "reason": "Not a fasting day.",
+      "periods": []
+     },
+     "feasts": [],
+     "commemorations": [
+      {
+       "amharic": "አቦ (ገብረ መንፈስ ቅዱስ)",
+       "translit": "Abo",
+       "english": "Abune Gebre Menfes Kidus"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "/v1/calendar/range?start=2026-04-30&end=2026-04-01": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "'end' must not be before 'start'."
+  }
+ },
+ "/v1/calendar/range?start=2025-01-01&end=2026-06-01": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Range covers 517 days; the maximum is 366.",
+   "hint": "Use /v1/calendar/{year}/{month} per month, or split the range."
+  }
+ },
+ "/v1/upcoming?from=2026-04-01&days=30": {
+  "status": 200,
+  "body": {
+   "from": {
+    "gregorian": "2026-04-01",
+    "ethiopic": "2018-07-23"
+   },
+   "days": 30,
+   "type": "all",
+   "count": 4,
+   "items": [
+    {
+     "daysAway": 4,
+     "kind": "feast",
+     "gregorian": "2026-04-05",
+     "ethiopic": "2018-07-27",
+     "feast": {
+      "key": "hosanna",
+      "amharic": "ሆሳዕና",
+      "translit": "Hosanna",
+      "english": "Palm Sunday",
+      "movable": true
+     }
+    },
+    {
+     "daysAway": 9,
+     "kind": "feast",
+     "gregorian": "2026-04-10",
+     "ethiopic": "2018-08-02",
+     "feast": {
+      "key": "siklet",
+      "amharic": "ስቅለት",
+      "translit": "Siklet",
+      "english": "Good Friday",
+      "movable": true
+     }
+    },
+    {
+     "daysAway": 10,
+     "kind": "fast_ends",
+     "gregorian": "2026-04-11",
+     "ethiopic": "2018-08-03",
+     "fast": {
+      "key": "abiy_tsome",
+      "amharic": "ዓቢይ ጾም",
+      "translit": "Abiy Tsome (Hudade)",
+      "english": "Great Lent",
+      "movable": true,
+      "days": 55
+     }
+    },
+    {
+     "daysAway": 11,
+     "kind": "feast",
+     "gregorian": "2026-04-12",
+     "ethiopic": "2018-08-04",
+     "feast": {
+      "key": "fasika",
+      "amharic": "ትንሣኤ",
+      "translit": "Tinsae/Fasika",
+      "english": "Easter (Resurrection)",
+      "movable": true
+     }
+    }
+   ]
+  }
+ },
+ "/v1/upcoming?from=2026-02-10&days=20&type=fasts": {
+  "status": 200,
+  "body": {
+   "from": {
+    "gregorian": "2026-02-10",
+    "ethiopic": "2018-06-03"
+   },
+   "days": 20,
+   "type": "fasts",
+   "count": 1,
+   "items": [
+    {
+     "daysAway": 6,
+     "kind": "fast_begins",
+     "gregorian": "2026-02-16",
+     "ethiopic": "2018-06-09",
+     "fast": {
+      "key": "abiy_tsome",
+      "amharic": "ዓቢይ ጾም",
+      "translit": "Abiy Tsome (Hudade)",
+      "english": "Great Lent",
+      "movable": true,
+      "days": 55
+     }
+    }
+   ]
+  }
+ },
+ "/v1/upcoming?from=2026-04-01&days=999": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "'days' must be an integer from 1 to 366, got '999'."
+  }
+ },
+ "/v1/feasts/2018/fasika": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "key": "fasika",
+   "amharic": "ትንሣኤ",
+   "translit": "Tinsae/Fasika",
+   "english": "Easter (Resurrection)",
+   "movable": true,
+   "major": null,
+   "aliases": [
+    "ፋሲካ",
+    "ትንሣኤ",
+    "Tinsae",
+    "Easter",
+    "Pascha",
+    "Resurrection"
+   ],
+   "date": {
+    "gregorian": "2026-04-12",
+    "ethiopic": "2018-08-04",
+    "weekday": {
+     "n": 0,
+     "amharic": "እሑድ",
+     "translit": "Ehud",
+     "english": "Sunday"
+    }
+   }
+  }
+ },
+ "/v1/feasts/2018/%E1%8C%88%E1%8A%93": {
+  "status": 200,
+  "body": {
+   "ethiopicYear": 2018,
+   "key": "gena",
+   "amharic": "ገና",
+   "translit": "Gena",
+   "english": "Nativity (Christmas)",
+   "movable": false,
+   "major": true,
+   "aliases": [
+    "ልደት",
+    "Lidet",
+    "Genna",
+    "Christmas",
+    "Nativity"
+   ],
+   "date": {
+    "gregorian": "2026-01-07",
+    "ethiopic": "2018-04-29",
+    "weekday": {
+     "n": 3,
+     "amharic": "ረቡዕ",
+     "translit": "Rebue",
+     "english": "Wednesday"
+    }
+   }
+  }
+ },
+ "/v1/feasts/2018/notafeast": {
+  "status": 404,
+  "body": {
+   "error": "not_found",
+   "message": "Unknown feast 'notafeast'.",
+   "hint": "Use a feast key, name, or alias; /v1/feasts/search?q= finds them."
+  }
+ },
+ "/v1/feasts/search?q=%E1%89%B5%E1%8A%95%E1%88%B3%E1%8A%A4": {
+  "status": 200,
+  "body": {
+   "query": "ትንሳኤ",
+   "normalized": true,
+   "ethiopicYear": null,
+   "count": 1,
+   "matches": [
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true,
+     "aliases": [
+      "ፋሲካ",
+      "ትንሣኤ",
+      "Tinsae",
+      "Easter",
+      "Pascha",
+      "Resurrection"
+     ],
+     "matchedOn": "amharic",
+     "matchedValue": "ትንሣኤ",
+     "confidence": "exact"
+    }
+   ]
+  }
+ },
+ "/v1/feasts/search?q=easter&year=2018": {
+  "status": 200,
+  "body": {
+   "query": "easter",
+   "normalized": true,
+   "ethiopicYear": 2018,
+   "count": 1,
+   "matches": [
+    {
+     "key": "fasika",
+     "amharic": "ትንሣኤ",
+     "translit": "Tinsae/Fasika",
+     "english": "Easter (Resurrection)",
+     "movable": true,
+     "aliases": [
+      "ፋሲካ",
+      "ትንሣኤ",
+      "Tinsae",
+      "Easter",
+      "Pascha",
+      "Resurrection"
+     ],
+     "matchedOn": "alias",
+     "matchedValue": "Easter",
+     "confidence": "exact",
+     "date": {
+      "gregorian": "2026-04-12",
+      "ethiopic": "2018-08-04",
+      "weekday": {
+       "n": 0,
+       "amharic": "እሑድ",
+       "translit": "Ehud",
+       "english": "Sunday"
+      }
+     }
+    }
+   ]
+  }
+ },
+ "/v1/feasts/search?q=%E1%8D%86%E1%88%9D": {
+  "status": 200,
+  "body": {
+   "query": "ፆም",
+   "normalized": true,
+   "ethiopicYear": null,
+   "count": 1,
+   "matches": [
+    {
+     "key": "abiy_tsome",
+     "amharic": "ዓቢይ ጾም",
+     "translit": "Abiy Tsome",
+     "english": "Great Lent begins",
+     "movable": true,
+     "aliases": [
+      "ሁዳዴ",
+      "ዐቢይ ጾም",
+      "Hudade",
+      "Great Lent",
+      "Lent",
+      "Abiy Tsom"
+     ],
+     "matchedOn": "amharic",
+     "matchedValue": "ዓቢይ ጾም",
+     "confidence": "partial"
+    }
+   ]
   }
  },
  "/v1/gitsawe/2018-12-22?calendar=ethiopian": {
