@@ -11,7 +11,7 @@ No auth. No API key. No database. The public deployment uses a generous anonymou
 rate limit to prevent abuse.
 
 ```bash
-curl https://eotcdev-api.workers.dev/v1/today
+curl https://eotcdev-api.natinael-96.workers.dev/v1/today
 ```
 
 ```json

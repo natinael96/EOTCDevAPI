@@ -41,6 +41,12 @@ The Python test suite replays those requests and compares the results exactly.
 
 ## 3. Base URLs and interactive documentation
 
+The public production deployment is the Cloudflare Worker:
+
+```text
+https://eotcdev-api.natinael-96.workers.dev
+```
+
 The local Python development server currently uses:
 
 ```text
