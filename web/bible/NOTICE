@@ -1,0 +1,12 @@
+The files under web/bible/ are third-party scripture text and are NOT under
+the repository's MIT license.
+
+am-1980: መጽሐፍ ቅዱስ ሰማንያ አሐዱ በአማርኛ (Amharic Bible, 81 books, 1980 EC edition)
+Source: 80-weahadu, EOTCOpenSource (https://github.com/EOTCOpenSource/80-weahadu)
+License: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+         (https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+The verse text is reproduced unchanged and served non-commercially with
+attribution by the project website's reader. Redistributors must satisfy the
+license independently; forking this repository does not grant MIT rights over
+these files.

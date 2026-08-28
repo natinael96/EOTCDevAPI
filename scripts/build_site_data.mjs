@@ -15,30 +15,34 @@ const bible = loadCatalog("py/eotc/bible_catalog.js");
 
 const abbr = new Map(bible.books.map((book) => [book.id, book.names.amharicAbbreviation || book.id]));
 
-function refString(reading) {
+function refObject(reading) {
   const ref = reading.canonicalReference;
   if (ref && ref.chapter) {
-    let out = (abbr.get(ref.book) ?? ref.book) + " " + ref.chapter;
+    let display = (abbr.get(ref.book) ?? ref.book) + " " + ref.chapter;
     if (ref.verseStart) {
-      out += ":" + ref.verseStart;
-      if (ref.verseEnd && ref.verseEnd !== ref.verseStart) out += "-" + ref.verseEnd;
-      else if (ref.toEndOfChapter) out += "ff";
+      display += ":" + ref.verseStart;
+      if (ref.verseEnd && ref.verseEnd !== ref.verseStart) display += "-" + ref.verseEnd;
+      else if (ref.toEndOfChapter) display += " እስከ ፍጻሜ";
     }
+    const out = { t: display, b: ref.book, c: ref.chapter };
+    if (ref.verseStart) out.v = ref.verseStart;
+    if (ref.verseEnd) out.e = ref.verseEnd;
+    if (ref.toEndOfChapter) out.f = true;
     return out;
   }
-  // Unresolved citation: fall back to the printed source label.
+  // Unresolved citation: fall back to the printed source label, unlinkable.
   const source = [reading.sourceBook, reading.sourceCitation].filter(Boolean).join(" ").trim();
-  return source || null;
+  return source ? { t: source } : null;
 }
 
 function serviceRefs(service) {
   if (!service) return null;
-  const first = (list) => (list && list.length ? refString(list[0]) : null);
+  const first = (list) => (list && list.length ? refObject(list[0]) : null);
   const out = {
     psalm: first(service.psalms),
     gospel: first(service.gospels),
   };
-  const epistles = (service.epistlesAndActs ?? []).map(refString).filter(Boolean);
+  const epistles = (service.epistlesAndActs ?? []).map(refObject).filter(Boolean);
   if (epistles.length) out.epistles = epistles;
   if (service.anaphora) out.anaphora = service.anaphora.replace(/\s*[።፡]\s*$/, "");
   return out;

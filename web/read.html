@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ንባብ · EOTCDev Reader</title>
+<meta name="description" content="Read the cited passage in the Amharic 81-book Bible (am-1980 edition).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+<style>
+  :root {
+    --parchment: #f4efe3; --raised: #faf7ee;
+    --ink: #1c1710; --ink-2: #5d5342; --faint: #8a7d66;
+    --rule: #d9cfba; --rule-soft: #e7dfcd;
+    --rubric: #a02c17; --rubric-deep: #7c2010;
+    --highlight: #f8ecd0;
+    --serif: "Fraunces", Georgia, serif;
+    --ethiopic: "Noto Serif Ethiopic", "Abyssinica SIL", "Nyala", serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--parchment); color: var(--ink); font: 16px/1.6 var(--serif); }
+  a { color: var(--rubric); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  header { position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--rule); background: var(--parchment); }
+  .bar { max-width: 760px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .mark { font-size: 15px; font-weight: 600; }
+  .bar nav { display: flex; gap: 16px; font-size: 13.5px; }
+  .bar nav a { color: var(--ink-2); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 70px; }
+  .head { padding: 34px 0 8px; }
+  h1 { font-family: var(--ethiopic); font-size: clamp(24px, 5vw, 32px); font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  h1 .ch { color: var(--rubric); }
+  .sub { color: var(--ink-2); font-size: 14px; margin-top: 4px; }
+  .cite-note {
+    border-left: 3px solid var(--rubric); background: var(--raised); border-radius: 0 6px 6px 0;
+    padding: 10px 14px; margin: 16px 0 0; color: var(--ink-2); font-size: 13.5px;
+  }
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 16px 0 6px; }
+  .controls select {
+    font: 500 16px var(--ethiopic); color: var(--ink); background: var(--raised);
+    border: 1px solid var(--rule); border-radius: 4px; padding: 6px 10px; max-width: 100%;
+  }
+  .controls button {
+    font: 600 14px var(--serif); color: var(--ink); background: none;
+    border: 1px solid var(--ink); border-radius: 3px; padding: 7px 15px; cursor: pointer;
+  }
+  .controls button:hover:not(:disabled) { border-color: var(--rubric); color: var(--rubric); }
+  .controls button:disabled { opacity: 0.3; cursor: default; }
+  .text { font-family: var(--ethiopic); font-size: 17.5px; line-height: 2.05; padding-top: 14px; }
+  .verse { padding: 1px 6px; border-radius: 4px; }
+  .verse .vn { color: var(--rubric); font-size: 12px; vertical-align: super; margin-right: 5px; user-select: none; }
+  .verse.hl { background: var(--highlight); box-shadow: -3px 0 0 var(--rubric); }
+  .loading { color: var(--faint); padding: 40px 0; font-size: 15px; }
+  footer { border-top: 1px solid var(--rule); margin-top: 30px; }
+  .foot { max-width: 760px; margin: 0 auto; padding: 20px 20px 44px; color: var(--faint); font-size: 12.5px; line-height: 1.7; }
+  .foot a { color: var(--faint); text-decoration: underline; text-underline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="./" style="color:inherit">EOTCDev API</a></div>
+    <nav>
+      <a href="./#today">ዛሬ · Today</a>
+      <a href="docs/">Documentation</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1 id="title">ንባብ</h1>
+    <div class="sub" id="subtitle"></div>
+    <div class="cite-note" id="cite-note" style="display:none"></div>
+  </div>
+  <div class="controls">
+    <select id="book-select" aria-label="Book"></select>
+    <select id="ch-select" aria-label="Chapter"></select>
+    <button id="prev" type="button">← ቀዳሚ</button>
+    <button id="next" type="button">ቀጣይ →</button>
+  </div>
+  <div class="text" id="text"><div class="loading">በመጫን ላይ… loading…</div></div>
+</div>
+
+<footer><div class="foot" id="attribution">
+  መጽሐፍ ቅዱስ ሰማንያ አሐዱ በአማርኛ (am-1980) · text reproduced unchanged from
+  <a href="https://github.com/EOTCOpenSource/80-weahadu">80-weahadu, EOTCOpenSource</a>, served
+  non-commercially with attribution under
+  <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.
+  The scripture text is not part of the MIT-licensed EOTCDev API.
+</div></footer>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var state = {
+    book: (params.get("book") || "PSA").toUpperCase(),
+    ch: parseInt(params.get("ch") || "1", 10) || 1,
+    v: parseInt(params.get("v") || "", 10) || null,
+    ve: parseInt(params.get("ve") || "", 10) || null,
+    toEnd: params.get("end") === "1",
+  };
+  var index = null;
+  var books = {};
+
+  function geezOrArabic(verse) { return verse.a || String(verse.n); }
+
+  function fetchJson(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error(String(r.status));
+      return r.json();
+    });
+  }
+
+  function loadBook(id) {
+    if (books[id]) return Promise.resolve(books[id]);
+    return fetchJson("bible/am-1980/" + id + ".json").then(function (b) {
+      books[id] = b;
+      return b;
+    });
+  }
+
+  function updateUrl() {
+    var q = "?book=" + state.book + "&ch=" + state.ch
+      + (state.v ? "&v=" + state.v : "") + (state.ve ? "&ve=" + state.ve : "")
+      + (state.toEnd ? "&end=1" : "");
+    history.replaceState(null, "", q);
+  }
+
+  function render() {
+    loadBook(state.book).then(function (book) {
+      if (state.ch < 1) state.ch = 1;
+      if (state.ch > book.chapters.length) state.ch = book.chapters.length;
+      var verses = book.chapters[state.ch - 1];
+      document.getElementById("title").innerHTML =
+        book.name + ' <span class="ch">ምዕራፍ ' + state.ch + "</span>";
+      document.getElementById("subtitle").textContent =
+        book.nameEn + " " + state.ch + " · " + verses.length + " verses · am-1980";
+      document.title = book.name + " " + state.ch + " · EOTCDev Reader";
+
+      var hlStart = state.v, hlEnd = state.toEnd ? verses.length : (state.ve || state.v);
+      var note = document.getElementById("cite-note");
+      note.style.display = "none";
+      if (hlStart && hlStart > verses.length) {
+        note.style.display = "block";
+        note.textContent = "የተጠቀሰው ቁጥር (" + hlStart + ") በዚህ እትም አከፋፈል ከምዕራፉ ("
+          + verses.length + " ቁጥሮች) ውጭ ነው። The printed citation uses a different verse "
+          + "numbering than this edition; the whole chapter is shown.";
+        hlStart = null;
+      }
+
+      var box = document.getElementById("text");
+      box.innerHTML = "";
+      var firstHl = null;
+      verses.forEach(function (verse) {
+        var span = document.createElement("span");
+        span.className = "verse" + (hlStart && verse.n >= hlStart && verse.n <= hlEnd ? " hl" : "");
+        var vn = document.createElement("span");
+        vn.className = "vn";
+        vn.textContent = geezOrArabic(verse);
+        span.appendChild(vn);
+        span.appendChild(document.createTextNode(verse.t + " "));
+        if (!firstHl && span.className.indexOf("hl") >= 0) firstHl = span;
+        box.appendChild(span);
+      });
+      if (firstHl) firstHl.scrollIntoView({ block: "center" });
+      else window.scrollTo(0, 0);
+
+      document.getElementById("prev").disabled = state.ch <= 1;
+      document.getElementById("next").disabled = state.ch >= book.chapters.length;
+      var chSelect = document.getElementById("ch-select");
+      chSelect.innerHTML = "";
+      for (var i = 1; i <= book.chapters.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = "ምዕራፍ " + i;
+        if (i === state.ch) opt.selected = true;
+        chSelect.appendChild(opt);
+      }
+      updateUrl();
+    }).catch(function () {
+      document.getElementById("text").innerHTML =
+        '<div class="loading">Could not load this book. <a href="./">Back to the API</a></div>';
+    });
+  }
+
+  fetchJson("bible/am-1980/index.json").then(function (data) {
+    index = data;
+    var select = document.getElementById("book-select");
+    data.books.forEach(function (book) {
+      var opt = document.createElement("option");
+      opt.value = book.id;
+      opt.textContent = book.name;
+      if (book.id === state.book) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", function () {
+      state.book = select.value; state.ch = 1; state.v = state.ve = null; state.toEnd = false;
+      render();
+    });
+  }).catch(function () {});
+
+  document.getElementById("ch-select").addEventListener("change", function (event) {
+    state.ch = parseInt(event.target.value, 10);
+    state.v = state.ve = null; state.toEnd = false;
+    render();
+  });
+  document.getElementById("prev").addEventListener("click", function () {
+    state.ch--; state.v = state.ve = null; state.toEnd = false; render();
+  });
+  document.getElementById("next").addEventListener("click", function () {
+    state.ch++; state.v = state.ve = null; state.toEnd = false; render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -94,43 +94,43 @@
   .term .cm { color: var(--terminal-dim); font-style: italic; }
   .fixture-note { font: 12px var(--mono); color: var(--faint); margin-top: 10px; text-align: right; }
 
-  /* ---------- today ribbon ---------- */
-  .today {
-    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
-    background: var(--raised);
-  }
-  .today-inner { display: flex; align-items: baseline; gap: 34px; padding: 20px 0; flex-wrap: wrap; }
-  .today-label { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rubric); font-weight: 600; }
-  .today-date { font-family: var(--ethiopic); font-size: 21px; font-weight: 500; }
-  .today-sub { color: var(--ink-2); font-size: 14.5px; }
-  .today-fasika { margin-left: auto; font-size: 14.5px; color: var(--ink-2); }
+  /* ---------- hero today panel ---------- */
+  .hero-today { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .today-date { font-family: var(--ethiopic); font-size: 19px; font-weight: 500; }
+  .today-sub { color: var(--ink-2); font-size: 13.5px; margin-top: 2px; }
+  .ht-chips { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .today-fasika { font-size: 13.5px; color: var(--ink-2); }
   .today-fasika b { color: var(--rubric-deep); }
-  .today-sinksar {
-    display: none; grid-template-columns: 1.25fr 1fr 1fr; gap: 12px 36px;
-    padding: 0 0 20px; border-top: 1px dashed var(--rule);
-  }
-  .today-sinksar.on { display: grid; }
-  .sk-readings { font-family: var(--ethiopic); font-size: 14.5px; line-height: 2; margin: 4px 0 0; }
-  .sk-readings .svc { color: var(--rubric); font-size: 12px; margin-right: 6px; }
-  .sk-readings .sep { color: var(--rule); margin: 0 7px; }
-  .sk-api { font-size: 12px; font-family: var(--serif); margin-top: 4px; display: inline-block; }
   .fast-chip {
-    display: none; font-size: 12.5px; font-weight: 600; border-radius: 999px;
-    padding: 4px 13px; border: 1px solid var(--rule); color: var(--ink-2); background: var(--parchment);
+    display: none; font-size: 12px; font-weight: 600; border-radius: 999px;
+    padding: 3px 12px; border: 1px solid var(--rule); color: var(--ink-2); background: var(--raised);
   }
   .fast-chip.on { display: inline-block; }
   .fast-chip.fasting { color: var(--parchment); background: var(--rubric); border-color: var(--rubric); }
+  .sk-label { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .sk-label .geez { color: var(--rubric); letter-spacing: 0.04em; text-transform: none; font-size: 12.5px; margin-right: 6px; }
+  .sk-readings { font-family: var(--ethiopic); font-size: 13.5px; line-height: 1.95; margin-top: 2px; }
+  .sk-readings .svc { color: var(--rubric); font-size: 11px; margin-right: 5px; }
+  .sk-readings .sep { color: var(--rule); margin: 0 6px; }
+  .sk-readings a { color: var(--ink); }
+  .sk-readings a:hover { color: var(--rubric); text-decoration: underline; text-underline-offset: 3px; }
+  .sk-api { font-size: 12px; margin-top: 2px; display: inline-block; }
+  .ht-sinksar { display: none; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .ht-sinksar.on { display: grid; }
+  .sk-list { font-family: var(--ethiopic); font-size: 13.5px; line-height: 1.9; margin: 2px 0 0; padding: 0; list-style: none; }
+  .sk-list li { display: inline; }
+  .sk-list li + li::before { content: "\1364 "; color: var(--rubric); }
   .sub-row {
     display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    padding: 0 0 18px; font-size: 12.5px; color: var(--faint);
+    padding: 0 0 16px; font-size: 12.5px; color: var(--faint);
   }
   .sub-row a {
     font-size: 12.5px; font-weight: 600; color: var(--ink); border: 1px solid var(--rule);
-    border-radius: 999px; padding: 4px 14px; background: var(--parchment);
+    border-radius: 999px; padding: 4px 14px; background: var(--raised);
   }
   .sub-row a:hover { border-color: var(--rubric); color: var(--rubric); text-decoration: none; }
-  .upcoming { border-bottom: 1px solid var(--rule); background: var(--parchment); }
-  .upcoming-inner { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 14px 0; }
+  .upcoming { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: var(--parchment); }
+  .upcoming-inner { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 14px 0 10px; }
   .up-label { font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-right: 6px; }
   .up-chip {
     border: 1px solid var(--rule); background: var(--raised); border-radius: 999px;
@@ -138,13 +138,6 @@
   }
   .up-chip .geez { color: var(--rubric-deep); font-weight: 500; margin-right: 5px; }
   .up-chip b { color: var(--ink); font-weight: 600; }
-  .sk-col { padding-top: 14px; }
-  .sk-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
-  .sk-label .geez { color: var(--rubric); letter-spacing: 0.05em; text-transform: none; font-size: 13px; margin-right: 6px; }
-  .sk-list { font-family: var(--ethiopic); font-size: 15px; line-height: 1.9; margin: 4px 0 0; padding: 0; list-style: none; }
-  .sk-list li { display: inline; }
-  .sk-list li + li::before { content: "፤ "; color: var(--rubric); }
-  @media (max-width: 700px) { .today-sinksar { grid-template-columns: 1fr; gap: 0; } }
 
   /* ---------- sections ---------- */
   section { padding: 74px 0 0; }
@@ -281,9 +274,6 @@
     .ics { grid-template-columns: 1fr; }
     .ep { grid-template-columns: 52px 1fr; }
     .ep .desc { grid-column: 2; margin-top: -6px; }
-    .today-fasika { margin-left: 0; }
-    .today-sinksar { grid-template-columns: 1fr 1fr; }
-    .today-sinksar .sk-col:first-child { grid-column: 1 / -1; }
   }
   @media (max-width: 560px) {
     .wrap { padding: 0 18px; }
@@ -298,8 +288,8 @@
     .sec-sub { margin-bottom: 24px; }
     .num { padding: 18px 16px; }
     .num .v { font-size: 25px; }
-    .today-date { font-size: 17.5px; }
-    .today-inner { gap: 12px 22px; padding: 16px 0; }
+    .today-date { font-size: 17px; }
+    .ht-sinksar { grid-template-columns: 1fr; }
     .term pre { font-size: 11px; }
     .fixture-note { text-align: left; }
     .ep { gap: 10px; padding: 10px 0; }
@@ -345,49 +335,44 @@
       <a class="btn ghost" href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
     </div>
   </div>
-  <div>
+  <div id="today">
     <div class="term">
       <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="term-title">sh · Easter Sunday, 2026</span></div>
-      <pre><span class="p">$</span> curl https://eotcdev-api.natinael-96.workers.dev<span class="s">/v1/date/2026-04-12</span>
-{
-  <span class="k">"gregorian"</span>: { <span class="k">"date"</span>: <span class="s">"2026-04-12"</span> },
-  <span class="k">"ethiopic"</span>:  { <span class="k">"date"</span>: <span class="s">"2018-08-04"</span>,
-                 <span class="k">"monthName"</span>: { <span class="k">"amharic"</span>: <span class="s">"ሚያዝያ"</span> } },
-  <span class="k">"weekday"</span>:   { <span class="k">"amharic"</span>: <span class="s">"እሑድ"</span>, <span class="k">"english"</span>: <span class="s">"Sunday"</span> },
-  <span class="k">"fasting"</span>:   { <span class="k">"isFasting"</span>: false,
-                 <span class="k">"fastFreeSeason"</span>: true },
-  <span class="k">"feasts"</span>: [{ <span class="k">"amharic"</span>: <span class="s">"ትንሣኤ"</span>,
-               <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span> }]
-}</pre>
+        <span class="term-title" id="term-title">sh · ዛሬ · Today</span></div>
+      <pre id="term-body"><span class="p">$</span> curl https://eotcdev-api.natinael-96.workers.dev<span class="s">/v1/today</span></pre>
     </div>
-    <div class="fixture-note">real bytes from spec/responses.json, asserted by both test suites</div>
+    <div class="hero-today">
+      <div>
+        <span class="today-date geez" id="t-eth">…</span>
+        <div class="today-sub" id="t-greg"></div>
+        <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
+      </div>
+      <div class="ht-chips">
+        <span class="fast-chip" id="t-fast"></span>
+        <span class="today-fasika" id="t-fasika"></span>
+      </div>
+      <div class="ht-block">
+        <div class="sk-label"><span class="geez">ግጻዌ</span> today's readings</div>
+        <div class="sk-readings" id="sk-readings"></div>
+        <a class="sk-api" id="sk-readings-link" href="#" target="_blank" rel="noopener">full readings from the API →</a>
+      </div>
+      <div class="ht-sinksar" id="t-sinksar">
+        <div>
+          <div class="sk-label"><span class="geez">ስንክሳር · ዓመታዊ</span> of the year</div>
+          <ul class="sk-list" id="sk-annual"></ul>
+        </div>
+        <div>
+          <div class="sk-label"><span class="geez">ወርኀዊ</span> of the month</div>
+          <ul class="sk-list" id="sk-monthly"></ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="today" id="today">
-  <div class="wrap today-inner">
-    <span class="today-label">ዛሬ · Today</span>
-    <span class="today-date geez" id="t-eth">…</span>
-    <span class="today-sub" id="t-greg"></span>
-    <span class="fast-chip" id="t-fast"></span>
-    <span class="today-fasika" id="t-fasika"></span>
-    <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
-  </div>
-  <div class="wrap today-sinksar" id="t-sinksar">
-    <div class="sk-col">
-      <div class="sk-label"><span class="geez">ግጻዌ</span> today's readings</div>
-      <div class="sk-readings" id="sk-readings"></div>
-      <a class="sk-api" id="sk-readings-link" href="#">full readings from the API →</a>
-    </div>
-    <div class="sk-col">
-      <div class="sk-label"><span class="geez">ስንክሳር · ዓመታዊ</span> commemorations of the year</div>
-      <ul class="sk-list" id="sk-annual"></ul>
-    </div>
-    <div class="sk-col">
-      <div class="sk-label"><span class="geez">ወርኀዊ</span> commemorations of the month</div>
-      <ul class="sk-list" id="sk-monthly"></ul>
-    </div>
+<div class="upcoming">
+  <div class="wrap upcoming-inner" id="upcoming">
+    <span class="up-label">ቀጣይ · Upcoming</span>
   </div>
   <div class="wrap sub-row" id="sub-row">
     <span>Subscribe in your calendar:</span>
@@ -395,11 +380,6 @@
     <a id="sub-feasts" href="#">በዓላት · Feasts</a>
     <a id="sub-all" href="#">ሁሉም · All</a>
     <span>works with Google, Apple, and Outlook</span>
-  </div>
-</div>
-<div class="upcoming">
-  <div class="wrap upcoming-inner" id="upcoming">
-    <span class="up-label">ቀጣይ · Upcoming</span>
   </div>
 </div>
 
@@ -506,30 +486,7 @@
 
 <section>
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">፫</span><h2>Two subtleties this API gets right</h2></div>
-    <p class="sec-sub">Popular sources round these off. The arithmetic doesn't.</p>
-    <div class="notes">
-      <div class="note-card">
-        <h4><span class="geez">ገና</span> is not always January 7</h4>
-        <p>Ethiopian year 2016 began on Sept 12, 2023 (2015 was a leap year), so every date until
-        the next Gregorian leap day shifted by one. Tahsas 29 fell on <b>January 8, 2024</b>, and
-        Lalibela observed it there. Timket shifts identically. This API returns the true
-        calendar arithmetic, not the approximation.</p>
-      </div>
-      <div class="note-card">
-        <h4>The weekly fast is not absolute</h4>
-        <p>Wednesdays and Fridays are fasting days, except during the fifty days from Fasika to
-        Pentecost (<span class="geez">ሃምሳ</span>), and except when a great feast of the Lord falls on one.
-        Both exceptions are implemented and flagged in the response as
-        <code>fastFreeSeason</code> and <code>feastOverride</code>.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">፬</span><h2>Subscribe without writing code</h2></div>
+    <div class="sec-head"><span class="sec-num">፫</span><h2>Subscribe without writing code</h2></div>
     <div class="ics" style="margin-top:26px">
       <div>
         <div class="ics-url" id="ics-url">https://eotcdev-api.natinael-96.workers.dev/v1/calendar/ics?year=2018&amp;type=fasting</div>
@@ -543,7 +500,7 @@
 
 <section id="data">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">፭</span><h2>Where the data comes from</h2></div>
+    <div class="sec-head"><span class="sec-num">፬</span><h2>Where the data comes from</h2></div>
     <p class="sec-sub">Infrastructure you can trust has to say what it knows, what it inferred,
     and what it doesn't have yet.</p>
     <div class="honesty">
@@ -841,8 +798,11 @@
     var box = document.getElementById("sk-readings");
     var lit = (day.readings && day.readings.liturgy) || {};
     var mat = (day.readings && day.readings.matins) || {};
-    function row(label, value) {
-      if (!value) return;
+    // A reading is {t, b, c, v, e, f}: display text plus the canonical
+    // reference; when the book and chapter are known the row links into the
+    // on-site reader, opened in its own page.
+    function row(label, ref) {
+      if (!ref || !ref.t) return;
       if (box.childNodes.length) {
         var sep = document.createElement("span");
         sep.className = "sep"; sep.textContent = "|";
@@ -851,12 +811,23 @@
       var svc = document.createElement("span");
       svc.className = "svc"; svc.textContent = label;
       box.appendChild(svc);
-      box.appendChild(document.createTextNode(value));
+      if (ref.b && ref.c) {
+        var a = document.createElement("a");
+        a.textContent = ref.t;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.href = "read.html?book=" + ref.b + "&ch=" + ref.c
+          + (ref.v ? "&v=" + ref.v : "") + (ref.e ? "&ve=" + ref.e : "")
+          + (ref.f ? "&end=1" : "");
+        box.appendChild(a);
+      } else {
+        box.appendChild(document.createTextNode(ref.t));
+      }
     }
     row("ምስባክ", lit.psalm || mat.psalm);
     (lit.epistles || []).forEach(function (ref) { row("ንባብ", ref); });
     row("ወንጌል", lit.gospel || mat.gospel);
-    row("ቅዳሴ", lit.anaphora);
+    row("ቅዳሴ", lit.anaphora ? { t: lit.anaphora } : null);
     var isoToday = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0")
       + "-" + String(now.getDate()).padStart(2, "0");
     document.getElementById("sk-readings-link").href =
@@ -867,9 +838,50 @@
   // ---- Daily-companion extras -----------------------------------------------
   var API = "https://eotcdev-api.natinael-96.workers.dev";
 
+  // The hero terminal shows today's /v1/today call, rendered first from the
+  // page's own computation and upgraded with fasting and feasts once the
+  // live response arrives.
+  var G_MON_FULL = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  function esc(value) {
+    return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  }
+  function renderTerminal(today) {
+    var k = function (name) { return '<span class="k">"' + name + '"</span>'; };
+    var s = function (value) { return '<span class="s">"' + esc(value) + '"</span>'; };
+    var gIso = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0")
+      + "-" + String(now.getDate()).padStart(2, "0");
+    var eIso = e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0");
+    var lines = [
+      '<span class="p">$</span> curl https://eotcdev-api.natinael-96.workers.dev<span class="s">/v1/today</span>',
+      "{",
+      "  " + k("gregorian") + ": { " + k("date") + ": " + s(gIso) + " },",
+      "  " + k("ethiopic") + ":  { " + k("date") + ": " + s(eIso) + ",",
+      "                 " + k("monthName") + ": { " + k("amharic") + ": " + s(MONTHS_AM[e.month - 1]) + " } },",
+      "  " + k("weekday") + ":   { " + k("amharic") + ": " + s(WD_AM[wd]) + ", " + k("english") + ": " + s(WD_EN[wd]) + " },",
+    ];
+    if (today && today.fasting) {
+      lines.push("  " + k("fasting") + ":   { " + k("isFasting") + ": " + today.fasting.isFasting + ",");
+      lines.push("                 " + k("reason") + ": " + s(today.fasting.reason || "") + " },");
+    }
+    if (today && today.feasts && today.feasts.length) {
+      lines.push("  " + k("feasts") + ": [{ " + k("amharic") + ": " + s(today.feasts[0].amharic) + ",");
+      lines.push("               " + k("english") + ": " + s(today.feasts[0].english) + " }]");
+    } else {
+      var last = lines.length - 1;
+      lines[last] = lines[last].replace(/,$/, "");
+    }
+    lines.push("}");
+    document.getElementById("term-body").innerHTML = lines.join("\n");
+    document.getElementById("term-title").textContent =
+      "sh · " + WD_EN[wd] + ", " + G_MON_FULL[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear();
+  }
+  renderTerminal(null);
+
   // Live fasting status from the API; the chip stays hidden if unreachable.
   fetch(API + "/v1/today").then(function (r) { return r.json(); }).then(function (t) {
     if (!t || !t.fasting) return;
+    renderTerminal(t);
     var chip = document.getElementById("t-fast");
     if (t.fasting.isFasting) {
       chip.textContent = "ጾም · " + (t.fasting.reason || "fasting day");
