@@ -1,25 +1,70 @@
-// Emit web/sinksar.json: the day-keyed Sinksar annual/monthly commemoration
-// titles the static site's "today" panel renders. Derived from the same
-// generated catalog the API serves, so the site can never drift from it.
+// Emit web/daily.json: for every Ethiopian month-day, the Sinksar annual and
+// monthly commemoration titles plus the day's Gitsawe reading references,
+// rendered with Amharic book abbreviations. Derived from the same generated
+// catalogs the API serves, so the site can never drift from it.
 import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
-const catalog = JSON.parse(
-  fs.readFileSync(path.join(root, "py/eotc/gitsawe_catalog.js"), "utf8")
+const loadCatalog = (file) => JSON.parse(
+  fs.readFileSync(path.join(root, file), "utf8")
     .replace(/^export default /, "").replace(/;\s*$/, ""),
 );
+const catalog = loadCatalog("py/eotc/gitsawe_catalog.js");
+const bible = loadCatalog("py/eotc/bible_catalog.js");
+
+const abbr = new Map(bible.books.map((book) => [book.id, book.names.amharicAbbreviation || book.id]));
+
+function refString(reading) {
+  const ref = reading.canonicalReference;
+  if (ref && ref.chapter) {
+    let out = (abbr.get(ref.book) ?? ref.book) + " " + ref.chapter;
+    if (ref.verseStart) {
+      out += ":" + ref.verseStart;
+      if (ref.verseEnd && ref.verseEnd !== ref.verseStart) out += "-" + ref.verseEnd;
+      else if (ref.toEndOfChapter) out += "ff";
+    }
+    return out;
+  }
+  // Unresolved citation: fall back to the printed source label.
+  const source = [reading.sourceBook, reading.sourceCitation].filter(Boolean).join(" ").trim();
+  return source || null;
+}
+
+function serviceRefs(service) {
+  if (!service) return null;
+  const first = (list) => (list && list.length ? refString(list[0]) : null);
+  const out = {
+    psalm: first(service.psalms),
+    gospel: first(service.gospels),
+  };
+  const epistles = (service.epistlesAndActs ?? []).map(refString).filter(Boolean);
+  if (epistles.length) out.epistles = epistles;
+  if (service.anaphora) out.anaphora = service.anaphora.replace(/\s*[።፡]\s*$/, "");
+  return out;
+}
 
 const out = {};
 for (const [key, day] of Object.entries(catalog.days)) {
   const sinksar = day.sinksar;
-  if (!sinksar) continue;
+  const services = day.gitsawe.services;
   out[key] = {
-    annual: sinksar.annualFeasts.items.map((item) => item.title),
-    monthly: sinksar.monthlyFeasts.items.map((item) => item.title),
+    annual: sinksar ? sinksar.annualFeasts.items.map((item) => item.title) : [],
+    monthly: sinksar ? sinksar.monthlyFeasts.items.map((item) => item.title) : [],
+    readings: {
+      matins: serviceRefs(services.matins),
+      liturgy: serviceRefs(services.liturgy),
+      vespers: serviceRefs(services.vespers),
+    },
   };
 }
 
-const file = path.join(root, "web/sinksar.json");
+const file = path.join(root, "web/daily.json");
 fs.writeFileSync(file, JSON.stringify(out) + "\n");
 console.log(`wrote ${path.relative(root, file)} (${Object.keys(out).length} days, ${fs.statSync(file).size} bytes)`);
+
+const legacy = path.join(root, "web/sinksar.json");
+if (fs.existsSync(legacy)) {
+  fs.rmSync(legacy);
+  console.log("removed web/sinksar.json (superseded by daily.json)");
+}

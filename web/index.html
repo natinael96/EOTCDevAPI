@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EOTCDev API: the Ethiopian Orthodox calendar, as infrastructure</title>
+<title>EOTCDev API: the Ethiopian Orthodox Tewahedo Church calendar, as infrastructure</title>
 <meta name="description" content="An open, free REST API for the Ethiopian Orthodox Tewahedo Church calendar: date conversion, fasting, feasts, Bahire Hasab, and the Gitsawe lectionary. No auth, no keys, no database.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -106,10 +106,14 @@
   .today-fasika { margin-left: auto; font-size: 14.5px; color: var(--ink-2); }
   .today-fasika b { color: var(--rubric-deep); }
   .today-sinksar {
-    display: none; grid-template-columns: 1fr 1fr; gap: 12px 40px;
+    display: none; grid-template-columns: 1.25fr 1fr 1fr; gap: 12px 36px;
     padding: 0 0 20px; border-top: 1px dashed var(--rule);
   }
   .today-sinksar.on { display: grid; }
+  .sk-readings { font-family: var(--ethiopic); font-size: 14.5px; line-height: 2; margin: 4px 0 0; }
+  .sk-readings .svc { color: var(--rubric); font-size: 12px; margin-right: 6px; }
+  .sk-readings .sep { color: var(--rule); margin: 0 7px; }
+  .sk-api { font-size: 12px; font-family: var(--serif); margin-top: 4px; display: inline-block; }
   .sk-col { padding-top: 14px; }
   .sk-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
   .sk-label .geez { color: var(--rubric); letter-spacing: 0.05em; text-transform: none; font-size: 13px; margin-right: 6px; }
@@ -275,7 +279,7 @@
 <div class="wrap hero">
   <div>
     <div class="rubricline">ባሕረ ሐሳብ&ensp;·&ensp;ግጻዌ&ensp;·&ensp;ስንክሳር&ensp;·&ensp;በዓላት</div>
-    <h1>The Ethiopian Orthodox calendar, as <em>infrastructure</em>.</h1>
+    <h1>The Ethiopian Orthodox Tewahedo Church calendar, as <em>infrastructure</em>.</h1>
     <p class="lede">An open, free REST API for the Tewahedo Church year: date conversion,
     fasting, feasts, the full Bahire Hasab computation, and a date-level bridge between
     the Gitsawe, Sinksar, and Bible. No auth. No API key. No database.</p>
@@ -313,6 +317,11 @@
     <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
   </div>
   <div class="wrap today-sinksar" id="t-sinksar">
+    <div class="sk-col">
+      <div class="sk-label"><span class="geez">ግጻዌ</span> today's readings</div>
+      <div class="sk-readings" id="sk-readings"></div>
+      <a class="sk-api" id="sk-readings-link" href="#">full readings from the API →</a>
+    </div>
     <div class="sk-col">
       <div class="sk-label"><span class="geez">ስንክሳር · ዓመታዊ</span> commemorations of the year</div>
       <ul class="sk-list" id="sk-annual"></ul>
@@ -742,10 +751,11 @@
     renderDeck(false);
   }
 
-  // Today's Sinksar commemorations: same data the API's /v1/sinksar serves.
-  fetch("sinksar.json").then(function (r) { return r.json(); }).then(function (sk) {
-    var day = sk[e.month + "-" + e.day];
-    if (!day || (!day.annual.length && !day.monthly.length)) return;
+  // Today's readings and Sinksar commemorations: the same data the API's
+  // /v1/readings and /v1/sinksar endpoints serve.
+  fetch("daily.json").then(function (r) { return r.json(); }).then(function (daily) {
+    var day = daily[e.month + "-" + e.day];
+    if (!day) return;
     function fill(id, items) {
       var ul = document.getElementById(id);
       items.forEach(function (t) {
@@ -757,6 +767,30 @@
     }
     fill("sk-annual", day.annual);
     fill("sk-monthly", day.monthly);
+
+    var box = document.getElementById("sk-readings");
+    var lit = (day.readings && day.readings.liturgy) || {};
+    var mat = (day.readings && day.readings.matins) || {};
+    function row(label, value) {
+      if (!value) return;
+      if (box.childNodes.length) {
+        var sep = document.createElement("span");
+        sep.className = "sep"; sep.textContent = "|";
+        box.appendChild(sep);
+      }
+      var svc = document.createElement("span");
+      svc.className = "svc"; svc.textContent = label;
+      box.appendChild(svc);
+      box.appendChild(document.createTextNode(value));
+    }
+    row("ምስባክ", lit.psalm || mat.psalm);
+    (lit.epistles || []).forEach(function (ref) { row("ንባብ", ref); });
+    row("ወንጌል", lit.gospel || mat.gospel);
+    row("ቅዳሴ", lit.anaphora);
+    var isoToday = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0")
+      + "-" + String(now.getDate()).padStart(2, "0");
+    document.getElementById("sk-readings-link").href =
+      "https://eotcdev-api.natinael-96.workers.dev/v1/readings/" + isoToday;
     document.getElementById("t-sinksar").classList.add("on");
   }).catch(function () {});
 })();
