@@ -22,7 +22,13 @@ from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 
 from .bahirehasab import MOVABLE_FEASTS, bahire_hasab, movable_feasts
+from .bible import (
+    bible_book, bible_books, bible_canon_note, bible_editions,
+    bible_versification, chapter_text, resolve_book,
+)
+from .citations import parse_citation
 from .day import describe_day, eth_iso, iso
+from .feast_search import feast_by_key, search_feasts
 from .ethiopic import (
     MONTHS, WEEKDAYS, days_in_ethiopic_month, ethiopic_to_jdn,
     gregorian_to_jdn, is_ethiopic_leap_year, jdn_to_ethiopic, jdn_to_weekday,
@@ -220,14 +226,23 @@ async def index() -> dict[str, Any]:
             "GET /v1/fasting/{date}": "Is it a fasting day, and why. ?calendar=gregorian|ethiopian",
             "GET /v1/fasts/{year}": "All fasting periods of an Ethiopian year.",
             "GET /v1/feasts/{year}": "All feasts. ?type=all|movable|fixed",
+            "GET /v1/feasts/{year}/{key}": "One feast resolved for a year, by key, name, or alias.",
+            "GET /v1/feasts/search": "Find a feast by any of its names, homophone-aware. ?q=&year=",
+            "GET /v1/upcoming": "Upcoming feasts and fasts. ?days=30&type=all|feasts|fasts",
             "GET /v1/bahire-hasab/{year}": "The full ባሕረ ሐሳብ computation.",
             "GET /v1/calendar/{year}/{month}": "One Ethiopian month, day by day.",
+            "GET /v1/calendar/range": "Describe a date range, up to 366 days. ?start=&end=&calendar=",
             "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
             "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
             "GET /v1/sinksar/{date}": "The day's Sinksar annual and monthly commemoration lists.",
             "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
+            "GET /v1/bible/books": "The canon: book metadata and verse counts. ?testament=&section=",
+            "GET /v1/bible/books/{id}": "One book with per-chapter verse counts.",
+            "GET /v1/bible/editions": "Bible editions registry and licensing.",
+            "GET /v1/bible/parse": "Parse a citation into a canonical reference. ?q=",
+            "GET /v1/bible/{edition}/{book}/{chapter}": "Chapter reference; verse text only on licensed self-hosts.",
             "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}",
         },
         "examples": [
@@ -390,6 +405,43 @@ async def fasts(year: str) -> dict[str, Any]:
     }
 
 
+@app.get("/v1/feasts/search", summary="Find a feast by any of its names")
+async def feasts_search(q: str = Query(None), year: str = Query(None),
+                        calendar: str = Query("gregorian")) -> dict[str, Any]:
+    if not q or not q.strip():
+        raise ApiError(400, "Missing query parameter 'q'.", "Example: /v1/feasts/search?q=ትንሳኤ")
+    y = parse_year(year) if year else None
+    matches = []
+    for match in search_feasts(q):
+        definition = match["definition"]
+        entry = {
+            "key": definition["key"],
+            "amharic": definition["amharic"],
+            "translit": definition["translit"],
+            "english": definition["english"],
+            "movable": definition["movable"],
+            "aliases": definition["aliases"],
+            "matchedOn": match["matchedOn"],
+            "matchedValue": match["matchedValue"],
+            "confidence": match["confidence"],
+        }
+        if y is not None:
+            entry["date"] = _resolve_feast_for_year(definition, y)
+        matches.append(entry)
+    return {"query": q, "normalized": True, "ethiopicYear": y,
+            "count": len(matches), "matches": matches}
+
+
+def _resolve_feast_for_year(definition: dict[str, Any], year: int) -> dict[str, Any]:
+    movable = next((f for f in movable_feasts(year) if f["key"] == definition["key"]), None)
+    if movable is not None:
+        jdn = movable["jdn"]
+    else:
+        jdn = next(f for f in fixed_feasts(year) if f["key"] == definition["key"])["jdn"]
+    return {"gregorian": iso(jdn), "ethiopic": _eth_iso_of(jdn),
+            "weekday": _wd(jdn_to_weekday(jdn))}
+
+
 @app.get("/v1/feasts/{year}", summary="Feasts of an Ethiopian year")
 async def feasts(year: str, type: str = Query("all", pattern="^(all|movable|fixed)$")) -> dict[str, Any]:
     y = parse_year(year)
@@ -416,6 +468,241 @@ async def feasts(year: str, type: str = Query("all", pattern="^(all|movable|fixe
     else:
         out = sorted(movable + fixed, key=lambda f: f["gregorian"])
     return {"ethiopicYear": y, "type": t, "count": len(out), "feasts": out}
+
+
+@app.get("/v1/feasts/{year}/{key}", summary="One feast resolved for a year")
+async def feast_lookup(year: str, key: str) -> dict[str, Any]:
+    y = parse_year(year)
+    definition = feast_by_key(key)
+    if definition is None:
+        raise ApiError(404, f"Unknown feast '{key}'.",
+                       "Use a feast key, name, or alias; /v1/feasts/search?q= finds them.")
+    return {
+        "ethiopicYear": y,
+        "key": definition["key"],
+        "amharic": definition["amharic"],
+        "translit": definition["translit"],
+        "english": definition["english"],
+        "movable": definition["movable"],
+        "major": definition["major"],
+        "aliases": definition["aliases"],
+        "date": _resolve_feast_for_year(definition, y),
+    }
+
+
+@app.get("/v1/upcoming", summary="Upcoming feasts and fasts")
+async def upcoming(days: str = Query("30"), type: str = Query("all"),
+                   tz: str = Query("Africa/Addis_Ababa"),
+                   date_from: str = Query(None, alias="from"),
+                   calendar: str = Query("gregorian")) -> dict[str, Any]:
+    try:
+        n_days = int(days)
+    except ValueError:
+        n_days = -1
+    if n_days < 1 or n_days > 366:
+        raise ApiError(400, f"'days' must be an integer from 1 to 366, got '{days}'.")
+    t = type.lower()
+    if t not in ("all", "feasts", "fasts"):
+        raise ApiError(400, f"Unknown type '{t}'.", "Use 'all', 'feasts' or 'fasts'.")
+    if date_from:
+        start_jdn = parse_date(date_from, calendar.lower())
+    else:
+        try:
+            now = datetime.now(ZoneInfo(tz))
+        except (ZoneInfoNotFoundError, ValueError, KeyError):
+            raise ApiError(400, f"Unknown timezone '{tz}'.",
+                           "Use an IANA name, e.g. Africa/Addis_Ababa.")
+        start_jdn = gregorian_to_jdn(now.year, now.month, now.day)
+    end_jdn = start_jdn + n_days - 1
+
+    items: list[dict[str, Any]] = []
+    if t != "fasts":
+        for offset in range(n_days):
+            jdn = start_jdn + offset
+            for feast in describe_day(jdn)["feasts"]:
+                items.append({
+                    "daysAway": offset, "kind": "feast",
+                    "gregorian": iso(jdn), "ethiopic": _eth_iso_of(jdn),
+                    "feast": feast,
+                })
+    if t != "feasts":
+        start_year = jdn_to_ethiopic(start_jdn).year
+        end_year = jdn_to_ethiopic(end_jdn).year
+        for y in range(start_year, end_year + 2):
+            for period in fast_periods(y):
+                for kind, jdn in (("fast_begins", period["startJDN"]), ("fast_ends", period["endJDN"])):
+                    if jdn < start_jdn or jdn > end_jdn:
+                        continue
+                    items.append({
+                        "daysAway": jdn - start_jdn, "kind": kind,
+                        "gregorian": iso(jdn), "ethiopic": _eth_iso_of(jdn),
+                        "fast": {
+                            "key": period["key"], "amharic": period["amharic"],
+                            "translit": period["translit"], "english": period["english"],
+                            "movable": period["movable"], "days": period["days"],
+                        },
+                    })
+    items.sort(key=lambda item: (
+        item["daysAway"], item["kind"],
+        str((item.get("feast") or item.get("fast") or {}).get("key", "")),
+    ))
+    return {
+        "from": {"gregorian": iso(start_jdn), "ethiopic": _eth_iso_of(start_jdn)},
+        "days": n_days, "type": t, "count": len(items), "items": items,
+    }
+
+
+@app.get("/v1/calendar/range", summary="Describe a date range")
+async def calendar_range(start: str = Query(None), end: str = Query(None),
+                         calendar: str = Query("gregorian")) -> dict[str, Any]:
+    if not start or not end:
+        raise ApiError(400, "Both 'start' and 'end' query parameters are required.",
+                       "Example: /v1/calendar/range?start=2026-04-01&end=2026-04-30")
+    start_jdn = parse_date(start, calendar.lower())
+    end_jdn = parse_date(end, calendar.lower())
+    if end_jdn < start_jdn:
+        raise ApiError(400, "'end' must not be before 'start'.")
+    count = end_jdn - start_jdn + 1
+    if count > 366:
+        raise ApiError(400, f"Range covers {count} days; the maximum is 366.",
+                       "Use /v1/calendar/{year}/{month} per month, or split the range.")
+    return {
+        "start": {"gregorian": iso(start_jdn), "ethiopic": _eth_iso_of(start_jdn)},
+        "end": {"gregorian": iso(end_jdn), "ethiopic": _eth_iso_of(end_jdn)},
+        "count": count,
+        "days": [describe_day(start_jdn + i) for i in range(count)],
+    }
+
+
+def _book_summary(book: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": book["id"], "order": book["order"], "slug": book["slug"],
+        "testament": book["testament"], "section": book["section"],
+        "names": book["names"], "chapters": book["chapters"],
+    }
+
+
+@app.get("/v1/bible/books", summary="The canon: book metadata and verse counts")
+async def bible_books_endpoint(testament: str = Query(None), section: str = Query(None)) -> dict[str, Any]:
+    t = testament.lower() if testament else None
+    s = section.lower() if section else None
+    if t and t not in ("old", "new"):
+        raise ApiError(400, f"Unknown testament '{t}'.", "Use 'old' or 'new'.")
+    books = [
+        _book_summary(book) for book in bible_books()
+        if (not t or book["testament"] == t)
+        and (not s or (book["section"] or "").lower() == s)
+    ]
+    return {
+        "versification": bible_versification(), "canonNote": bible_canon_note(),
+        "count": len(books), "books": books,
+    }
+
+
+@app.get("/v1/bible/books/{id}", summary="One book with per-chapter verse counts")
+async def bible_book_endpoint(id: str) -> dict[str, Any]:
+    book = bible_book(id)
+    if book is None:
+        resolved = resolve_book(id)
+        book = resolved["book"] if resolved else None
+    if book is None:
+        raise ApiError(404, f"Unknown book '{id}'.", "See /v1/bible/books for the canon.")
+    return {
+        **_book_summary(book),
+        "versification": bible_versification(),
+        "verseCounts": book["verseCounts"],
+        "textEditions": book["textEditions"],
+    }
+
+
+@app.get("/v1/bible/editions", summary="Bible editions registry and licensing")
+async def bible_editions_endpoint() -> dict[str, Any]:
+    return {"count": len(bible_editions()), "editions": bible_editions()}
+
+
+@app.get("/v1/bible/parse", summary="Parse a citation into a canonical reference")
+async def bible_parse(q: str = Query(None)) -> dict[str, Any]:
+    if not q or not q.strip():
+        raise ApiError(400, "Missing query parameter 'q'.",
+                       "Example: /v1/bible/parse?q=ዮሐንስ ም· ፫ ቍ ፲፮")
+    tokens = q.strip().split()
+    match = None
+    citation = None
+    # Shortest book part first, so citation numerals never get swallowed into
+    # the book label; numbered book names still win because their bare prefix
+    # is ambiguous until the numeral is included.
+    for i in range(1, len(tokens)):
+        candidate = resolve_book(" ".join(tokens[:i]))
+        if not candidate:
+            continue
+        parsed = parse_citation(" ".join(tokens[i:]))
+        if parsed["chapter"]:
+            match, citation = candidate, parsed
+            break
+        if match is None:
+            match, citation = candidate, parsed
+    if match is None:
+        whole = resolve_book(q)
+        if whole:
+            match = whole
+            citation = {"chapter": None, "verseStart": None, "verseEnd": None, "toEndOfChapter": False}
+    book = match["book"] if match else None
+    if book and citation and citation["chapter"]:
+        within = (1 <= citation["chapter"] <= book["chapters"]
+                  and (citation["verseStart"] is None
+                       or 1 <= citation["verseStart"] <= book["verseCounts"][citation["chapter"] - 1]))
+    else:
+        within = None
+    return {
+        "input": q,
+        "resolved": book is not None,
+        "book": ({"id": book["id"], "names": book["names"],
+                  "matchedOn": match["matchedOn"], "confidence": match["confidence"]}
+                 if book else None),
+        "chapter": citation["chapter"] if citation else None,
+        "verseStart": citation["verseStart"] if citation else None,
+        "verseEnd": citation["verseEnd"] if citation else None,
+        "toEndOfChapter": citation["toEndOfChapter"] if citation else False,
+        "withinBounds": within,
+        "versification": bible_versification(),
+    }
+
+
+@app.get("/v1/bible/{edition}/{book}/{chapter}", summary="Chapter reference and, on licensed self-hosts, verse text")
+async def bible_chapter(edition: str, book: str, chapter: str) -> dict[str, Any]:
+    edition_entry = next((e for e in bible_editions() if e["id"] == edition), None)
+    if edition_entry is None:
+        known = ", ".join(e["id"] for e in bible_editions())
+        raise ApiError(400, f"Unknown edition '{edition}'.", f"Known editions: {known}.")
+    resolved_book = bible_book(book)
+    if resolved_book is None:
+        resolved = resolve_book(book)
+        resolved_book = resolved["book"] if resolved else None
+    if resolved_book is None:
+        raise ApiError(404, f"Unknown book '{book}'.", "See /v1/bible/books for the canon.")
+    try:
+        n_chapter = int(chapter)
+    except ValueError:
+        n_chapter = 0
+    if n_chapter < 1:
+        raise ApiError(400, f"Chapter must be a positive integer, got '{chapter}'.")
+    if n_chapter > resolved_book["chapters"]:
+        raise ApiError(404, f"{resolved_book['id']} has {resolved_book['chapters']} chapters; "
+                            f"there is no chapter {n_chapter}.")
+    verses = chapter_text(edition, resolved_book, n_chapter)
+    return {
+        "edition": {"id": edition_entry["id"], "title": edition_entry["title"],
+                    "license": edition_entry["license"], "source": edition_entry["source"]},
+        "book": {"id": resolved_book["id"], "names": resolved_book["names"]},
+        "chapter": n_chapter,
+        "verseCount": resolved_book["verseCounts"][n_chapter - 1],
+        "verses": verses,
+        "textAvailable": verses is not None,
+        "reason": (None if verses is not None
+                   else "Verse text is not bundled with the public MIT runtime; the edition is CC BY-NC-ND."),
+        "selfHost": (None if verses is not None
+                     else "Self-hosted Python deployments with the edition present locally can serve text; see the documentation."),
+    }
 
 
 @app.get("/v1/bahire-hasab/{year}", summary="The full ባሕረ ሐሳብ computation")
