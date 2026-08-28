@@ -50,7 +50,7 @@ Change one implementation without the other and a build fails.
 | `GET /v1/feasts/{year}` | All feasts. `?type=all\|movable\|fixed` |
 | `GET /v1/feasts/{year}/{key}` | One feast resolved for a year, by key, name, or alias |
 | `GET /v1/feasts/search` | Find a feast by any of its names, homophone-aware (ትንሳኤ finds ትንሣኤ). `?q=&year=` |
-| `GET /v1/upcoming` | Upcoming feasts and fasts. `?days=30&type=all\|feasts\|fasts` |
+| `GET /v1/upcoming` | Upcoming feasts and fasts, limited to the next 30 days. `?days=30&type=all\|feasts\|fasts` |
 | `GET /v1/calendar/range` | Describe any date range, up to 366 days. `?start=&end=` |
 | `GET /v1/bahire-hasab/{year}` | The full ባሕረ ሐሳብ computation |
 | `GET /v1/calendar/{year}/{month}` | One Ethiopian month, day by day |

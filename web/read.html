@@ -23,6 +23,9 @@
   body { margin: 0; background: var(--parchment); color: var(--ink); font: 16px/1.6 var(--serif); }
   a { color: var(--rubric); text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, select:focus-visible {
+    outline: 3px solid var(--rubric); outline-offset: 3px;
+  }
   header { position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--rule); background: var(--parchment); }
   .bar { max-width: 760px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .mark { font-size: 15px; font-weight: 600; }
@@ -53,6 +56,7 @@
   .verse .vn { color: var(--rubric); font-size: 12px; vertical-align: super; margin-right: 5px; user-select: none; }
   .verse.hl { background: var(--highlight); box-shadow: -3px 0 0 var(--rubric); }
   .loading { color: var(--faint); padding: 40px 0; font-size: 15px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   footer { border-top: 1px solid var(--rule); margin-top: 30px; }
   .foot { max-width: 760px; margin: 0 auto; padding: 20px 20px 44px; color: var(--faint); font-size: 12.5px; line-height: 1.7; }
   .foot a { color: var(--faint); text-decoration: underline; text-underline-offset: 2px; }
@@ -82,7 +86,7 @@
     <button id="prev" type="button">← ቀዳሚ</button>
     <button id="next" type="button">ቀጣይ →</button>
   </div>
-  <div class="text" id="text"><div class="loading">በመጫን ላይ… loading…</div></div>
+  <div class="text" id="text" aria-live="polite" aria-busy="true"><div class="loading" role="status">በመጫን ላይ… loading…</div></div>
 </div>
 
 <footer><div class="foot" id="attribution">
@@ -131,6 +135,9 @@
   }
 
   function render() {
+    var box = document.getElementById("text");
+    box.setAttribute("aria-busy", "true");
+    box.innerHTML = '<div class="loading" role="status">በመጫን ላይ… loading…</div>';
     loadBook(state.book).then(function (book) {
       if (state.ch < 1) state.ch = 1;
       if (state.ch > book.chapters.length) state.ch = book.chapters.length;
@@ -152,7 +159,6 @@
         hlStart = null;
       }
 
-      var box = document.getElementById("text");
       box.innerHTML = "";
       var firstHl = null;
       verses.forEach(function (verse) {
@@ -166,7 +172,8 @@
         if (!firstHl && span.className.indexOf("hl") >= 0) firstHl = span;
         box.appendChild(span);
       });
-      if (firstHl) firstHl.scrollIntoView({ block: "center" });
+      box.setAttribute("aria-busy", "false");
+      if (firstHl && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) firstHl.scrollIntoView({ block: "center" });
       else window.scrollTo(0, 0);
 
       document.getElementById("prev").disabled = state.ch <= 1;
@@ -182,8 +189,9 @@
       }
       updateUrl();
     }).catch(function () {
+      box.setAttribute("aria-busy", "false");
       document.getElementById("text").innerHTML =
-        '<div class="loading">Could not load this book. <a href="./">Back to the API</a></div>';
+        '<div class="loading" role="alert">Could not load this book. Check the address or <a href="read.html">open the default reader</a>.</div>';
     });
   }
 
@@ -197,11 +205,21 @@
       if (book.id === state.book) opt.selected = true;
       select.appendChild(opt);
     });
+    if (!data.books.some(function (book) { return book.id === state.book; })) {
+      state.book = data.books[0].id;
+      state.ch = 1; state.v = state.ve = null; state.toEnd = false;
+      select.value = state.book;
+    }
     select.addEventListener("change", function () {
       state.book = select.value; state.ch = 1; state.v = state.ve = null; state.toEnd = false;
       render();
     });
-  }).catch(function () {});
+    render();
+  }).catch(function () {
+    var box = document.getElementById("text");
+    box.setAttribute("aria-busy", "false");
+    box.innerHTML = '<div class="loading" role="alert">The Bible catalog could not be loaded. Please reload the page.</div>';
+  });
 
   document.getElementById("ch-select").addEventListener("change", function (event) {
     state.ch = parseInt(event.target.value, 10);
@@ -215,7 +233,6 @@
     state.ch++; state.v = state.ve = null; state.toEnd = false; render();
   });
 
-  render();
 })();
 </script>
 </body>

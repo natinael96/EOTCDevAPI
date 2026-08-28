@@ -43,7 +43,9 @@ app.use('/v1/*', async (c, next) => {
   if (c.req.method === 'OPTIONS' || c.req.path === '/v1/health') return next();
   const limiter = c.env?.API_RATE_LIMITER;
   if (!limiter && c.env?.RATE_LIMIT_CAPACITY === undefined) return next();
-  const client = c.req.header('cf-connecting-ip') ?? c.req.header('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
+  // Cloudflare supplies this header at the trusted edge. Do not fall back to
+  // X-Forwarded-For: a direct caller can forge it and rotate limiter keys.
+  const client = c.req.header('cf-connecting-ip') ?? 'anonymous';
   const capacity = Number(c.env?.RATE_LIMIT_CAPACITY ?? 60);
   const refill = Number(c.env?.RATE_LIMIT_REFILL_PER_SECOND ?? 10);
   const dynamic = dynamicLimiter.take(client, capacity, refill);
@@ -62,10 +64,18 @@ app.use('/v1/*', async (c, next) => {
   return next();
 });
 
-// Cache aggressively: for any given date the answer never changes.
+// Explicitly dated computations are immutable. Clock-dependent routes must be
+// revalidated so a shared cache cannot serve yesterday's result for 24 hours.
 app.use('/v1/*', async (c, next) => {
   await next();
-  if (c.res.status === 200) c.res.headers.set('cache-control', 'public, max-age=86400');
+  if (c.res.status !== 200) return;
+  if (c.req.path === '/v1/health') {
+    c.res.headers.set('cache-control', 'no-store');
+  } else if (c.req.path === '/v1/today' || (c.req.path === '/v1/upcoming' && !c.req.query('from'))) {
+    c.res.headers.set('cache-control', 'public, max-age=60, must-revalidate');
+  } else {
+    c.res.headers.set('cache-control', 'public, max-age=86400');
+  }
 });
 
 class ApiError extends Error {
@@ -708,8 +718,8 @@ app.get('/v1/calendar/range', (c) => {
 
 app.get('/v1/upcoming', (c) => {
   const days = Number(c.req.query('days') ?? 30);
-  if (!Number.isInteger(days) || days < 1 || days > 366) {
-    throw new ApiError(400, `'days' must be an integer from 1 to 366, got '${c.req.query('days')}'.`);
+  if (!Number.isInteger(days) || days < 1 || days > 30) {
+    throw new ApiError(400, `'days' must be an integer from 1 to 30, got '${c.req.query('days')}'.`);
   }
   const type = (c.req.query('type') ?? 'all').toLowerCase();
   if (!['all', 'feasts', 'fasts'].includes(type)) {

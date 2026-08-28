@@ -11,7 +11,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
+import httpx
 
 from eotc.api import app
 
@@ -23,9 +23,12 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def test_text_served_when_edition_present(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.anyio
+async def test_text_served_when_edition_present(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("EOTC_BIBLE_TEXT_DIR", str(BIBLE_DIR))
-    response = TestClient(app).get("/v1/bible/am-1980/JHN/3")
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        response = await client.get("/v1/bible/am-1980/JHN/3")
     assert response.status_code == 200
     body = response.json()
     assert body["textAvailable"] is True
@@ -36,9 +39,17 @@ def test_text_served_when_edition_present(monkeypatch: pytest.MonkeyPatch) -> No
     assert verse16["geezNumeral"]
 
 
-def test_text_unavailable_without_env() -> None:
-    response = TestClient(app).get("/v1/bible/am-1980/JHN/3")
+@pytest.mark.anyio
+async def test_text_unavailable_without_env() -> None:
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        response = await client.get("/v1/bible/am-1980/JHN/3")
     assert response.status_code == 200
     body = response.json()
     assert body["textAvailable"] is False
     assert body["verses"] is None
+
+
+@pytest.fixture
+def anyio_backend() -> str:
+    return "asyncio"

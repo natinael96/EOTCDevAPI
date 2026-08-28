@@ -41,6 +41,35 @@ async def test_rate_limit_http_contract(monkeypatch: pytest.MonkeyPatch) -> None
     assert health.status_code == 200
 
 
+@pytest.mark.anyio
+async def test_cache_policy_distinguishes_clock_dependent_routes() -> None:
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        today = await client.get("/v1/today")
+        upcoming = await client.get("/v1/upcoming?days=5")
+        dated_upcoming = await client.get("/v1/upcoming?from=2026-04-01&days=5")
+        dated = await client.get("/v1/date/2026-04-12")
+        health = await client.get("/v1/health")
+
+    assert today.headers["cache-control"] == "public, max-age=60, must-revalidate"
+    assert upcoming.headers["cache-control"] == "public, max-age=60, must-revalidate"
+    assert dated_upcoming.headers["cache-control"] == "public, max-age=86400"
+    assert dated.headers["cache-control"] == "public, max-age=86400"
+    assert health.headers["cache-control"] == "no-store"
+
+
+@pytest.mark.anyio
+async def test_upcoming_is_limited_to_thirty_days() -> None:
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        allowed = await client.get("/v1/upcoming?from=2026-04-01&days=30")
+        too_long = await client.get("/v1/upcoming?from=2026-04-01&days=31")
+
+    assert allowed.status_code == 200
+    assert too_long.status_code == 400
+    assert "1 to 30" in too_long.json()["message"]
+
+
 @pytest.fixture
 def anyio_backend() -> str:
     return "asyncio"

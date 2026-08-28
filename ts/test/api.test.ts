@@ -202,6 +202,20 @@ describe('headers', () => {
     expect(headers.get('cache-control')).toContain('max-age');
   });
 
+  it('does not cache clock-dependent routes for a full day', async () => {
+    expect((await get('/v1/today')).headers.get('cache-control')).toBe('public, max-age=60, must-revalidate');
+    expect((await get('/v1/upcoming?days=5')).headers.get('cache-control')).toBe('public, max-age=60, must-revalidate');
+    expect((await get('/v1/upcoming?from=2026-04-01&days=5')).headers.get('cache-control')).toBe('public, max-age=86400');
+    expect((await get('/v1/health')).headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('limits upcoming queries to a 30-day horizon', async () => {
+    expect((await get('/v1/upcoming?from=2026-04-01&days=30')).status).toBe(200);
+    const tooLong = await get('/v1/upcoming?from=2026-04-01&days=31');
+    expect(tooLong.status).toBe(400);
+    expect(tooLong.body.message).toContain('1 to 30');
+  });
+
   it('allows POST in CORS preflight', async () => {
     const res = await app.request('http://localhost/v1/calendar/convert/batch', {
       method: 'OPTIONS',

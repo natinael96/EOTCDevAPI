@@ -10599,7 +10599,7 @@
   "status": 400,
   "body": {
    "error": "bad_request",
-   "message": "'days' must be an integer from 1 to 366, got '999'."
+   "message": "'days' must be an integer from 1 to 30, got '999'."
   }
  },
  "/v1/feasts/2018/fasika": {

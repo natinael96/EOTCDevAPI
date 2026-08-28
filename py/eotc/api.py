@@ -152,7 +152,13 @@ async def _not_found(request: Request, _exc) -> JSONResponse:
 async def _cache_headers(request: Request, call_next):
     response = await call_next(request)
     if request.url.path.startswith("/v1/") and response.status_code == 200:
-        response.headers["cache-control"] = "public, max-age=86400"
+        if request.url.path == "/v1/health":
+            response.headers["cache-control"] = "no-store"
+        elif request.url.path == "/v1/today" or (
+                request.url.path == "/v1/upcoming" and not request.query_params.get("from")):
+            response.headers["cache-control"] = "public, max-age=60, must-revalidate"
+        else:
+            response.headers["cache-control"] = "public, max-age=86400"
     return response
 
 
@@ -594,8 +600,8 @@ async def upcoming(days: str = Query("30"), type: str = Query("all"),
         n_days = int(days)
     except ValueError:
         n_days = -1
-    if n_days < 1 or n_days > 366:
-        raise ApiError(400, f"'days' must be an integer from 1 to 366, got '{days}'.")
+    if n_days < 1 or n_days > 30:
+        raise ApiError(400, f"'days' must be an integer from 1 to 30, got '{days}'.")
     t = type.lower()
     if t not in ("all", "feasts", "fasts"):
         raise ApiError(400, f"Unknown type '{t}'.", "Use 'all', 'feasts' or 'fasts'.")

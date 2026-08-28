@@ -39,6 +39,9 @@
   .geez { font-family: var(--ethiopic); }
   a { color: var(--rubric); text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 3px solid var(--rubric); outline-offset: 3px;
+  }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
 
   /* ---------- header ---------- */
@@ -188,7 +191,7 @@
     background: var(--parchment); border: 1px solid var(--rule); border-radius: 4px;
     padding: 5px 10px; text-align: center;
   }
-  .bh-year input:focus { outline: none; border-color: var(--rubric); }
+  .bh-year input:focus { border-color: var(--rubric); }
   .bh-year .geez-year { font-family: var(--ethiopic); color: var(--rubric); font-size: 14px; }
   .bh-slide { padding: 24px 26px 8px; min-height: 320px; }
   .bh-slide.swap { animation: bhswap 0.25s ease; }
@@ -304,6 +307,10 @@
     .up-chip { font-size: 12.5px; padding: 4px 12px; }
     .sub-row { gap: 8px; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .bh-slide.swap { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -344,16 +351,16 @@
     <div class="hero-today">
       <div>
         <span class="today-date geez" id="t-eth">…</span>
-        <div class="today-sub" id="t-greg"></div>
+        <div class="today-sub" id="t-greg" aria-live="polite"></div>
         <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
       </div>
       <div class="ht-chips">
-        <span class="fast-chip" id="t-fast"></span>
+        <span class="fast-chip" id="t-fast" role="status" aria-live="polite"></span>
         <span class="today-fasika" id="t-fasika"></span>
       </div>
       <div class="ht-block">
         <div class="sk-label"><span class="geez">ግጻዌ</span> today's readings</div>
-        <div class="sk-readings" id="sk-readings"></div>
+        <div class="sk-readings" id="sk-readings" role="status" aria-live="polite"></div>
         <a class="sk-api" id="sk-readings-link" href="#" target="_blank" rel="noopener">full readings from the API →</a>
       </div>
       <div class="ht-sinksar" id="t-sinksar">
@@ -474,7 +481,7 @@
         <label class="bh-year">ዓ.ም. <input type="number" id="bh-year" min="1" max="9999" inputmode="numeric">
           <span class="geez-year" id="bh-year-geez"></span></label>
       </div>
-      <div class="bh-slide" id="bh-slide"></div>
+      <div class="bh-slide" id="bh-slide" aria-live="polite"></div>
       <div class="bh-nav">
         <button class="bh-btn" id="bh-prev" type="button">← Back</button>
         <div class="bh-dots" id="bh-dots"></div>
@@ -575,15 +582,25 @@
     return out;
   }
 
+  var G_MON_FULL = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+
+  // The API's default "today" is Addis Ababa. Use that same civil date for
+  // local rendering so readings and live fasting status cannot disagree.
   var now = new Date();
-  var jdn = gregorianToJDN(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  var addisParts = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Africa/Addis_Ababa", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(now).map(function (p) { return [p.type, p.value]; }));
+  var todayYear = Number(addisParts.year), todayMonth = Number(addisParts.month), todayDay = Number(addisParts.day);
+  var isoToday = todayYear + "-" + String(todayMonth).padStart(2, "0") + "-" + String(todayDay).padStart(2, "0");
+  var jdn = gregorianToJDN(todayYear, todayMonth, todayDay);
   var e = jdnToEthiopic(jdn);
   var wd = ((jdn + 1) % 7 + 7) % 7;
 
   document.getElementById("t-eth").textContent =
     WD_AM[wd] + "፣ " + MONTHS_AM[e.month - 1] + " " + toGeez(e.day) + " ቀን፣ " + toGeez(e.year) + " ዓ.ም.";
   document.getElementById("t-greg").textContent =
-    WD_EN[wd] + ", " + now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    WD_EN[wd] + ", " + G_MON_FULL[todayMonth - 1] + " " + todayDay + ", " + todayYear
     + " · " + e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0") + " EC";
 
   var f = fasikaJDN(e.year);
@@ -753,6 +770,7 @@
       var d = document.createElement("button");
       d.type = "button";
       d.textContent = toGeez(i + 1);
+      d.setAttribute("aria-label", "Go to computation step " + (i + 1));
       d.addEventListener("click", function () { deckIndex = i; renderDeck(true); });
       dotsEl.appendChild(d);
     });
@@ -762,7 +780,11 @@
       document.getElementById("bh-year-geez").textContent = toGeez(deckYear);
       document.getElementById("bh-prev").disabled = deckIndex === 0;
       document.getElementById("bh-next").disabled = deckIndex === SLIDES.length - 1;
-      Array.prototype.forEach.call(dotsEl.children, function (d, i) { d.classList.toggle("on", i === deckIndex); });
+      Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+        d.classList.toggle("on", i === deckIndex);
+        if (i === deckIndex) d.setAttribute("aria-current", "step");
+        else d.removeAttribute("aria-current");
+      });
       if (animate) { slideEl.classList.remove("swap"); void slideEl.offsetWidth; slideEl.classList.add("swap"); }
     }
     document.getElementById("bh-prev").addEventListener("click", function () {
@@ -780,7 +802,7 @@
 
   // Today's readings and Sinksar commemorations: the same data the API's
   // /v1/readings and /v1/sinksar endpoints serve.
-  fetch("daily.json").then(function (r) { return r.json(); }).then(function (daily) {
+  fetch("daily.json").then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(function (daily) {
     var day = daily[e.month + "-" + e.day];
     if (!day) return;
     function fill(id, items) {
@@ -828,12 +850,13 @@
     (lit.epistles || []).forEach(function (ref) { row("ንባብ", ref); });
     row("ወንጌል", lit.gospel || mat.gospel);
     row("ቅዳሴ", lit.anaphora ? { t: lit.anaphora } : null);
-    var isoToday = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0")
-      + "-" + String(now.getDate()).padStart(2, "0");
     document.getElementById("sk-readings-link").href =
       "https://eotcdev-api.natinael-96.workers.dev/v1/readings/" + isoToday;
     document.getElementById("t-sinksar").classList.add("on");
-  }).catch(function () {});
+  }).catch(function () {
+    document.getElementById("sk-readings").textContent = "Today's readings could not be loaded. Please try again.";
+    document.getElementById("sk-readings-link").href = API + "/v1/readings/" + isoToday;
+  });
 
   // ---- Daily-companion extras -----------------------------------------------
   var API = "https://eotcdev-api.natinael-96.workers.dev";
@@ -841,16 +864,13 @@
   // The hero terminal shows today's /v1/today call, rendered first from the
   // page's own computation and upgraded with fasting and feasts once the
   // live response arrives.
-  var G_MON_FULL = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
   function esc(value) {
     return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   }
   function renderTerminal(today) {
     var k = function (name) { return '<span class="k">"' + name + '"</span>'; };
     var s = function (value) { return '<span class="s">"' + esc(value) + '"</span>'; };
-    var gIso = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0")
-      + "-" + String(now.getDate()).padStart(2, "0");
+    var gIso = isoToday;
     var eIso = e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0");
     var lines = [
       '<span class="p">$</span> curl https://eotcdev-api.natinael-96.workers.dev<span class="s">/v1/today</span>',
@@ -874,12 +894,12 @@
     lines.push("}");
     document.getElementById("term-body").innerHTML = lines.join("\n");
     document.getElementById("term-title").textContent =
-      "sh · " + WD_EN[wd] + ", " + G_MON_FULL[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear();
+      "sh · " + WD_EN[wd] + ", " + G_MON_FULL[todayMonth - 1] + " " + todayDay + ", " + todayYear;
   }
   renderTerminal(null);
 
   // Live fasting status from the API; the chip stays hidden if unreachable.
-  fetch(API + "/v1/today").then(function (r) { return r.json(); }).then(function (t) {
+  fetch(API + "/v1/today?tz=Africa/Addis_Ababa").then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(function (t) {
     if (!t || !t.fasting) return;
     renderTerminal(t);
     var chip = document.getElementById("t-fast");
@@ -890,15 +910,19 @@
       chip.textContent = "not a fasting day";
       chip.className = "fast-chip on";
     }
-  }).catch(function () {});
+  }).catch(function () {
+    var chip = document.getElementById("t-fast");
+    chip.textContent = "Live fasting status unavailable";
+    chip.className = "fast-chip on";
+  });
 
   // Calendar subscription links for the current Ethiopian year.
   document.getElementById("sub-fasting").href = API + "/v1/calendar/ics?year=" + e.year + "&type=fasting";
   document.getElementById("sub-feasts").href = API + "/v1/calendar/ics?year=" + e.year + "&type=feasts";
   document.getElementById("sub-all").href = API + "/v1/calendar/ics?year=" + e.year + "&type=all";
 
-  // Upcoming strip: the next five movable and fixed occasions, computed with
-  // the same chain the walkthrough deck uses.
+  // Upcoming strip: at most five occasions within the next 30 days, computed
+  // with the same chain the walkthrough deck uses.
   var FIXED_FEASTS = [
     ["እንቁጣጣሽ", "New Year", 1, 1], ["መስቀል", "Meskel", 1, 17],
     ["ገና", "Gena", 4, 29], ["ጥምቀት", "Timket", 5, 11],
@@ -913,7 +937,7 @@
     FEASTS.forEach(function (f) { upcoming.push({ am: f[0], en: f[1], jdn: nin + f[2] }); });
     FIXED_FEASTS.forEach(function (f) { upcoming.push({ am: f[0], en: f[1], jdn: ethiopicToJDN(uy, f[2], f[3]) }); });
   }
-  upcoming = upcoming.filter(function (f) { return f.jdn >= jdn; })
+  upcoming = upcoming.filter(function (f) { return f.jdn >= jdn && f.jdn - jdn <= 30; })
     .sort(function (a, b) { return a.jdn - b.jdn || (a.am < b.am ? -1 : 1); })
     .slice(0, 5);
   var strip = document.getElementById("upcoming");

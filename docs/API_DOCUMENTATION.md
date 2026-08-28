@@ -218,7 +218,7 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 | GET | `/v1/sinksar/{date}` | Sinksar annual and monthly commemoration lists |
 | GET | `/v1/feasts/{year}/{key}` | One feast resolved for a year, by key, name, or alias |
 | GET | `/v1/feasts/search` | Homophone-aware feast search across names and aliases |
-| GET | `/v1/upcoming` | Upcoming feasts and fasts within a window |
+| GET | `/v1/upcoming` | Upcoming feasts and fasts within a maximum 30-day window |
 | GET | `/v1/calendar/range` | Fully described date range, up to 366 days |
 | GET | `/v1/bible/books` | Canon book metadata and verse counts |
 | GET | `/v1/bible/books/{id}` | One book with per-chapter verse counts |
@@ -1416,4 +1416,3 @@ Never fill missing liturgical content by inference alone.
 | `docs/GITSAWE_DATA_MODEL.md` | Gitsawe source model and resolution semantics |
 | `postman/EOTCDevAPI.postman_collection.json` | Import-ready API test collection |
 | `data/gitsawe/quality-report.json` | Generated data-quality and review report |
-
