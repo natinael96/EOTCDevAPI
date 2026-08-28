@@ -22,6 +22,7 @@
     "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
     "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
     "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
+    "GET /v1/sinksar/{date}": "The day's Sinksar annual and monthly commemoration lists.",
     "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
     "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}"
    },
@@ -6412,6 +6413,192 @@
     "license": "CC-BY-NC-ND-4.0",
     "note": "Canonical references identify passages; Bible verse text is not bundled with the MIT API."
    }
+  }
+ },
+ "/v1/sinksar/2026-08-28": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-08-28",
+    "ethiopic": "2018-12-22",
+    "weekday": {
+     "n": 5,
+     "amharic": "ዓርብ",
+     "translit": "Arb",
+     "english": "Friday"
+    }
+   },
+   "annualFeasts": {
+    "sourceEntryId": "12-22-2",
+    "heading": "📌 ነሐሴ ፳፪ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+    "items": [
+     {
+      "id": "12-22-annual-1",
+      "title": "ቅዱስ ሚክያስ ነቢይ",
+      "sourceText": "፩.ቅዱስ ሚክያስ ነቢይ"
+     }
+    ]
+   },
+   "monthlyFeasts": {
+    "sourceEntryId": "12-22-3",
+    "heading": "📌 ወርኀዊ በዓላት",
+    "items": [
+     {
+      "id": "12-22-monthly-1",
+      "title": "ቅዱስ ዑራኤል ሊቀ መላእክት",
+      "sourceText": "፩.ቅዱስ ዑራኤል ሊቀ መላእክት"
+     },
+     {
+      "id": "12-22-monthly-2",
+      "title": "ቅዱስ ሉቃስ ወንጌላዊ",
+      "sourceText": "፪.ቅዱስ ሉቃስ ወንጌላዊ"
+     },
+     {
+      "id": "12-22-monthly-3",
+      "title": "ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)",
+      "sourceText": "፫.ቅዱስ ደቅስዮስ (የእመቤታችን ወዳጅ)"
+     },
+     {
+      "id": "12-22-monthly-4",
+      "title": "አባ እንጦንስ አበ መነኮሳት",
+      "sourceText": "፬.አባ እንጦንስ አበ መነኮሳት"
+     },
+     {
+      "id": "12-22-monthly-5",
+      "title": "አባ ዻውሊ የዋህ",
+      "sourceText": "፭.አባ ዻውሊ የዋህ"
+     }
+    ]
+   },
+   "entryCount": 4,
+   "fullTextAvailable": false,
+   "reason": "Full-text publication rights are not yet recorded."
+  }
+ },
+ "/v1/sinksar/2018-01-01?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2025-09-11",
+    "ethiopic": "2018-01-01",
+    "weekday": {
+     "n": 4,
+     "amharic": "ሐሙስ",
+     "translit": "Hamus",
+     "english": "Thursday"
+    }
+   },
+   "annualFeasts": {
+    "sourceEntryId": "1-1-7",
+    "heading": "📌 መስከረም ፩ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+    "items": [
+     {
+      "id": "1-1-annual-1",
+      "title": "ርዕሰ ዓውደ ዓመት",
+      "sourceText": "፩.ርዕሰ ዓውደ ዓመት"
+     },
+     {
+      "id": "1-1-annual-2",
+      "title": "ቅዱስ በርተሎሜዎስ ሐዋርያ",
+      "sourceText": "፪.ቅዱስ በርተሎሜዎስ ሐዋርያ"
+     },
+     {
+      "id": "1-1-annual-3",
+      "title": "ቅዱስ /ማር/ ሚልኪ (ትሩፈ ምግባር)",
+      "sourceText": "፫.ቅዱስ /ማር/ ሚልኪ (ትሩፈ ምግባር)"
+     },
+     {
+      "id": "1-1-annual-4",
+      "title": "ቅዱስ ራጉኤል ሊቀ መላእክት",
+      "sourceText": "፬.ቅዱስ ራጉኤል ሊቀ መላእክት"
+     },
+     {
+      "id": "1-1-annual-5",
+      "title": "ቅዱስ ኢዮብ ተአጋሲ",
+      "sourceText": "፭.ቅዱስ ኢዮብ ተአጋሲ"
+     },
+     {
+      "id": "1-1-annual-6",
+      "title": "ቅዱስ ሜልዮስ ሊቀ ዻዻሳት",
+      "sourceText": "፮.ቅዱስ ሜልዮስ ሊቀ ዻዻሳት"
+     }
+    ]
+   },
+   "monthlyFeasts": {
+    "sourceEntryId": "1-1-8",
+    "heading": "📌 ወርኀዊ በዓላት",
+    "items": [
+     {
+      "id": "1-1-monthly-1",
+      "title": "ልደታ ለማርያም ድንግል እግዝእትነ",
+      "sourceText": "፩.ልደታ ለማርያም ድንግል እግዝእትነ"
+     },
+     {
+      "id": "1-1-monthly-2",
+      "title": "ቅዱሳን ኢያቄም ወሐና",
+      "sourceText": "፪.ቅዱሳን ኢያቄም ወሐና"
+     }
+    ]
+   },
+   "entryCount": 9,
+   "fullTextAvailable": false,
+   "reason": "Full-text publication rights are not yet recorded."
+  }
+ },
+ "/v1/sinksar/2018-13-05?calendar=ethiopian": {
+  "status": 200,
+  "body": {
+   "date": {
+    "gregorian": "2026-09-10",
+    "ethiopic": "2018-13-05",
+    "weekday": {
+     "n": 4,
+     "amharic": "ሐሙስ",
+     "translit": "Hamus",
+     "english": "Thursday"
+    }
+   },
+   "annualFeasts": {
+    "sourceEntryId": "13-5-5",
+    "heading": "📌 ዻጒሜን ፭ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት",
+    "items": [
+     {
+      "id": "13-5-annual-1",
+      "title": "ታላቁ አባ በርሶማ",
+      "sourceText": "፩.ታላቁ አባ በርሶማ"
+     },
+     {
+      "id": "13-5-annual-2",
+      "title": "ቅዱስ አሞጽ ነቢይ",
+      "sourceText": "፪.ቅዱስ አሞጽ ነቢይ"
+     },
+     {
+      "id": "13-5-annual-3",
+      "title": "ቅዱስ ያዕቆብ ዘምስር",
+      "sourceText": "፫.ቅዱስ ያዕቆብ ዘምስር"
+     },
+     {
+      "id": "13-5-annual-4",
+      "title": "አባ መግደር (እግዚአብሔር በጸሎቱ ይማረን)",
+      "sourceText": "፬.አባ መግደር (እግዚአብሔር በጸሎቱ ይማረን)"
+     }
+    ]
+   },
+   "monthlyFeasts": {
+    "sourceEntryId": null,
+    "heading": null,
+    "items": []
+   },
+   "entryCount": 7,
+   "fullTextAvailable": false,
+   "reason": "Full-text publication rights are not yet recorded."
+  }
+ },
+ "/v1/sinksar/2026-02-31": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "'2026-02-31' is not a real Gregorian date."
   }
  },
  "/v1/gitsawe/2018-12-22?calendar=ethiopian": {

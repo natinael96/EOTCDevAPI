@@ -224,6 +224,7 @@ async def index() -> dict[str, Any]:
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
             "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
+            "GET /v1/sinksar/{date}": "The day's Sinksar annual and monthly commemoration lists.",
             "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
             "POST /v1/calendar/convert/batch": "Convert many dates at once. body: {dates:[], calendar?}",
         },
@@ -299,6 +300,28 @@ async def gitsawe(date: str, calendar: str = Query("gregorian")) -> dict[str, An
             "license": "CC-BY-NC-ND-4.0",
             "note": "Canonical references identify passages; Bible verse text is not bundled with the MIT API.",
         },
+    }
+
+
+@app.get("/v1/sinksar/{date}", summary="Sinksar annual and monthly commemorations for a date")
+async def sinksar(date: str, calendar: str = Query("gregorian")) -> dict[str, Any]:
+    jdn = parse_date(date, calendar.lower())
+    described = describe_day(jdn)
+    fixed = fixed_gitsawe_on(described["ethiopic"]["month"], described["ethiopic"]["day"])
+    sinksar_data = fixed["sinksar"] if fixed else None
+    if sinksar_data is None:
+        raise ApiError(404, "No Sinksar record for this date.")
+    return {
+        "date": {
+            "gregorian": described["gregorian"]["date"],
+            "ethiopic": described["ethiopic"]["date"],
+            "weekday": described["weekday"],
+        },
+        "annualFeasts": sinksar_data["annualFeasts"],
+        "monthlyFeasts": sinksar_data["monthlyFeasts"],
+        "entryCount": sinksar_data["entryCount"],
+        "fullTextAvailable": sinksar_data["fullTextAvailable"],
+        "reason": sinksar_data["reason"],
     }
 
 

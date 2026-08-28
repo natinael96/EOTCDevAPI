@@ -209,6 +209,7 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 | GET | `/v1/calendar/ics` | iCalendar fasting and feast feed |
 | GET | `/v1/gitsawe/{date}` | Gitsawe, Sinksar, and Bible-reference detail |
 | GET | `/v1/readings/{date}` | Focused daily Bible reading appointments |
+| GET | `/v1/sinksar/{date}` | Sinksar annual and monthly commemoration lists |
 
 ## 8. Service endpoints
 
@@ -775,6 +776,22 @@ It separates Acts from the other epistles for easier application rendering.
 
 The Sinksar catalog contains summary entries beginning with `📌`. Two forms are exposed
 as structured arrays.
+
+### `GET /v1/sinksar/{date}`
+
+The focused view of just those two lists for a date, without the full Gitsawe
+payload. Accepts the same `?calendar=gregorian|ethiopian` parameter as
+`/v1/gitsawe/{date}` and returns:
+
+- `date` — Gregorian date, Ethiopian date, and weekday;
+- `annualFeasts` — the ዓመታዊ list: source entry id, printed heading, and items;
+- `monthlyFeasts` — the ወርኀዊ በዓላት list in the same shape;
+- `entryCount` — how many Sinksar entries exist for the day;
+- `fullTextAvailable` / `reason` — the narrative-text licensing status.
+
+```bash
+curl /v1/sinksar/2018-01-01?calendar=ethiopian
+```
 
 ### Annual commemorations
 

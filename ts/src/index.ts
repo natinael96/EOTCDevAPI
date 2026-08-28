@@ -146,6 +146,7 @@ app.get('/', (c) =>
       'GET /v1/calendar/season': 'Liturgical season of a date. ?date=&calendar=',
       'GET /v1/calendar/geez-numeral': "Arabic to Ge'ez numerals. ?number=2018",
       'GET /v1/gitsawe/{date}': 'Fixed-cycle Gitsawe with Sinksar and canonical Bible links.',
+      'GET /v1/sinksar/{date}': "The day's Sinksar annual and monthly commemoration lists.",
       'GET /v1/readings/{date}': 'Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.',
       'POST /v1/calendar/convert/batch': 'Convert many dates at once. body: {dates:[], calendar?}',
     },
@@ -223,6 +224,32 @@ app.get('/v1/gitsawe/:date', (c) => {
       license: 'CC-BY-NC-ND-4.0',
       note: 'Canonical references identify passages; Bible verse text is not bundled with the MIT API.',
     },
+  });
+});
+
+app.get('/v1/sinksar/:date', (c) => {
+  const jdn = parseDate(c.req.param('date'), cal(c));
+  const described = describeDay(jdn);
+  const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
+  const sinksar = fixed?.sinksar as {
+    entryCount: number;
+    annualFeasts: Record<string, unknown>;
+    monthlyFeasts: Record<string, unknown>;
+    fullTextAvailable: boolean;
+    reason: string;
+  } | null;
+  if (!sinksar) throw new ApiError(404, 'No Sinksar record for this date.');
+  return c.json({
+    date: {
+      gregorian: described.gregorian.date,
+      ethiopic: described.ethiopic.date,
+      weekday: described.weekday,
+    },
+    annualFeasts: sinksar.annualFeasts,
+    monthlyFeasts: sinksar.monthlyFeasts,
+    entryCount: sinksar.entryCount,
+    fullTextAvailable: sinksar.fullTextAvailable,
+    reason: sinksar.reason,
   });
 });
 

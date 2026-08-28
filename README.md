@@ -34,7 +34,7 @@ curl https://eotcdev-api.workers.dev/v1/today
 They are not "a port and a copy" — they are held identical by tests:
 
 - **`spec/conformance.json`** — 9,154 golden vectors. Both suites assert against it.
-- **`spec/responses.json`** — every route's exact HTTP response. The Python suite replays all 39 routes and asserts byte-identical JSON, **including error bodies and status codes**.
+- **`spec/responses.json`** — every route's exact HTTP response. The Python suite replays every fixture route and asserts byte-identical JSON, **including error bodies and status codes**.
 
 Change one implementation without the other and a build fails.
 
@@ -55,6 +55,7 @@ Change one implementation without the other and a build fails.
 | `GET /v1/calendar/geez-numeral` | Arabic → Ge'ez numerals (`2018` → `፳፻፲፰`) |
 | `GET /v1/gitsawe/{date}` | Gitsawe appointments + Sinksar commemorations + Bible references for a date |
 | `GET /v1/readings/{date}` | Focused daily Psalms, Gospels, Epistles, Acts, and anaphora from Gitsawe |
+| `GET /v1/sinksar/{date}` | The day's Sinksar annual (ዓመታዊ) and monthly (ወርኀዊ) commemoration lists |
 | `POST /v1/calendar/convert/batch` | Convert up to 366 non-contiguous dates in one call |
 
 Years are **Amete Mihret** (the ordinary Ethiopian year, ≈ Gregorian − 8). Dates are `YYYY-MM-DD`.
@@ -179,10 +180,12 @@ already provides rate limiting.
 ## Project layout
 
 ```
-spec/           conformance.json, responses.json, routes.json -- the shared contract
-data/gitsawe/   Gitsawe transcriptions, source manifest, and generated quality report
-ts/src/core/    ethiopic · bahirehasab · fasts · feasts · day · gitsawe
-py/eotc/        matching Python modules plus the shared generated Gitsawe catalog
+spec/             conformance.json, responses.json, routes.json -- the shared contract
+data/gitsawe/     Gitsawe transcriptions, source manifest, and generated quality report
+data/sinq-gitsawe/ frozen Sinq snapshot: seasonal/monthly cycles, feast graph, mahlets,
+                  provenance manifest, and generated quality + reconciliation reports
+ts/src/core/      ethiopic · bahirehasab · fasts · feasts · day · gitsawe · sinq
+py/eotc/          matching Python modules plus the shared generated catalogs
 ```
 
 The `core` modules have **zero dependencies** in both languages. Vendor them directly
