@@ -157,4 +157,22 @@ footer { border-top: 1px solid var(--rule); }
   .sidebar h5 { flex-basis: 100%; margin: 12px 0 4px; }
   .sidebar a { padding-left: 0; border-left: none; }
   main { padding-top: 28px; }
+  main table { display: block; overflow-x: auto; }
+  .endpoint { flex-wrap: wrap; row-gap: 6px; }
+}
+
+@media (max-width: 560px) {
+  .bar { padding: 12px 18px; flex-wrap: wrap; gap: 4px 14px; }
+  .bar nav { flex-wrap: wrap; gap: 12px; row-gap: 2px; }
+  .shell { padding: 0 18px; }
+  h1 { font-size: 27px; }
+  .lede { font-size: 15.5px; }
+  h2 { font-size: 19.5px; }
+  h3 { font-size: 16px; }
+  pre { font-size: 11.5px; padding: 12px 14px; }
+  .endpoint code.path { font-size: 13.5px; word-break: break-all; }
+  .callout { padding: 12px 14px; font-size: 14px; }
+  .pager { flex-direction: column; gap: 10px; }
+  .pager .next { margin-left: 0; text-align: left; }
+  .foot { flex-direction: column; gap: 6px; padding: 20px 18px 36px; }
 }

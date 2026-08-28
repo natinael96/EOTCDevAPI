@@ -191,7 +191,7 @@
   .bh-top .hint { color: var(--faint); font-size: 12.5px; }
   .bh-year { margin-left: auto; display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
   .bh-year input {
-    width: 84px; font: 600 15px var(--serif); color: var(--ink);
+    width: 84px; font: 600 16px var(--serif); color: var(--ink);
     background: var(--parchment); border: 1px solid var(--rule); border-radius: 4px;
     padding: 5px 10px; text-align: center;
   }
@@ -282,6 +282,37 @@
     .ep { grid-template-columns: 52px 1fr; }
     .ep .desc { grid-column: 2; margin-top: -6px; }
     .today-fasika { margin-left: 0; }
+    .today-sinksar { grid-template-columns: 1fr 1fr; }
+    .today-sinksar .sk-col:first-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 18px; }
+    .bar { flex-wrap: wrap; gap: 4px 0; padding: 12px 0; }
+    nav { gap: 13px; flex-wrap: wrap; font-size: 13.5px; row-gap: 2px; }
+    .hero { padding: 36px 0 34px; gap: 26px; }
+    .lede { font-size: 15.5px; }
+    .cta { gap: 10px; }
+    .btn { padding: 10px 15px; font-size: 14px; }
+    section { padding: 50px 0 0; }
+    h2 { font-size: 23px; }
+    .sec-sub { margin-bottom: 24px; }
+    .num { padding: 18px 16px; }
+    .num .v { font-size: 25px; }
+    .today-date { font-size: 17.5px; }
+    .today-inner { gap: 12px 22px; padding: 16px 0; }
+    .term pre { font-size: 11px; }
+    .fixture-note { text-align: left; }
+    .ep { gap: 10px; padding: 10px 0; }
+    .desc { font-size: 13.5px; }
+    .chain { gap: 8px; }
+    .link-box { font-size: 13px; padding: 7px 11px; }
+    .proof { font-size: 14.5px; padding-left: 14px; }
+    .note-card { padding: 16px 16px; }
+    .ics { padding: 18px 16px; }
+    .honesty { font-size: 14.5px; }
+    .foot { flex-direction: column; gap: 6px; }
+    .up-chip { font-size: 12.5px; padding: 4px 12px; }
+    .sub-row { gap: 8px; }
   }
 </style>
 </head>
