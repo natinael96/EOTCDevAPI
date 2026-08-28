@@ -25,7 +25,7 @@ build-backend = "setuptools.build_meta"
 packages = ["eotc"]
 
 [tool.setuptools.package-data]
-eotc = ["gitsawe_catalog.js"]
+eotc = ["gitsawe_catalog.js", "sinq_catalog.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

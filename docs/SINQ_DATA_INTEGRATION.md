@@ -1,8 +1,42 @@
 # Sinq Data Structure and EOTCDevAPI Integration Plan
 
-Status: analysis complete; implementation contract proposed  
+Status: first implementation slice landed (snapshot, schemas-in-importer, lossless
+import, daily reconciliation, feast graph, CI wiring)  
 Reviewed: 2026-08-28  
-Source inspected: local `---sinq` application repository
+Source inspected: local `---sinq` application repository at revision `4b051fc`
+(Release 1.1.1)
+
+## 0. Implementation status (2026-08-28)
+
+Tasks 1–5 of section 7 are implemented:
+
+- `data/sinq-gitsawe/` holds the frozen snapshot, `manifest.json` (provenance,
+  hashes, per-collection license decisions), `upstream-npm.json` (tarball
+  evidence: exactly which records exist in the MIT `gitsawe` npm package), and
+  `LICENSE-MIT`.
+- `scripts/compile_sinq_gitsawe.mjs` validates structure (slots, seasons,
+  Ethiopian dates, feast-graph foreign keys, chapter bounds against the local
+  validation edition), normalizes slots/services to the canonical model below,
+  and emits `py/eotc/sinq_catalog.js` plus `data/sinq-gitsawe/quality-report.json`
+  and `data/sinq-gitsawe/reconciliation-report.json`. It runs from
+  `make gitsawe` and staleness fails `make check-generated`.
+- `ts/src/core/sinq.ts` and `py/eotc/sinq.py` load the shared catalog;
+  `ts/test/sinq-catalog.test.ts` and `py/tests/test_sinq_catalog.py` assert the
+  same integrity and license-boundary invariants in both runtimes.
+- Per the license decisions in the snapshot manifest, reading bodies and mahlet
+  chant verse text stay out of the runtime artifact (readings carry references
+  and text-availability flags); collection endpoints (section 7 Task 8) are not
+  yet exposed.
+
+Corrections to the analysis below, found during implementation: Sinq's daily
+file now has all 366 Ethiopian month-days (not 301) because Sinq back-filled the
+missing days *from this repository's scan transcription* via
+`tools/import_gitsawe_months.py`, which also added a third `serk` (vespers)
+office on 365 days; 134 daily entries embed Amharic synaxarium notes; and the
+`monthly`, `feasts`, `sub-feasts`, `mahlets`, `months`, and `packages`
+collections are Sinq-authored — they do not exist in the npm dataset. The
+reconciliation report therefore treats vespers agreement as a parser round-trip
+check, not independent confirmation.
 
 ## 1. Decision
 

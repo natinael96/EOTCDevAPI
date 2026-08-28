@@ -41,11 +41,13 @@ typecheck:          ## Typecheck the TypeScript
 validate-json:      ## Parse every JSON data and specification file
 	python3 scripts/validate_json.py
 
-gitsawe:            ## Compile and validate the Gitsawe catalog and links
+gitsawe:            ## Compile and validate the Gitsawe and Sinq catalogs and links
 	node scripts/compile_gitsawe.mjs
+	node scripts/compile_sinq_gitsawe.mjs
 
 check-generated: spec gitsawe   ## Fail when generated fixtures or Gitsawe artifacts are stale
-	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js
+	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js \
+		data/sinq-gitsawe py/eotc/sinq_catalog.js
 
 ci: validate-json gitsawe check-generated test-ts test-py typecheck   ## Run the complete CI verification suite
 

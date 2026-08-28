@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "dataset": "sinq-gitsawe",
+  "description": "Frozen snapshot of the Sinq app's normalized Gitsawe collections, imported for the seasonal, monthly, feast, sub-feast, and mahlet layers that the scan transcription does not yet cover.",
+  "snapshot": {
+    "copiedFrom": "---sinq/app/src/main/assets/content/gitsawe/",
+    "sinqGitRevision": "4b051fc4777fd24c4bca6654fa9d75b37e99f0a2",
+    "sinqRelease": "1.1.1",
+    "sinqCommitDate": "2026-08-25",
+    "accessDate": "2026-08-28",
+    "editPolicy": "Snapshot files are verbatim copies and must never be hand-edited. Corrections belong in the importer or in review records, never in the snapshot."
+  },
+  "lineage": [
+    {
+      "step": 1,
+      "source": "gitsawe npm dataset",
+      "package": "gitsawe@<=0.1.3",
+      "author": "BereketeAb (bereketeabbirkuk@gmail.com)",
+      "license": "MIT",
+      "licenseEvidence": "LICENSE-MIT here; tarball sha256 and extracted record keys in upstream-npm.json (verified 2026-08-28)",
+      "note": "Origin of the daily readings (301 unique keys of 366 days; the tarball's 302nd record is a byte-identical duplicate of 02-08) and all 43 seasonal records, including multilingual incipit and verse text. The package contains NO monthly, feast, sub-feast, mahlet, month, or package collections, and publishes no repository or upstream provenance for its translation text."
+    },
+    {
+      "step": 2,
+      "source": "Sinq authorship and tools/restructure_gitsawe.py",
+      "license": "Sinq is authored by this repository's owner; its source code is Apache-2.0 and its NOTICE places no third-party claim on the gitsawe collections",
+      "note": "Sinq authored the monthly, feasts, sub-feasts, mahlets, months, and packages collections (none exist in the npm dataset). Mahlet chant text is credited by its records to third-party digitizations (@EOTCMahlet, @Finotehiwott, @nabeliszema, ዝማሬ መላእክት, ፍኖተ ሕይወት) with no stated license. restructure_gitsawe.py additionally normalized matching metadata (feast dateKey/monthNum/day/movable; seasonal season/week/part; monthly month/day-range/nth-Sunday). Reading content untouched."
+    },
+    {
+      "step": 3,
+      "source": "Sinq tools/import_gitsawe_months.py fed by EOTCDevAPI data/gitsawe scan transcription",
+      "license": "scan transcription licenseStatus: unverified (see data/gitsawe/manifest.json)",
+      "note": "Back-filled the 65 daily entries missing from the npm dataset and added the vespers (serk) office throughout, using this repository's own transcription of መጽሐፈ ግጻዌ ወመዝሙር ከነምልክቱ. Those fields are re-imports of EOTCDevAPI data, not independent evidence."
+    }
+  ],
+  "files": {
+    "daily-gitsawe.json": {
+      "sha256": "3d98e2b7409c72b93fdaf937253dd2c8847333828f792993a09846c38471dc9a",
+      "records": 366,
+      "recordKey": "date (Ethiopian DD-MM)",
+      "provenance": "mixed: npm dataset entries preserved; missing days and serk office back-filled from the EOTCDevAPI scan transcription"
+    },
+    "seasonal-gitsawe.json": {
+      "sha256": "32b2feb742aacc5af93ea84a153a9171ae1c4f524eccf3ca1617f74c91e0d0c5",
+      "records": 43,
+      "recordKey": "season + week + part",
+      "provenance": "npm dataset (all 43 records; restructure_gitsawe.py split the raw key into season/week/part)"
+    },
+    "monthly-gitsawe.json": {
+      "sha256": "c01c066c3d2aa3b8e7f3371cc7070c34770943caae3559c0bb34440ab8051fd0",
+      "records": 9,
+      "recordKey": "month + day range or nth Sunday",
+      "provenance": "Sinq-authored (not present in the npm dataset)"
+    },
+    "feasts.json": {
+      "sha256": "f1dc8e43b46451cbffd5f8985a6e1fe1631dd9c0c14c946ab7e7b49f390f8eed",
+      "records": 21,
+      "recordKey": "key",
+      "provenance": "Sinq-authored (not present in the npm dataset)"
+    },
+    "sub-feasts.json": {
+      "sha256": "a0399b9afe08376485ff25cb6829715997cc65cb5f3b212693e22df6725b4c53",
+      "records": 40,
+      "recordKey": "key (foreign key: feast)",
+      "provenance": "Sinq-authored (not present in the npm dataset)"
+    },
+    "mahlets.json": {
+      "sha256": "bf5b03f3771d4d310bc579bdc523ccf5af31b3fd553777a365db26772c4616ad",
+      "records": 37,
+      "recordKey": "subFeast link + title",
+      "provenance": "Sinq-authored structure; chant text credited to third-party digitizations with no stated license (see records' source field)"
+    },
+    "months.json": {
+      "sha256": "31fb44a65b4a9eb202dcfb868a357228027ce0bfce62b4907d257519a54bf579",
+      "records": 8,
+      "recordKey": "key",
+      "provenance": "Sinq-authored; partial list (8 entries including the movable pseudo-months tsige and seasonal)"
+    },
+    "packages.json": {
+      "sha256": "b50643cadf31b850323b9b482975ad54e6db20870bee6841c4887dd075067251",
+      "records": 1,
+      "recordKey": "key",
+      "provenance": "Sinq-authored (not present in the npm dataset)"
+    },
+    "upstream-npm.json": {
+      "generated": true,
+      "description": "Provenance evidence extracted from the npm tarball: unique daily keys and seasonal raw keys published there."
+    }
+  },
+  "licenseDecisions": {
+    "structuralData": {
+      "status": "permitted",
+      "scope": "record structure, stable keys, season/monthly/feast matching metadata, verse references (book, chapter, verse range, endText boundary markers), titles, chant names, service and slot organization",
+      "basis": "MIT license of the gitsawe npm dataset; Sinq's NOTICE places no additional restriction on the gitsawe collections"
+    },
+    "incipitAndVerseText": {
+      "status": "restricted_pending_review",
+      "scope": "text.geez, text.amharic, text.english reading bodies and mahlet chant verse text",
+      "basis": "The npm dataset is MIT as published, but its Amharic and English strings match Bible translations whose own provenance the dataset does not state, and Sinq separately bundles a CC BY-NC-ND Amharic Bible. Per V1 scope, unknown upstream rights are treated as restricted: these strings stay in this snapshot directory and out of generated runtime artifacts until a rights review records otherwise.",
+      "reviewItem": "confirm the translation source of the npm dataset's amharic/english text and the transcription source of its geez incipits and mahlet chants"
+    },
+    "backfilledScanFields": {
+      "status": "restricted_pending_review",
+      "scope": "daily entries and serk fields originating from the EOTCDevAPI scan transcription",
+      "basis": "data/gitsawe/manifest.json records the scan edition licenseStatus as unverified; re-importing those fields through Sinq does not change their status"
+    }
+  },
+  "attribution": "Contains data derived from the 'gitsawe' npm package (MIT) by BereketeAb, as normalized by the Sinq app (local repository, Apache-2.0 source code), snapshot revision 4b051fc."
+}

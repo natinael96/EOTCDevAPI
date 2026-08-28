@@ -1,0 +1,477 @@
+{
+  "version": 1,
+  "counts": {
+    "input": {
+      "daily": 366,
+      "seasonal": 43,
+      "monthly": 9,
+      "feasts": 21,
+      "subFeasts": 40,
+      "mahlets": 37,
+      "months": 8,
+      "packages": 1
+    },
+    "output": {
+      "daily": 366,
+      "seasonal": 43,
+      "monthly": 9,
+      "feasts": 21,
+      "subFeasts": 40,
+      "mahlets": 37,
+      "months": 8,
+      "packages": 1
+    },
+    "readings": {
+      "normalized": 3624,
+      "resolvedBooks": 3612,
+      "unresolvedBooks": 12,
+      "slotFamilyMismatches": 32
+    },
+    "dailyProvenance": {
+      "npmDerived": 301,
+      "scanBackfilled": 65
+    }
+  },
+  "reviewItems": [
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 08-01 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "HEB",
+      "chapter": 15,
+      "chapterCount": 13,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 06-02 kidassie",
+      "sourceSlot": "secondKahn",
+      "bibleBook": "ACT",
+      "chapter": 76,
+      "chapterCount": 28,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 13-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "2CO",
+      "chapter": 14,
+      "chapterCount": 13,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 16-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 8,
+      "chapterCount": 6,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 25-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 7,
+      "chapterCount": 6,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 08-03 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 05-04 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "ወደ ገላትያ ሰዎች",
+      "bibleBook": "GAL"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 05-04 kidassie",
+      "sourceSlot": "secondKahn",
+      "slot": "acts",
+      "sourceBookTitle": "የጴጥሮስ መልእክት 1",
+      "bibleBook": "1PE"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 12-04 kidassie",
+      "sourceSlot": "firstDeacon",
+      "slot": "paulineEpistle",
+      "sourceBookTitle": "ወደ ይሁዳ",
+      "bibleBook": "JUD"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 28-04 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 29-04 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 17-05 kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "MRK",
+      "chapter": 17,
+      "chapterCount": 16,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 22-05 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 7,
+      "chapterCount": 6,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 28-05 kidassie",
+      "sourceSlot": "firstDeacon",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 01-06 serk",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 07-06 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 09-06 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 2",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 14-06 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 14-06 serk",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 17-06 negh",
+      "sourceSlot": "msbak",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 09-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 10-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 11-08 kidassie",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 14-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 19-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 25-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 26-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 04-09 serk",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 05-09 serk",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 16-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 21-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 24-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 24-09 kidassie",
+      "sourceSlot": "secondKahn",
+      "slot": "acts",
+      "sourceBookTitle": "የጴጥሮስ መልእክት 1",
+      "bibleBook": "1PE"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 25-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 30-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 01-10 serk",
+      "sourceSlot": "wengel",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 15-10 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 16-10 kidassie",
+      "sourceSlot": "secondDeacon",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 16-10 serk",
+      "sourceSlot": "msbak",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 22-10 kidassie",
+      "sourceSlot": "firstDeacon",
+      "slot": "paulineEpistle",
+      "sourceBookTitle": "የያዕቆብ መልእክት",
+      "bibleBook": "JAS"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 22-10 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "ግብረ ሐዋርያት",
+      "bibleBook": "ACT"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 29-10 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 30-10 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 06-11 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "unresolved_bible_book",
+      "where": "daily 13-11 kidassie",
+      "sourceSlot": "secondDeacon",
+      "sourceBookTitle": null
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 27-11 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 16-12 kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "2JN",
+      "chapter": 2,
+      "chapterCount": 1,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "daily 18-12 kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ወንጌል 1",
+      "bibleBook": "JHN"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "seasonal 06-abiyTsom kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "2PE",
+      "chapter": 5,
+      "chapterCount": 3,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "seasonal 05-tnsae kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "seasonal 06-tnsae kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "JHN",
+      "chapter": 24,
+      "chapterCount": 21,
+      "versification": "am-1980"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "monthly ዘመስከረም፡ ፳፭ ሰንበት kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "monthly ዘጽጌ-፩ kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "slot_family_mismatch",
+      "where": "monthly ዘጽጌ-፫ kidassie",
+      "sourceSlot": "secondDeacon",
+      "slot": "catholicEpistle",
+      "sourceBookTitle": "የዮሐንስ ራዕይ",
+      "bibleBook": "REV"
+    },
+    {
+      "kind": "feast_name_day_mismatch",
+      "feast": "st_georege_hidar",
+      "name": "St George. (Hidar 7)",
+      "nameDay": 7,
+      "day": 6
+    },
+    {
+      "kind": "feast_name_day_mismatch",
+      "feast": "st_teklehaymanot_tahsas",
+      "name": "St. TekleHaymanot (Tahsas 19)",
+      "nameDay": 19,
+      "day": 24
+    },
+    {
+      "kind": "shared_feast_date_key",
+      "dateKey": "3-6",
+      "feasts": [
+        "qusquam_hidar",
+        "st_georege_hidar"
+      ]
+    }
+  ]
+}
