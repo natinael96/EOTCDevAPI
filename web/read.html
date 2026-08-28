@@ -20,7 +20,8 @@
     --ethiopic: "Noto Serif Ethiopic", "Abyssinica SIL", "Nyala", serif;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--parchment); color: var(--ink); font: 16px/1.6 var(--serif); }
+  html { max-width: 100%; overflow-x: clip; }
+  body { margin: 0; background: var(--parchment); color: var(--ink); font: 16px/1.6 var(--serif); max-width: 100%; overflow-x: clip; }
   a { color: var(--rubric); text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
   a:focus-visible, button:focus-visible, select:focus-visible {

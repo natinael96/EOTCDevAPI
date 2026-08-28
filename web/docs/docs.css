@@ -20,11 +20,12 @@
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; max-width: 100%; overflow-x: clip; }
 body {
   margin: 0; background: var(--parchment); color: var(--ink);
   font: 15.5px/1.7 var(--serif);
   -webkit-font-smoothing: antialiased;
+  max-width: 100%; overflow-x: clip;
 }
 .geez { font-family: var(--ethiopic); }
 a { color: var(--rubric); text-decoration: none; }
