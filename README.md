@@ -59,6 +59,10 @@ Change one implementation without the other and a build fails.
 | `GET /v1/calendar/geez-numeral` | Arabic → Ge'ez numerals (`2018` → `፳፻፲፰`) |
 | `GET /v1/gitsawe/{date}` | Gitsawe appointments + Sinksar commemorations + Bible references for a date |
 | `GET /v1/readings/{date}` | Focused daily Psalms, Gospels, Epistles, Acts, and anaphora from Gitsawe |
+| `GET /v1/gitsawe/seasons` | Movable-cycle reading candidates by liturgical season. `?season=abiyTsom` |
+| `GET /v1/gitsawe/monthly` | Monthly Sunday-cycle reading candidates |
+| `GET /v1/gitsawe/feasts` | The feast graph: feasts, sub-feasts, and mahlet service orders |
+| `GET /v1/gitsawe/mahlets/{id}` | One mahlet service order with its chant roles |
 | `GET /v1/sinksar/{date}` | The day's Sinksar annual (ዓመታዊ) and monthly (ወርኀዊ) commemoration lists |
 | `GET /v1/bible/books` | The canon: book metadata and per-chapter verse counts (am-1980 versification) |
 | `GET /v1/bible/parse` | Parse a printed citation (`ዮሐንስ ም· ፫ ቍ ፲፮`) into a canonical reference. `?q=` |
@@ -189,7 +193,7 @@ already provides rate limiting.
 ```
 spec/             conformance.json, responses.json, routes.json -- the shared contract
 data/gitsawe/     Gitsawe transcriptions, source manifest, and generated quality report
-data/sinq-gitsawe/ frozen Sinq snapshot: seasonal/monthly cycles, feast graph, mahlets,
+data/sinq-gitsawe/ frozen import snapshot: seasonal/monthly cycles, feast graph, mahlets,
                   provenance manifest, and generated quality + reconciliation reports
 ts/src/core/      ethiopic · bahirehasab · fasts · feasts · day · gitsawe · sinq
 py/eotc/          matching Python modules plus the shared generated catalogs

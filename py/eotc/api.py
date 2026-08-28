@@ -38,6 +38,10 @@ from .feasts import fixed_feasts
 from .geez import to_geez
 from .ical import build_ics
 from .gitsawe import fixed_gitsawe_on, gitsawe_coverage
+from .sinq import (
+    sinq_catalog, sinq_feasts, sinq_mahlets, sinq_monthly, sinq_seasonal,
+    sinq_sub_feasts,
+)
 from .seasons import season_of
 
 VERSION = "0.1.0"
@@ -236,6 +240,10 @@ async def index() -> dict[str, Any]:
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
             "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
+            "GET /v1/gitsawe/seasons": "Movable-cycle reading candidates by season. ?season=abiyTsom",
+            "GET /v1/gitsawe/monthly": "Monthly Sunday-cycle reading candidates.",
+            "GET /v1/gitsawe/feasts": "The feast graph: feasts, sub-feasts, and mahlet service orders.",
+            "GET /v1/gitsawe/mahlets/{id}": "One mahlet service order with its chant roles.",
             "GET /v1/sinksar/{date}": "The day's Sinksar annual and monthly commemoration lists.",
             "GET /v1/readings/{date}": "Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.",
             "GET /v1/bible/books": "The canon: book metadata and verse counts. ?testament=&section=",
@@ -284,6 +292,93 @@ async def fasting(date: str, calendar: str = Query("gregorian")) -> dict[str, An
     d = describe_day(parse_date(date, calendar.lower()))
     return {"jdn": d["jdn"], "gregorian": d["gregorian"]["date"],
             "ethiopic": d["ethiopic"]["date"], "weekday": d["weekday"], **d["fasting"]}
+
+
+_CYCLE_NOTE = ("Candidate reference data: these cycles are not yet applied to date resolution; "
+               "/v1/gitsawe/{date} remains fixed_candidate_only until precedence rules are reviewed.")
+
+
+@app.get("/v1/gitsawe/seasons", summary="Movable-cycle Gitsawe candidates by season")
+async def gitsawe_seasons(season: str = Query(None)) -> dict[str, Any]:
+    all_entries = sinq_seasonal()
+    if season and not any(entry["season"] == season for entry in all_entries):
+        known = ", ".join(sorted({entry["season"] for entry in all_entries}))
+        raise ApiError(400, f"Unknown season '{season}'.", f"Known seasons: {known}.")
+    seasons = [entry for entry in all_entries if entry["season"] == season] if season else all_entries
+    return {
+        "resolution": "candidates_only",
+        "note": _CYCLE_NOTE,
+        "textPolicy": sinq_catalog()["source"]["textPolicy"],
+        "count": len(seasons),
+        "seasons": seasons,
+    }
+
+
+@app.get("/v1/gitsawe/monthly", summary="Monthly Sunday-cycle Gitsawe candidates")
+async def gitsawe_monthly() -> dict[str, Any]:
+    return {
+        "resolution": "candidates_only",
+        "note": _CYCLE_NOTE,
+        "textPolicy": sinq_catalog()["source"]["textPolicy"],
+        "count": len(sinq_monthly()),
+        "entries": sinq_monthly(),
+    }
+
+
+@app.get("/v1/gitsawe/feasts", summary="The Gitsawe feast graph")
+async def gitsawe_feasts() -> dict[str, Any]:
+    mahlets_by_sub_feast: dict[str, list[dict[str, Any]]] = {}
+    for mahlet in sinq_mahlets():
+        mahlets_by_sub_feast.setdefault(mahlet["subFeast"], []).append(
+            {"id": mahlet["id"], "title": mahlet["title"], "chantCount": len(mahlet["chants"])})
+    feasts = [{
+        "id": feast["id"],
+        "name": feast["name"],
+        "amharicName": feast["amharicName"],
+        "month": feast["month"],
+        "monthNum": feast["monthNum"],
+        "day": feast["day"],
+        "dateKey": feast["dateKey"],
+        "movable": feast["movable"],
+        "provenance": feast["provenance"],
+        "subFeasts": [{
+            "id": sub["id"],
+            "name": sub["name"],
+            "amharicName": sub["amharicName"],
+            "mahlets": mahlets_by_sub_feast.get(sub["id"], []),
+        } for sub in sinq_sub_feasts() if sub["feast"] == feast["id"]],
+    } for feast in sinq_feasts()]
+    return {
+        "resolution": "candidates_only",
+        "note": _CYCLE_NOTE,
+        "count": {
+            "feasts": len(feasts),
+            "subFeasts": len(sinq_sub_feasts()),
+            "mahlets": len(sinq_mahlets()),
+        },
+        "feasts": feasts,
+    }
+
+
+@app.get("/v1/gitsawe/mahlets/{id}", summary="One mahlet service order")
+async def gitsawe_mahlet(id: str) -> dict[str, Any]:
+    wanted = id if id.startswith("mahlet:") else f"mahlet:{id}"
+    mahlet = next((entry for entry in sinq_mahlets() if entry["id"] == wanted), None)
+    if mahlet is None:
+        raise ApiError(404, f"Unknown mahlet '{id}'.", "See /v1/gitsawe/feasts for the list.")
+    sub_feast = next(sub for sub in sinq_sub_feasts() if sub["id"] == mahlet["subFeast"])
+    feast = next(entry for entry in sinq_feasts() if entry["id"] == sub_feast["feast"])
+    return {
+        "id": mahlet["id"],
+        "title": mahlet["title"],
+        "subFeast": {"id": sub_feast["id"], "name": sub_feast["name"],
+                     "amharicName": sub_feast["amharicName"]},
+        "feast": {"id": feast["id"], "name": feast["name"], "amharicName": feast["amharicName"]},
+        "chantSource": mahlet["chantSource"],
+        "chants": mahlet["chants"],
+        "chantTextAvailable": mahlet["chantTextAvailable"],
+        "textPolicy": sinq_catalog()["source"]["textPolicy"],
+    }
 
 
 @app.get("/v1/gitsawe/{date}", summary="Fixed-cycle Gitsawe appointments for a date")

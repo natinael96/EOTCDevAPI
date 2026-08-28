@@ -100,5 +100,5 @@ def test_monthly_rules_are_sunday_rules_with_spans() -> None:
 def test_seasonal_ids_are_stable() -> None:
     for entry in sinq_seasonal():
         part = f":{entry['part']}" if entry["part"] is not None else ""
-        assert entry["id"] == f"sinq:seasonal:{entry['season']}:{entry['week'] or 0}{part}"
+        assert entry["id"] == f"seasonal:{entry['season']}:{entry['week'] or 0}{part}"
         assert entry["sourceKey"]

@@ -207,15 +207,15 @@ for (const entry of daily) {
   report.counts.dailyProvenance[fromNpm ? "npmDerived" : "scanBackfilled"]++;
   const where = `daily ${entry.date}`;
   catalogDaily[`${month}-${day}`] = {
-    id: `sinq:daily:${month}-${day}`,
+    id: `daily:${month}-${day}`,
     cycle: "fixed",
     ethiopianMonth: month,
     ethiopianDay: day,
     title: entry.title ?? null,
     synaxariumNoteCount: (entry.snksar || []).length,
     provenance: fromNpm
-      ? { matins: "gitsawe-npm", liturgy: "gitsawe-npm", vespers: "eotc-scan-backfill" }
-      : { matins: "eotc-scan-backfill", liturgy: "eotc-scan-backfill", vespers: "eotc-scan-backfill" },
+      ? { matins: "gitsawe-npm", liturgy: "gitsawe-npm", vespers: "scan-transcription" }
+      : { matins: "scan-transcription", liturgy: "scan-transcription", vespers: "scan-transcription" },
     services: normalizedServices(entry, where),
   };
 }
@@ -237,7 +237,7 @@ for (const entry of seasonal) {
   if (!npmSeasonalKeys.has(entry.raw)) {
     review({ kind: "seasonal_key_not_in_npm_dataset", raw: entry.raw });
   }
-  const id = `sinq:seasonal:${entry.season}:${entry.week ?? 0}${entry.part != null ? `:${entry.part}` : ""}`;
+  const id = `seasonal:${entry.season}:${entry.week ?? 0}${entry.part != null ? `:${entry.part}` : ""}`;
   if (seenSeasonalIds.has(id)) { errors.push(`seasonal: duplicate id '${id}'`); continue; }
   seenSeasonalIds.add(id);
   catalogSeasonal.push({
@@ -271,7 +271,7 @@ for (const entry of monthly) {
     continue;
   }
   const span = entry.nthSunday != null ? `sun${entry.nthSunday}` : `d${entry.fromDay}-${entry.toDay ?? entry.fromDay}`;
-  const id = `sinq:monthly:${entry.month}:${span}`;
+  const id = `monthly:${entry.month}:${span}`;
   if (seenMonthlyIds.has(id)) { errors.push(`monthly: duplicate id '${id}'`); continue; }
   seenMonthlyIds.add(id);
   catalogMonthly.push({
@@ -289,7 +289,7 @@ for (const entry of monthly) {
     mezmur: entry.mezmur ?? null,
     sourceKey: entry.raw,
     title: entry.title ?? null,
-    provenance: "sinq-authored",
+    provenance: "curated",
     services: normalizedServices(entry, `monthly ${entry.raw}`),
   });
 }
@@ -323,7 +323,7 @@ for (const feast of feasts) {
     }
   }
   catalogFeasts.push({
-    id: `sinq:feast:${feast.key}`,
+    id: `feast:${feast.key}`,
     sourceKey: feast.key,
     name: feast.name,
     amharicName: feast.amharicName,
@@ -332,7 +332,7 @@ for (const feast of feasts) {
     day: feast.day ?? null,
     dateKey,
     movable: feast.movable === true,
-    provenance: "sinq-authored",
+    provenance: "curated",
   });
 }
 for (const [dateKey, keys] of dateKeyUse) {
@@ -349,12 +349,12 @@ for (const sub of subFeasts) {
     continue;
   }
   catalogSubFeasts.push({
-    id: `sinq:subfeast:${sub.key}`,
+    id: `subfeast:${sub.key}`,
     sourceKey: sub.key,
     name: sub.name,
     amharicName: sub.amharicName,
-    feast: `sinq:feast:${sub.feast}`,
-    provenance: "sinq-authored",
+    feast: `feast:${sub.feast}`,
+    provenance: "curated",
   });
 }
 
@@ -368,14 +368,14 @@ for (const mahlet of mahlets) {
   const count = (mahletIdCount.get(mahlet.subFeast) || 0) + 1;
   mahletIdCount.set(mahlet.subFeast, count);
   catalogMahlets.push({
-    id: `sinq:mahlet:${mahlet.subFeast}${count > 1 ? `:${count}` : ""}`,
+    id: `mahlet:${mahlet.subFeast}${count > 1 ? `:${count}` : ""}`,
     title: mahlet.title,
-    subFeast: `sinq:subfeast:${mahlet.subFeast}`,
+    subFeast: `subfeast:${mahlet.subFeast}`,
     chantSource: mahlet.source ?? null,
     // Roles only; the chant verse text is rights-restricted (see manifest).
     chants: (mahlet.detail || []).map((chant) => ({ role: chant.key })),
     chantTextAvailable: (mahlet.detail || []).length > 0,
-    provenance: "sinq-authored",
+    provenance: "curated",
   });
 }
 
@@ -469,10 +469,10 @@ if (errors.length) {
 const catalog = {
   version: 1,
   source: {
-    dataset: "sinq-gitsawe",
-    snapshotRevision: manifest.snapshot.sinqGitRevision,
+    dataset: "gitsawe-cycles",
+    sourceRevision: manifest.snapshot.sinqGitRevision,
     upstreamPackage: `${upstream.package}@${upstream.version} (${upstream.license})`,
-    textPolicy: "Reading bodies and mahlet chant verse text are excluded pending the rights review recorded in data/sinq-gitsawe/manifest.json; readings carry references and text-availability flags only.",
+    textPolicy: "Reading bodies and chant verse text are excluded pending the rights review recorded in the source manifest; readings carry references and text-availability flags only.",
   },
   daily: catalogDaily,
   seasonal: catalogSeasonal,

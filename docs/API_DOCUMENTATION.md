@@ -225,6 +225,14 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 | GET | `/v1/bible/editions` | Bible editions registry and licensing |
 | GET | `/v1/bible/parse` | Citation parsing into canonical references |
 | GET | `/v1/bible/{edition}/{book}/{chapter}` | Chapter reference; text on licensed self-hosts only |
+| GET | `/v1/gitsawe/seasons` | Movable-cycle reading candidates by season |
+| GET | `/v1/gitsawe/monthly` | Monthly Sunday-cycle reading candidates |
+| GET | `/v1/gitsawe/feasts` | Feast graph: feasts, sub-feasts, mahlet service orders |
+| GET | `/v1/gitsawe/mahlets/{id}` | One mahlet service order with its chant roles |
+
+The cycle collections are candidate reference data (`resolution: "candidates_only"`):
+they are not yet applied to date resolution, so `/v1/gitsawe/{date}` remains
+`fixed_candidate_only` until precedence rules are reviewed.
 
 Full request/response documentation for these newer endpoints lives in the hosted
 documentation (https://natinael96.github.io/EOTCDevAPI/docs/); the shared response

@@ -113,7 +113,7 @@ describe('sinq catalog', () => {
   it('classifies seasonal entries under known seasons with stable keys', () => {
     for (const entry of sinqSeasonal()) {
       expect(entry.id).toBe(
-        `sinq:seasonal:${entry.season}:${entry.week ?? 0}${entry.part != null ? `:${entry.part}` : ''}`,
+        `seasonal:${entry.season}:${entry.week ?? 0}${entry.part != null ? `:${entry.part}` : ''}`,
       );
       expect(entry.sourceKey.length).toBeGreaterThan(0);
     }

@@ -164,6 +164,46 @@
     year. A day may legitimately lack one of the two lists; absence is a <code>null</code>
     heading and an empty items array, never an error.</p>
 
+    <h2 id="cycles">The cycle collections<a class="anchor" href="#cycles">¶</a></h2>
+    <p>The movable and monthly lectionary layers are served as <strong>candidate reference
+    data</strong>: browsable collections, not yet applied to date resolution. Every response
+    carries <code>resolution: "candidates_only"</code> until the precedence rules that would
+    pick a winner are reviewed. This is the stepping stone toward the full resolver.</p>
+
+    <div class="endpoint" id="seasons"><span class="method">GET</span><code class="path">/v1/gitsawe/seasons</code></div>
+    <p>The 43 movable-cycle entries, located by season and week rather than by fixed date:
+    the Nineveh fast, the eight named Sundays of Great Lent (ዘወረደ through ሆሣዕና), the
+    Resurrection-season Sundays, the Sundays of ክረምት, and the rest. Filter with
+    <code>?season=abiyTsom</code> (an unknown season returns the valid list). Each entry
+    carries its season, week, part, title, provenance, and normalized reading references
+    per service.</p>
+
+    <div class="endpoint" id="monthly"><span class="method">GET</span><code class="path">/v1/gitsawe/monthly</code></div>
+    <p>The 9 monthly Sunday rules: day-range, nth-Sunday, or cross-month spans (Meskerem
+    26 running into the next month), each with its መዝሙር chant identifier and readings.
+    All entries carry <code>appliesTo: "sunday"</code>; applying a range rule to a weekday
+    is a documented source-review issue, which is one reason resolution waits.</p>
+
+    <div class="endpoint" id="feast-graph"><span class="method">GET</span><code class="path">/v1/gitsawe/feasts</code></div>
+    <p>The feast graph in one response: 21 feasts, each with its sub-feasts (eve and
+    morning services, numbered weeks of ጽጌ), and each sub-feast with its mahlet service
+    orders summarized. Fixed feasts carry a <code>dateKey</code>; movable feasts carry
+    none and are located liturgically.</p>
+
+    <div class="endpoint" id="mahlets"><span class="method">GET</span><code class="path">/v1/gitsawe/mahlets/<i>{id}</i></code></div>
+    <p>One ማኅሌት service order in detail: its titled sequence of chant roles (ነግሥ, ዚቅ,
+    ወረብ, መልክዕ…) in liturgical order. Chant <em>text</em> is rights-restricted and stays
+    out of the public runtime; the response carries the roles, the count, and the text
+    policy, exactly like reading bodies elsewhere in the API.</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/gitsawe/mahlets/st_abuye_tikmt_negs</span>
+{
+  <span class="k">"id"</span>: <span class="s">"mahlet:st_abuye_tikmt_negs"</span>,
+  <span class="k">"title"</span>: <span class="s">"ሥርዓተ ማኅሌት ዘጥቅምት አቡነ ገብረ መንፈስ ቅዱስ"</span>,
+  <span class="k">"feast"</span>: { <span class="k">"id"</span>: <span class="s">"feast:st_abuye_tikimt"</span> },
+  <span class="k">"chants"</span>: [ { <span class="k">"role"</span>: <span class="s">"ነግሥ"</span> }, { <span class="k">"role"</span>: <span class="s">"መልክአ ሥላሴ"</span> }, { <span class="k">"role"</span>: <span class="s">"ዚቅ"</span> }, … ],
+  <span class="k">"chantTextAvailable"</span>: true
+}</pre>
+
     <h2 id="bible-model">The Bible reference model<a class="anchor" href="#bible-model">¶</a></h2>
     <p>Canonical references use stable book IDs:</p>
     <pre>MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL

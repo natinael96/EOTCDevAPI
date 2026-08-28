@@ -21,6 +21,7 @@ import { seasonOf } from './core/seasons.ts';
 import { buildIcs } from './core/ical.ts';
 import { fixedGitsaweOn, gitsaweCoverage } from './core/gitsawe.ts';
 import { bibleBooks, bibleBook, bibleEditions, bibleVersification, bibleCanonNote, resolveBook } from './core/bible.ts';
+import { sinqCatalog, sinqSeasonal, sinqMonthly, sinqFeasts, sinqSubFeasts, sinqMahlets } from './core/sinq.ts';
 import { parseCitation } from './core/citations.ts';
 import { feastByKey, searchFeasts } from './core/feast-search.ts';
 import { TokenBucketLimiter } from './core/rate-limit.ts';
@@ -155,6 +156,10 @@ app.get('/', (c) =>
       'GET /v1/calendar/season': 'Liturgical season of a date. ?date=&calendar=',
       'GET /v1/calendar/geez-numeral': "Arabic to Ge'ez numerals. ?number=2018",
       'GET /v1/gitsawe/{date}': 'Fixed-cycle Gitsawe with Sinksar and canonical Bible links.',
+      'GET /v1/gitsawe/seasons': 'Movable-cycle reading candidates by season. ?season=abiyTsom',
+      'GET /v1/gitsawe/monthly': 'Monthly Sunday-cycle reading candidates.',
+      'GET /v1/gitsawe/feasts': 'The feast graph: feasts, sub-feasts, and mahlet service orders.',
+      'GET /v1/gitsawe/mahlets/{id}': 'One mahlet service order with its chant roles.',
       'GET /v1/sinksar/{date}': "The day's Sinksar annual and monthly commemoration lists.",
       'GET /v1/readings/{date}': 'Daily Psalms, Gospels, Epistles and Acts from the Gitsawe.',
       'GET /v1/bible/books': 'The canon: book metadata and verse counts. ?testament=&section=',
@@ -206,6 +211,98 @@ app.get('/v1/fasting/:date', (c) => {
   return c.json({
     jdn: d.jdn, gregorian: d.gregorian.date, ethiopic: d.ethiopic.date,
     weekday: d.weekday, ...d.fasting,
+  });
+});
+
+// ---- Gitsawe cycle collections ---------------------------------------------
+// Reference data for the movable and monthly lectionary layers. Served as
+// candidate cycles: the API does not yet apply them to dates, because the
+// precedence rules that would pick a winner are not reviewed.
+
+const CYCLE_NOTE = 'Candidate reference data: these cycles are not yet applied to date resolution; /v1/gitsawe/{date} remains fixed_candidate_only until precedence rules are reviewed.';
+
+app.get('/v1/gitsawe/seasons', (c) => {
+  const filter = c.req.query('season') ?? null;
+  const all = sinqSeasonal();
+  if (filter && !all.some((entry) => entry.season === filter)) {
+    const known = [...new Set(all.map((entry) => entry.season))].sort().join(', ');
+    throw new ApiError(400, `Unknown season '${filter}'.`, `Known seasons: ${known}.`);
+  }
+  const seasons = filter ? all.filter((entry) => entry.season === filter) : all;
+  return c.json({
+    resolution: 'candidates_only',
+    note: CYCLE_NOTE,
+    textPolicy: sinqCatalog().source.textPolicy,
+    count: seasons.length,
+    seasons,
+  });
+});
+
+app.get('/v1/gitsawe/monthly', (c) =>
+  c.json({
+    resolution: 'candidates_only',
+    note: CYCLE_NOTE,
+    textPolicy: sinqCatalog().source.textPolicy,
+    count: sinqMonthly().length,
+    entries: sinqMonthly(),
+  }));
+
+app.get('/v1/gitsawe/feasts', (c) => {
+  const mahletsBySubFeast = new Map<string, { id: string; title: string; chantCount: number }[]>();
+  for (const mahlet of sinqMahlets()) {
+    const list = mahletsBySubFeast.get(mahlet.subFeast) ?? [];
+    list.push({ id: mahlet.id, title: mahlet.title, chantCount: mahlet.chants.length });
+    mahletsBySubFeast.set(mahlet.subFeast, list);
+  }
+  const feasts = sinqFeasts().map((feast) => ({
+    id: feast.id,
+    name: feast.name,
+    amharicName: feast.amharicName,
+    month: feast.month,
+    monthNum: feast.monthNum,
+    day: feast.day,
+    dateKey: feast.dateKey,
+    movable: feast.movable,
+    provenance: feast.provenance,
+    subFeasts: sinqSubFeasts()
+      .filter((sub) => sub.feast === feast.id)
+      .map((sub) => ({
+        id: sub.id,
+        name: sub.name,
+        amharicName: sub.amharicName,
+        mahlets: mahletsBySubFeast.get(sub.id) ?? [],
+      })),
+  }));
+  return c.json({
+    resolution: 'candidates_only',
+    note: CYCLE_NOTE,
+    count: {
+      feasts: feasts.length,
+      subFeasts: sinqSubFeasts().length,
+      mahlets: sinqMahlets().length,
+    },
+    feasts,
+  });
+});
+
+app.get('/v1/gitsawe/mahlets/:id', (c) => {
+  const raw = c.req.param('id');
+  const wanted = raw.startsWith('mahlet:') ? raw : `mahlet:${raw}`;
+  const mahlet = sinqMahlets().find((entry) => entry.id === wanted) ?? null;
+  if (!mahlet) {
+    throw new ApiError(404, `Unknown mahlet '${raw}'.`, 'See /v1/gitsawe/feasts for the list.');
+  }
+  const subFeast = sinqSubFeasts().find((sub) => sub.id === mahlet.subFeast)!;
+  const feast = sinqFeasts().find((entry) => entry.id === subFeast.feast)!;
+  return c.json({
+    id: mahlet.id,
+    title: mahlet.title,
+    subFeast: { id: subFeast.id, name: subFeast.name, amharicName: subFeast.amharicName },
+    feast: { id: feast.id, name: feast.name, amharicName: feast.amharicName },
+    chantSource: mahlet.chantSource,
+    chants: mahlet.chants,
+    chantTextAvailable: mahlet.chantTextAvailable,
+    textPolicy: sinqCatalog().source.textPolicy,
   });
 });
 
