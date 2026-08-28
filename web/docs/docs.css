@@ -20,7 +20,7 @@
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
   margin: 0; background: var(--parchment); color: var(--ink);
   font: 15.5px/1.7 var(--serif);
@@ -31,7 +31,11 @@ a { color: var(--rubric); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* header */
-header { border-bottom: 1px solid var(--rule); }
+header {
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid var(--rule);
+  background: var(--parchment);
+}
 .bar {
   max-width: 1180px; margin: 0 auto; padding: 16px 28px;
   display: flex; align-items: baseline; justify-content: space-between;
@@ -48,7 +52,7 @@ header { border-bottom: 1px solid var(--rule); }
   display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 56px;
 }
 .sidebar { padding: 40px 0 60px; border-right: 1px solid var(--rule-soft); }
-.side-sticky { position: sticky; top: 24px; }
+.side-sticky { position: sticky; top: 80px; }
 .sidebar h5 {
   font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--faint); margin: 26px 0 8px; font-weight: 600;

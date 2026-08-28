@@ -43,9 +43,12 @@
 
   /* ---------- header ---------- */
   header {
+    position: sticky; top: 0; z-index: 100;
     border-bottom: 1px solid var(--rule);
     background: var(--parchment);
+    box-shadow: 0 1px 0 rgba(28,23,16,0.03);
   }
+  html { scroll-padding-top: 76px; }
   .bar { display: flex; align-items: baseline; justify-content: space-between; padding: 18px 0; }
   .mark { font-size: 17px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink); }
   .mark .geez { color: var(--rubric); margin-right: 8px; }
