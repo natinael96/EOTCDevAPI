@@ -130,8 +130,10 @@ app.get('/', (c) =>
       'fasting days, fasting periods, and feasts.',
     version: '0.1.0',
     license: 'MIT',
-    documentation: '/v1/openapi.json',
-    note: 'All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no rate limit, no key.',
+    documentation: 'https://natinael96.github.io/EOTCDevAPI/docs/',
+    website: 'https://natinael96.github.io/EOTCDevAPI/',
+    openapi: '/v1/openapi.json',
+    note: 'All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no API key; a generous anonymous rate limit applies.',
     endpoints: {
       'GET /v1/health': 'Liveness check.',
       'GET /v1/today': "Today, fully described. ?tz=Africa/Addis_Ababa",
