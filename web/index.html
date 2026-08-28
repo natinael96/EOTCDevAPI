@@ -153,6 +153,70 @@
   .proof { border-left: 3px solid var(--rubric); padding: 4px 0 4px 20px; color: var(--ink-2); font-size: 15.5px; max-width: 66ch; font-style: italic; }
   .proof b { color: var(--ink); font-style: normal; }
 
+  /* Bahire Hasab walkthrough deck */
+  .bh-deck { border: 1px solid var(--rule); border-radius: 8px; background: var(--raised); margin-top: 34px; overflow: hidden; }
+  .bh-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 22px; border-bottom: 1px solid var(--rule-soft); }
+  .bh-top h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .bh-top .hint { color: var(--faint); font-size: 12.5px; }
+  .bh-year { margin-left: auto; display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+  .bh-year input {
+    width: 84px; font: 600 15px var(--serif); color: var(--ink);
+    background: var(--parchment); border: 1px solid var(--rule); border-radius: 4px;
+    padding: 5px 10px; text-align: center;
+  }
+  .bh-year input:focus { outline: none; border-color: var(--rubric); }
+  .bh-year .geez-year { font-family: var(--ethiopic); color: var(--rubric); font-size: 14px; }
+  .bh-slide { padding: 24px 26px 8px; min-height: 320px; }
+  .bh-slide.swap { animation: bhswap 0.25s ease; }
+  @keyframes bhswap { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+  .bh-step { font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rubric); font-weight: 600; }
+  .bh-slide h4 { margin: 6px 0 4px; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+  .bh-slide h4 .geez { color: var(--rubric); font-weight: 500; }
+  .bh-slide p { color: var(--ink-2); font-size: 14.5px; margin: 10px 0; max-width: 72ch; }
+  .bh-slide p b, .bh-slide p strong { color: var(--ink); }
+  .bh-formula {
+    background: var(--terminal); color: var(--terminal-ink); border-radius: 6px;
+    padding: 12px 16px; margin: 14px 0; font: 12.5px/1.8 var(--mono); overflow-x: auto;
+  }
+  .bh-formula .p { color: var(--terminal-dim); }
+  .bh-formula .k { color: var(--terminal-gold); }
+  .bh-formula .s { color: var(--terminal-red); }
+  .bh-result {
+    display: inline-block; border: 1px solid var(--rule); background: var(--parchment);
+    border-radius: 4px; padding: 6px 14px; margin: 4px 8px 4px 0; font-size: 14px;
+  }
+  .bh-result .geez { color: var(--rubric); margin-right: 6px; }
+  .bh-result b { font-size: 16px; }
+  .bh-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0 6px; }
+  .bh-table th { text-align: left; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; padding: 5px 12px 5px 0; border-bottom: 1px solid var(--rule); }
+  .bh-table td { padding: 5px 12px 5px 0; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  .bh-table td:first-child { color: var(--ink); }
+  .bh-table tr:last-child td { border-bottom: none; }
+  .bh-table .geez { color: var(--rubric); }
+  .bh-ok { color: #3d6b2f; font-weight: 600; }
+  .bh-nav { display: flex; align-items: center; gap: 14px; padding: 14px 22px 18px; border-top: 1px solid var(--rule-soft); }
+  .bh-btn {
+    font: 600 13.5px var(--serif); color: var(--ink); background: none;
+    border: 1px solid var(--ink); border-radius: 3px; padding: 8px 18px; cursor: pointer;
+  }
+  .bh-btn:hover:not(:disabled) { border-color: var(--rubric); color: var(--rubric); }
+  .bh-btn.primary { background: var(--ink); color: var(--parchment); }
+  .bh-btn.primary:hover:not(:disabled) { background: var(--rubric-deep); border-color: var(--rubric-deep); color: var(--parchment); }
+  .bh-btn:disabled { opacity: 0.35; cursor: default; }
+  .bh-dots { margin: 0 auto; display: flex; gap: 4px; }
+  .bh-dots button {
+    font-family: var(--ethiopic); font-size: 12px; color: var(--faint);
+    background: none; border: none; cursor: pointer; padding: 4px 5px; border-radius: 3px;
+  }
+  .bh-dots button.on { color: var(--parchment); background: var(--rubric); }
+  .bh-dots button:hover:not(.on) { color: var(--rubric); }
+  @media (max-width: 700px) {
+    .bh-slide { padding: 20px 18px 6px; min-height: 0; }
+    .bh-dots { display: none; }
+    .bh-nav { justify-content: space-between; }
+    .bh-year { margin-left: 0; }
+  }
+
   /* margin-note cards */
   .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .note-card { border: 1px solid var(--rule); border-radius: 6px; padding: 22px 24px; background: var(--raised); }
@@ -327,10 +391,20 @@
       <span class="link-box">every movable feast, a fixed Tewsak offset later</span>
     </div>
 
-    <p class="proof"><b>The correctness argument:</b> Fasika is computed two completely independent
-    ways: the traditional chain above and the Alexandrian computus. The test suite asserts
-    they agree for every year from 1800 to 2200 EC. Two methods with nothing in common but the
-    answer, agreeing for four centuries, is not a coincidence.</p>
+    <div class="bh-deck" id="bh-deck">
+      <div class="bh-top">
+        <h3>Walk the computation</h3>
+        <span class="hint">every number below is computed live, in this page, for the year you pick</span>
+        <label class="bh-year">ዓ.ም. <input type="number" id="bh-year" min="1" max="9999" inputmode="numeric">
+          <span class="geez-year" id="bh-year-geez"></span></label>
+      </div>
+      <div class="bh-slide" id="bh-slide"></div>
+      <div class="bh-nav">
+        <button class="bh-btn" id="bh-prev" type="button">← Back</button>
+        <div class="bh-dots" id="bh-dots"></div>
+        <button class="bh-btn primary" id="bh-next" type="button">Next →</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -465,6 +539,191 @@
   document.getElementById("t-fasika").innerHTML = days === 0
     ? "<b>ትንሣኤ · Fasika is today.</b>"
     : "ትንሣኤ · Fasika in <b>" + days + " day" + (days === 1 ? "" : "s") + "</b>";
+
+  // ---- Bahire Hasab walkthrough deck ----------------------------------------
+  // Same arithmetic as ts/src/core/bahirehasab.ts, including the Metqi-0 and
+  // Tewsak rules, verified against the Python core.
+  var WD_EN_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var TEWSAK = [7, 6, 5, 4, 3, 2, 8];
+  var EVANGELISTS = [["ዮሐንስ", "John"], ["ማቴዎስ", "Matthew"], ["ማርቆስ", "Mark"], ["ሉቃስ", "Luke"]];
+  var FEASTS = [
+    ["ጾመ ነነዌ", "Fast of Nineveh", 0], ["ዓቢይ ጾም", "Great Lent begins", 14],
+    ["ደብረ ዘይት", "Mid-Lent", 41], ["ሆሳዕና", "Palm Sunday", 62],
+    ["ስቅለት", "Good Friday", 67], ["ትንሣኤ", "Easter (Fasika)", 69],
+    ["ርክበ ካህናት", "Assembly of the Priests", 93], ["ዕርገት", "Ascension", 108],
+    ["በዓለ ጰራቅሊጦስ", "Pentecost", 118], ["ጾመ ሐዋርያት", "Apostles' Fast begins", 119],
+    ["ጾመ ድህነት", "Fast of Salvation begins", 121],
+  ];
+  function ethiopicToJDN(y, m, d) {
+    return EPOCH + 365 + 365 * (y - 1) + Math.floor(y / 4) + 30 * m + d - 31;
+  }
+  function jdnToGregorian(jdn) {
+    var a = jdn + 32044, b = Math.floor((4 * a + 3) / 146097), c = a - Math.floor(146097 * b / 4);
+    var d = Math.floor((4 * c + 3) / 1461), ee = c - Math.floor(1461 * d / 4), m = Math.floor((5 * ee + 2) / 153);
+    return { year: 100 * b + d - 4800 + Math.floor(m / 10), month: m + 3 - 12 * Math.floor(m / 10), day: ee - Math.floor((153 * m + 2) / 5) + 1 };
+  }
+  var G_MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function gregStr(jdn) { var g = jdnToGregorian(jdn); return G_MON[g.month - 1] + " " + g.day + ", " + g.year; }
+  function ethStr(jdn) { var d = jdnToEthiopic(jdn); return MONTHS_AM[d.month - 1] + " " + toGeez(d.day) + " (" + d.year + "-" + String(d.month).padStart(2, "0") + "-" + String(d.day).padStart(2, "0") + ")"; }
+  function wdOf(jdn) { return ((jdn + 1) % 7 + 7) % 7; }
+
+  function bahireHasab(y) {
+    var ameteAlem = y + 5500;
+    var medeb = ameteAlem % 19;
+    var wenber = medeb === 0 ? 18 : medeb - 1;
+    var abekte = (wenber * 11) % 30;
+    var metqi = (wenber * 19) % 30;
+    var effMetqi = metqi === 0 ? 30 : metqi;
+    var mhMonth = effMetqi > 14 ? 1 : 2;
+    var mhJDN = ethiopicToJDN(y, mhMonth, effMetqi);
+    var mhWd = wdOf(mhJDN);
+    var ninevehJDN = ethiopicToJDN(y, mhMonth + 4, effMetqi) + TEWSAK[mhWd];
+    return { y: y, ameteAlem: ameteAlem, medeb: medeb, wenber: wenber, abekte: abekte,
+      metqi: metqi, effMetqi: effMetqi, mhMonth: mhMonth, mhJDN: mhJDN, mhWd: mhWd,
+      ninevehJDN: ninevehJDN };
+  }
+  function alexandrianEasterJDN(gy) {
+    var a = gy % 4, b = gy % 7, c = gy % 19;
+    var d = (19 * c + 15) % 30, ee = (2 * a + 4 * b - d + 34) % 7;
+    var n = d + ee + 114, mo = Math.floor(n / 31), da = n % 31 + 1;
+    var aa = Math.floor((14 - mo) / 12), yy = gy + 4800 - aa, mm = mo + 12 * aa - 3;
+    return da + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - 32083;
+  }
+
+  var SLIDES = [
+    function (b) { return { step: "Overview", title: 'ባሕረ ሐሳብ <span class="geez">·</span> the sea of thought', html:
+      "<p>Eleven fasts and feasts move every year, and all of them hang on one date: " +
+      "<b>ጾመ ነነዌ, the Fast of Nineveh</b>. Bahire Hasab is the classical computation that finds it. " +
+      "Once Nineveh's Monday is fixed, every other movable feast sits a fixed number of days after it.</p>" +
+      "<p>The whole computation needs a single input, the Ethiopian year. Seven small steps take us from " +
+      "<b>" + b.y + " ዓ.ም.</b> to the full year of movable feasts. Click <b>Next</b> to walk them, " +
+      "or change the year above to recompute everything, for any year from 1 to 9999.</p>" +
+      '<div class="bh-formula"><span class="p">input:</span> year = <span class="s">' + b.y + '</span> <span class="p">(Amete Mihret)</span></div>' }; },
+    function (b) { return { step: "Step 1 of 7", title: '<span class="geez">ዓመተ ዓለም</span> · Amete Alem', html:
+      "<p>Tradition counts <b>5,500 years from Creation to the Incarnation</b> (the ዓመተ ፍዳ, the years of judgment). " +
+      "Adding them to the ordinary year gives the year of the world, and every later step works from this number.</p>" +
+      '<div class="bh-formula">ameteAlem = year + 5500\n' +
+      '           = ' + b.y + ' + 5500 = <span class="s">' + b.ameteAlem + '</span></div>' +
+      '<span class="bh-result"><span class="geez">ዓመተ ዓለም</span><b>' + b.ameteAlem + '</b></span>' +
+      "<p>The year's evangelist comes straight from it: <code style=\"font:12px var(--mono)\">ameteAlem mod 4</code> " +
+      "cycles John (0), Matthew (1), Mark (2), Luke (3). For " + b.y + ": " + b.ameteAlem + " mod 4 = " +
+      (b.ameteAlem % 4) + ", the year of <b>" + EVANGELISTS[b.ameteAlem % 4][1] + " (" + EVANGELISTS[b.ameteAlem % 4][0] + ")</b>." +
+      (b.y % 4 === 3 ? " A Year of Luke is a leap year: Pagumen gets its sixth day." : "") + "</p>" }; },
+    function (b) { return { step: "Step 2 of 7", title: '<span class="geez">መደብ · ወንበር</span> · Medeb &amp; Wenber', html:
+      "<p>Sun and moon realign almost exactly every <b>19 solar years</b> (the lunar cycle the Greeks called Metonic; " +
+      "the tradition attributes it to Demetrius). <b>Medeb</b> is the year's position inside that cycle. " +
+      "<b>Wenber</b>, \"the chair\", is Medeb counted from the year before: one less, wrapping 0 back to 18.</p>" +
+      '<div class="bh-formula">medeb  = ameteAlem mod 19 = ' + b.ameteAlem + ' mod 19 = <span class="s">' + b.medeb + '</span>\n' +
+      'wenber = medeb - 1' + (b.medeb === 0 ? ' <span class="p">(0 wraps to 18)</span>' : '') + '           = <span class="s">' + b.wenber + '</span></div>' +
+      '<span class="bh-result"><span class="geez">መደብ</span><b>' + b.medeb + '</b></span>' +
+      '<span class="bh-result"><span class="geez">ወንበር</span><b>' + b.wenber + '</b></span>' +
+      "<p>Everything lunar in the rest of the computation is driven by Wenber alone.</p>" }; },
+    function (b) { return { step: "Step 3 of 7", title: '<span class="geez">አበቅቴ</span> · Abekte, the epact', html:
+      "<p>A lunar year runs about <b>11 days short</b> of a solar year. Those 11 days accumulate with every year " +
+      "of the cycle, and their running total (mod 30, one lunar month) is the <b>epact</b>: the age of the moon " +
+      "when the year opens.</p>" +
+      '<div class="bh-formula">abekte = (wenber × 11) mod 30\n' +
+      '       = (' + b.wenber + ' × 11) mod 30 = ' + (b.wenber * 11) + ' mod 30 = <span class="s">' + b.abekte + '</span></div>' +
+      '<span class="bh-result"><span class="geez">አበቅቴ</span><b>' + b.abekte + '</b></span>' +
+      "<p>An Abekte of 0 means new year and new moon coincide; that happens only when Wenber is 0, " +
+      "once per 19-year cycle.</p>" }; },
+    function (b) { return { step: "Step 4 of 7", title: '<span class="geez">መጥቅዕ</span> · Metqi', html:
+      "<p><b>Metqi</b>, \"the trumpet\", is the epact's complement: the two always sum to a full lunar month of 30. " +
+      "It names the day the paschal reckoning is seated in the new year.</p>" +
+      '<div class="bh-formula">metqi = (wenber × 19) mod 30\n' +
+      '      = (' + b.wenber + ' × 19) mod 30 = ' + (b.wenber * 19) + ' mod 30 = <span class="s">' + b.metqi + '</span>\n\n' +
+      '<span class="p">invariant:</span> abekte + metqi = ' + b.abekte + ' + ' + b.metqi + ' = <span class="s">' + (b.abekte + b.metqi) + '</span> <span class="p">' +
+      ((b.abekte + b.metqi) % 30 === 0 ? "✓ (a full lunar month)" : "") + '</span></div>' +
+      '<span class="bh-result"><span class="geez">መጥቅዕ</span><b>' + b.metqi + '</b></span>' +
+      "<p>The test suite asserts this 30-sum invariant for all 401 verified years." +
+      (b.metqi === 0 ? " <b>This year Metqi is 0, which the tradition reads as the 30th</b>, a rule the next step applies." : "") + "</p>" }; },
+    function (b) { return { step: "Step 5 of 7", title: '<span class="geez">መባጃ ሐመር</span> · Mebaja Hamer', html:
+      "<p>Metqi becomes a real calendar date: <b>day " + b.effMetqi + "</b> of <b>" +
+      (b.mhMonth === 1 ? "Meskerem" : "Tikimt") + "</b>. The rule: a Metqi greater than 14 lands in Meskerem, " +
+      "otherwise in Tikimt" + (b.metqi === 0 ? ", and a Metqi of 0 is read as the 30th of Meskerem (there is no day zero)" : "") + ". " +
+      "That date's weekday then selects a <b>ተውሳክ (Tewsak)</b> addition from a fixed table.</p>" +
+      '<div class="bh-formula">metqi ' + b.metqi + (b.metqi === 0 ? ' → 30' : '') + (b.effMetqi > 14 ? ' &gt; 14  → ' : ' ≤ 14  → ') +
+      (b.mhMonth === 1 ? 'መስከረም (Meskerem)' : 'ጥቅምት (Tikimt)') + ' ' + b.effMetqi + '\n' +
+      'weekday(' + (b.mhMonth === 1 ? 'Meskerem' : 'Tikimt') + ' ' + b.effMetqi + ', ' + b.y + ') = <span class="s">' +
+      WD_EN[b.mhWd] + ' (' + WD_AM[b.mhWd] + ')</span>\n' +
+      'tewsak[' + WD_EN_SHORT[b.mhWd] + '] = <span class="s">' + TEWSAK[b.mhWd] + '</span>  ' +
+      '<span class="p">table: Sun 7 · Mon 6 · Tue 5 · Wed 4 · Thu 3 · Fri 2 · Sat 8</span></div>' +
+      '<span class="bh-result"><span class="geez">መባጃ ሐመር</span><b>' + (b.mhMonth === 1 ? 'መስከረም' : 'ጥቅምት') + ' ' + toGeez(b.effMetqi) + '</b></span>' +
+      '<span class="bh-result">Tewsak <b>' + TEWSAK[b.mhWd] + '</b></span>' }; },
+    function (b) { return { step: "Step 6 of 7", title: '<span class="geez">ጾመ ነነዌ</span> · the Fast of Nineveh', html:
+      "<p>Count from the <b>same day-number four months later</b> (Meskerem carries to Tir, Tikimt to Yekatit) " +
+      "and add the Tewsak. Every Ethiopian month is exactly 30 days, and 120 mod 7 = 1, so four months on, " +
+      "the weekday has advanced by exactly one; the table is built so the sum <b>always lands on a Monday</b>, " +
+      "the day the three-day fast opens.</p>" +
+      '<div class="bh-formula">nineveh = (' + b.y + ', ' + (b.mhMonth === 1 ? 'ጥር' : 'የካቲት') + ' ' + b.effMetqi + ') + ' + TEWSAK[b.mhWd] + '\n' +
+      '        = <span class="s">' + ethStr(b.ninevehJDN) + '</span>\n' +
+      '        = <span class="s">' + gregStr(b.ninevehJDN) + '</span> · ' + WD_EN[wdOf(b.ninevehJDN)] +
+      (wdOf(b.ninevehJDN) === 1 ? ' <span class="p">✓ a Monday, as always</span>' : '') + '</div>' +
+      '<span class="bh-result"><span class="geez">ጾመ ነነዌ</span><b>' + gregStr(b.ninevehJDN) + '</b></span>' +
+      "<p>This is the linchpin. Everything else is now a fixed offset.</p>" }; },
+    function (b) {
+      var rows = FEASTS.map(function (f) {
+        var j = b.ninevehJDN + f[2];
+        return "<tr><td>" + f[1] + '</td><td class="geez">' + f[0] + "</td><td>+" + f[2] + "</td><td>" +
+          ethStr(j) + "</td><td>" + gregStr(j) + "</td><td>" + WD_EN_SHORT[wdOf(j)] + "</td></tr>";
+      }).join("");
+      return { step: "Step 7 of 7", title: '<span class="geez">ተውሳክ</span> · every movable feast of ' + b.y, html:
+        "<p>Each feast is Nineveh plus its fixed Tewsak offset. The offsets never change; only Nineveh moves.</p>" +
+        '<div style="overflow-x:auto"><table class="bh-table"><thead><tr><th>Feast</th><th></th><th>Offset</th><th>Ethiopian</th><th>Gregorian</th><th>Day</th></tr></thead><tbody>' +
+        rows + "</tbody></table></div>" }; },
+    function (b) {
+      var fasika = b.ninevehJDN + 69;
+      var alex = alexandrianEasterJDN(b.y + 8);
+      var agree = fasika === alex;
+      return { step: "The proof", title: "Two roads, one answer", html:
+        "<p>Nothing above had to be taken on trust. Fasika can be computed a second, completely different way: " +
+        "the <b>Alexandrian computus</b> (Meeus' Julian-calendar algorithm), which shares no intermediate values " +
+        "with the chain you just walked.</p>" +
+        '<div class="bh-formula">bahire hasab:  nineveh + 69           = JDN <span class="s">' + fasika + '</span>  (' + gregStr(fasika) + ')\n' +
+        'alexandrian:   easter(' + (b.y + 8) + ' AD, Julian) = JDN <span class="s">' + alex + '</span>  (' + gregStr(alex) + ')\n\n' +
+        (agree ? '<span class="k">agreement: exact</span> <span class="p">(just verified in your browser, for this year)</span>'
+               : '<span class="s">disagreement: this year falls outside the validated range</span>') + '</div>' +
+        "<p>The repository's test suite asserts this agreement for <b>every year from 1800 to 2200 EC</b>, " +
+        "and the API exposes every intermediate value so you can rerun any step:</p>" +
+        '<div class="bh-formula"><span class="p">$</span> curl https://eotcdev-api.natinael-96.workers.dev<span class="s">/v1/bahire-hasab/' + b.y + '</span></div>' };
+    },
+  ];
+
+  var deckYear = e.year;
+  var deckIndex = 0;
+  var slideEl = document.getElementById("bh-slide");
+  var yearEl = document.getElementById("bh-year");
+  var dotsEl = document.getElementById("bh-dots");
+  if (slideEl) {
+    yearEl.value = deckYear;
+    SLIDES.forEach(function (_, i) {
+      var d = document.createElement("button");
+      d.type = "button";
+      d.textContent = toGeez(i + 1);
+      d.addEventListener("click", function () { deckIndex = i; renderDeck(true); });
+      dotsEl.appendChild(d);
+    });
+    function renderDeck(animate) {
+      var s = SLIDES[deckIndex](bahireHasab(deckYear));
+      slideEl.innerHTML = '<div class="bh-step">' + s.step + "</div><h4>" + s.title + "</h4>" + s.html;
+      document.getElementById("bh-year-geez").textContent = toGeez(deckYear);
+      document.getElementById("bh-prev").disabled = deckIndex === 0;
+      document.getElementById("bh-next").disabled = deckIndex === SLIDES.length - 1;
+      Array.prototype.forEach.call(dotsEl.children, function (d, i) { d.classList.toggle("on", i === deckIndex); });
+      if (animate) { slideEl.classList.remove("swap"); void slideEl.offsetWidth; slideEl.classList.add("swap"); }
+    }
+    document.getElementById("bh-prev").addEventListener("click", function () {
+      if (deckIndex > 0) { deckIndex--; renderDeck(true); }
+    });
+    document.getElementById("bh-next").addEventListener("click", function () {
+      if (deckIndex < SLIDES.length - 1) { deckIndex++; renderDeck(true); }
+    });
+    yearEl.addEventListener("input", function () {
+      var v = parseInt(yearEl.value, 10);
+      if (Number.isInteger(v) && v >= 1 && v <= 9999) { deckYear = v; renderDeck(false); }
+    });
+    renderDeck(false);
+  }
 
   // Today's Sinksar commemorations: same data the API's /v1/sinksar serves.
   fetch("sinksar.json").then(function (r) { return r.json(); }).then(function (sk) {
