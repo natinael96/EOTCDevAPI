@@ -114,6 +114,30 @@
   .sk-readings .svc { color: var(--rubric); font-size: 12px; margin-right: 6px; }
   .sk-readings .sep { color: var(--rule); margin: 0 7px; }
   .sk-api { font-size: 12px; font-family: var(--serif); margin-top: 4px; display: inline-block; }
+  .fast-chip {
+    display: none; font-size: 12.5px; font-weight: 600; border-radius: 999px;
+    padding: 4px 13px; border: 1px solid var(--rule); color: var(--ink-2); background: var(--parchment);
+  }
+  .fast-chip.on { display: inline-block; }
+  .fast-chip.fasting { color: var(--parchment); background: var(--rubric); border-color: var(--rubric); }
+  .sub-row {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    padding: 0 0 18px; font-size: 12.5px; color: var(--faint);
+  }
+  .sub-row a {
+    font-size: 12.5px; font-weight: 600; color: var(--ink); border: 1px solid var(--rule);
+    border-radius: 999px; padding: 4px 14px; background: var(--parchment);
+  }
+  .sub-row a:hover { border-color: var(--rubric); color: var(--rubric); text-decoration: none; }
+  .upcoming { border-bottom: 1px solid var(--rule); background: var(--parchment); }
+  .upcoming-inner { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 14px 0; }
+  .up-label { font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-right: 6px; }
+  .up-chip {
+    border: 1px solid var(--rule); background: var(--raised); border-radius: 999px;
+    padding: 5px 15px; font-size: 13.5px; color: var(--ink-2); white-space: nowrap;
+  }
+  .up-chip .geez { color: var(--rubric-deep); font-weight: 500; margin-right: 5px; }
+  .up-chip b { color: var(--ink); font-weight: 600; }
   .sk-col { padding-top: 14px; }
   .sk-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
   .sk-label .geez { color: var(--rubric); letter-spacing: 0.05em; text-transform: none; font-size: 13px; margin-right: 6px; }
@@ -265,8 +289,9 @@
 
 <header>
   <div class="wrap bar">
-    <div class="mark"><span class="geez">ግጻዌ</span>EOTCDev API</div>
+    <div class="mark">EOTCDev API</div>
     <nav>
+      <a href="#today">Today</a>
       <a href="docs/">Documentation</a>
       <a href="#endpoints">Endpoints</a>
       <a href="#bahirehasab">Bahire&nbsp;Hasab</a>
@@ -284,8 +309,9 @@
     fasting, feasts, the full Bahire Hasab computation, and a date-level bridge between
     the Gitsawe, Sinksar, and Bible. No auth. No API key. No database.</p>
     <div class="cta">
-      <a class="btn primary" href="docs/">Read the documentation</a>
-      <a class="btn ghost" href="https://github.com/natinael96/EOTCDevAPI">Source on GitHub</a>
+      <a class="btn primary" href="#today"><span class="geez">ዛሬ</span>&ensp;Today's readings &amp; feasts</a>
+      <a class="btn ghost" href="docs/">Read the documentation</a>
+      <a class="btn ghost" href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
     </div>
   </div>
   <div>
@@ -308,11 +334,12 @@
   </div>
 </div>
 
-<div class="today">
+<div class="today" id="today">
   <div class="wrap today-inner">
     <span class="today-label">ዛሬ · Today</span>
     <span class="today-date geez" id="t-eth">…</span>
     <span class="today-sub" id="t-greg"></span>
+    <span class="fast-chip" id="t-fast"></span>
     <span class="today-fasika" id="t-fasika"></span>
     <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date, or just <code>curl /v1/today</code>.</span></noscript>
   </div>
@@ -330,6 +357,18 @@
       <div class="sk-label"><span class="geez">ወርኀዊ</span> commemorations of the month</div>
       <ul class="sk-list" id="sk-monthly"></ul>
     </div>
+  </div>
+  <div class="wrap sub-row" id="sub-row">
+    <span>Subscribe in your calendar:</span>
+    <a id="sub-fasting" href="#">ጾም · Fasting</a>
+    <a id="sub-feasts" href="#">በዓላት · Feasts</a>
+    <a id="sub-all" href="#">ሁሉም · All</a>
+    <span>works with Google, Apple, and Outlook</span>
+  </div>
+</div>
+<div class="upcoming">
+  <div class="wrap upcoming-inner" id="upcoming">
+    <span class="up-label">ቀጣይ · Upcoming</span>
   </div>
 </div>
 
@@ -793,6 +832,62 @@
       "https://eotcdev-api.natinael-96.workers.dev/v1/readings/" + isoToday;
     document.getElementById("t-sinksar").classList.add("on");
   }).catch(function () {});
+
+  // ---- Daily-companion extras -----------------------------------------------
+  var API = "https://eotcdev-api.natinael-96.workers.dev";
+
+  // Live fasting status from the API; the chip stays hidden if unreachable.
+  fetch(API + "/v1/today").then(function (r) { return r.json(); }).then(function (t) {
+    if (!t || !t.fasting) return;
+    var chip = document.getElementById("t-fast");
+    if (t.fasting.isFasting) {
+      chip.textContent = "ጾም · " + (t.fasting.reason || "fasting day");
+      chip.className = "fast-chip on fasting";
+    } else {
+      chip.textContent = "not a fasting day";
+      chip.className = "fast-chip on";
+    }
+  }).catch(function () {});
+
+  // Calendar subscription links for the current Ethiopian year.
+  document.getElementById("sub-fasting").href = API + "/v1/calendar/ics?year=" + e.year + "&type=fasting";
+  document.getElementById("sub-feasts").href = API + "/v1/calendar/ics?year=" + e.year + "&type=feasts";
+  document.getElementById("sub-all").href = API + "/v1/calendar/ics?year=" + e.year + "&type=all";
+
+  // Upcoming strip: the next five movable and fixed occasions, computed with
+  // the same chain the walkthrough deck uses.
+  var FIXED_FEASTS = [
+    ["እንቁጣጣሽ", "New Year", 1, 1], ["መስቀል", "Meskel", 1, 17],
+    ["ገና", "Gena", 4, 29], ["ጥምቀት", "Timket", 5, 11],
+    ["ቃና ዘገሊላ", "Kana Zegelila", 5, 12], ["ኪዳነ ምሕረት", "Kidane Mihret", 6, 16],
+    ["ቅዱስ ጊዮርጊስ", "St George", 8, 23], ["ልደታ ለማርያም", "Lideta", 9, 1],
+    ["ጴጥሮስ ወጳውሎስ", "Peter and Paul", 11, 5], ["ቅዱስ ገብርኤል", "Gabriel", 11, 19],
+    ["ቡሄ", "Buhe", 12, 13], ["ፍልሰታ ለማርያም", "Filseta", 12, 16],
+  ];
+  var upcoming = [];
+  for (var uy = e.year; uy <= e.year + 1; uy++) {
+    var nin = fasikaJDN(uy) - 69;
+    FEASTS.forEach(function (f) { upcoming.push({ am: f[0], en: f[1], jdn: nin + f[2] }); });
+    FIXED_FEASTS.forEach(function (f) { upcoming.push({ am: f[0], en: f[1], jdn: ethiopicToJDN(uy, f[2], f[3]) }); });
+  }
+  upcoming = upcoming.filter(function (f) { return f.jdn >= jdn; })
+    .sort(function (a, b) { return a.jdn - b.jdn || (a.am < b.am ? -1 : 1); })
+    .slice(0, 5);
+  var strip = document.getElementById("upcoming");
+  upcoming.forEach(function (f) {
+    var away = f.jdn - jdn;
+    var chip = document.createElement("span");
+    chip.className = "up-chip";
+    var g = document.createElement("span");
+    g.className = "geez";
+    g.textContent = f.am;
+    chip.appendChild(g);
+    chip.appendChild(document.createTextNode(f.en + " · "));
+    var b = document.createElement("b");
+    b.textContent = away === 0 ? "today" : away === 1 ? "tomorrow" : "in " + away + " days";
+    chip.appendChild(b);
+    strip.appendChild(chip);
+  });
 })();
 </script>
 </body>
