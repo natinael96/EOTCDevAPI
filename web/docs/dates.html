@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dates &amp; conversion — EOTCDev API Documentation</title>
+<meta name="description" content="Reference for /v1/today, /v1/date, /v1/convert, and batch conversion.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html" class="active">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Dates &amp; conversion</div>
+    <h1>Dates &amp; conversion</h1>
+    <p class="lede">Describing a day and moving between the calendars. All conversion goes
+    through the Julian Day Number, so the two calendars never need to know about each other.</p>
+
+    <div class="endpoint" id="today"><span class="method">GET</span><code class="path">/v1/today</code></div>
+    <p>Today, fully described, in a chosen civil timezone.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>tz</code></td><td>No</td><td><code>Africa/Addis_Ababa</code></td><td>IANA timezone name used to decide what "today" is</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/today?tz=Africa/Addis_Ababa"</span></pre>
+    <p>The response is the timezone plus the complete date description below.</p>
+
+    <div class="endpoint" id="date"><span class="method">GET</span><code class="path">/v1/date/<i>{date}</i></code></div>
+    <p>The full description of any date: both calendars, weekday, fasting status, and feasts.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Required</th><th>Default</th><th>Values</th></tr></thead>
+      <tbody>
+        <tr><td><code>calendar</code></td><td>No</td><td><code>gregorian</code></td><td><code>gregorian</code>, <code>ethiopian</code></td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/date/2026-04-12</span>
+{
+  <span class="k">"jdn"</span>: 2461143,
+  <span class="k">"gregorian"</span>: { <span class="k">"date"</span>: <span class="s">"2026-04-12"</span>, <span class="k">"year"</span>: 2026, <span class="k">"month"</span>: 4, <span class="k">"day"</span>: 12 },
+  <span class="k">"ethiopic"</span>: {
+    <span class="k">"date"</span>: <span class="s">"2018-08-04"</span>, <span class="k">"year"</span>: 2018, <span class="k">"month"</span>: 8, <span class="k">"day"</span>: 4,
+    <span class="k">"monthName"</span>: { <span class="k">"amharic"</span>: <span class="s">"ሚያዝያ"</span>, <span class="k">"translit"</span>: <span class="s">"Miyazya"</span> },
+    <span class="k">"isLeapYear"</span>: false,
+    <span class="k">"daysInMonth"</span>: 30
+  },
+  <span class="k">"weekday"</span>: { <span class="k">"n"</span>: 0, <span class="k">"amharic"</span>: <span class="s">"እሑድ"</span>, <span class="k">"translit"</span>: <span class="s">"Ehud"</span>, <span class="k">"english"</span>: <span class="s">"Sunday"</span> },
+  <span class="k">"fasting"</span>: { <span class="k">"isFasting"</span>: false, <span class="k">"fastFreeSeason"</span>: true, <span class="k">"periods"</span>: [] },
+  <span class="k">"feasts"</span>: [
+    { <span class="k">"key"</span>: <span class="s">"fasika"</span>, <span class="k">"amharic"</span>: <span class="s">"ትንሣኤ"</span>,
+      <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span>, <span class="k">"movable"</span>: true }
+  ],
+  <span class="k">"commemorations"</span>: []
+}</pre>
+    <ul>
+      <li><code>jdn</code> is the Julian Day Number — a calendar-agnostic integer count of
+        days, useful for date arithmetic on the client.</li>
+      <li><code>weekday.n</code> is <code>0</code>&nbsp;=&nbsp;Sunday through
+        <code>6</code>&nbsp;=&nbsp;Saturday, matching JavaScript's <code>Date.getDay()</code>.</li>
+      <li>All names come localized — Amharic, transliteration, English — in every response.</li>
+    </ul>
+
+    <div class="endpoint" id="convert"><span class="method">GET</span><code class="path">/v1/convert/<i>{date}</i></code></div>
+    <p>The smaller conversion-only form: JDN, both dates, and the weekday — no fasting or
+    feast computation. Use it when that's all you need; it's cheaper to read and cache-friendly.</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/convert/2026-08-27</span>
+<span class="p">$</span> curl <span class="s">"…/v1/convert/2018-12-21?calendar=ethiopian"</span></pre>
+
+    <div class="endpoint" id="batch"><span class="method post">POST</span><code class="path">/v1/calendar/convert/batch</code></div>
+    <p>Converts 1–366 <em>non-contiguous</em> dates in one request — a year of birthdays, a
+    list of appointment dates, an arbitrary selection.</p>
+    <pre><span class="p">$</span> curl -X POST …<span class="s">/v1/calendar/convert/batch</span> \
+    -H <span class="s">"Content-Type: application/json"</span> \
+    -d <span class="s">'{ "calendar": "gregorian",
+          "dates": ["2026-04-12", "2023-09-11", "invalid"] }'</span>
+{
+  <span class="k">"calendar"</span>: <span class="s">"gregorian"</span>,
+  <span class="k">"count"</span>: 3,
+  <span class="k">"results"</span>: [
+    { <span class="k">"input"</span>: <span class="s">"2026-04-12"</span>, <span class="k">"jdn"</span>: 2461143, <span class="k">"gregorian"</span>: { … }, <span class="k">"ethiopic"</span>: { … } },
+    { <span class="k">"input"</span>: <span class="s">"2023-09-11"</span>, <span class="k">"jdn"</span>: 2460199, <span class="k">"gregorian"</span>: { … }, <span class="k">"ethiopic"</span>: { … } },
+    { <span class="k">"input"</span>: <span class="s">"invalid"</span>, <span class="k">"error"</span>: <span class="s">"Could not parse date 'invalid'."</span> }
+  ]
+}</pre>
+    <div class="callout"><b>Per-item errors.</b> An invalid entry never rejects the valid
+    ones — it receives its own <code>error</code> in place. The whole request fails only when
+    <code>dates</code> is missing, empty, not an array, or longer than 366 elements.</div>
+    <p>For a <em>contiguous</em> range, prefer
+    <a href="calendar-utils.html#month"><code>/v1/calendar/{year}/{month}</code></a> — one call
+    per Ethiopian month, fully described.</p>
+
+    <div class="pager">
+      <a href="getting-started.html"><b>Previous</b>← Getting started</a>
+      <a class="next" href="fasting-feasts.html"><b>Next</b>Fasting &amp; feasts →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>

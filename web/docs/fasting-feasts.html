@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fasting &amp; feasts — EOTCDev API Documentation</title>
+<meta name="description" content="Reference for /v1/fasting, /v1/fasts, and /v1/feasts — including the weekly-fast exceptions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html" class="active">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Fasting &amp; feasts</div>
+    <h1>Fasting &amp; feasts</h1>
+    <p class="lede">The API answers <em>why</em>, not just yes or no — which fast, how long it
+    is, how far into it the date falls, and which rule produced the answer.</p>
+
+    <div class="endpoint" id="fasting"><span class="method">GET</span><code class="path">/v1/fasting/<i>{date}</i></code></div>
+    <p>Fasting status for one date. Accepts <code>?calendar=ethiopian</code> like every
+    date endpoint.</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/fasting/2026-03-04</span>
+{
+  <span class="k">"jdn"</span>: 2461104,
+  <span class="k">"gregorian"</span>: <span class="s">"2026-03-04"</span>,
+  <span class="k">"ethiopic"</span>: <span class="s">"2018-06-25"</span>,
+  <span class="k">"weekday"</span>: { <span class="k">"n"</span>: 3, <span class="k">"amharic"</span>: <span class="s">"ረቡዕ"</span>, <span class="k">"english"</span>: <span class="s">"Wednesday"</span> },
+  <span class="k">"isFasting"</span>: true,
+  <span class="k">"reason"</span>: <span class="s">"ዓቢይ ጾም (Great Lent)"</span>,
+  <span class="k">"weeklyFast"</span>: false,
+  <span class="k">"fastFreeSeason"</span>: false,
+  <span class="k">"feastOverride"</span>: false,
+  <span class="k">"periods"</span>: [ { <span class="k">"key"</span>: <span class="s">"abiy_tsome"</span>, <span class="k">"dayOfPeriod"</span>: 17 } ]
+}</pre>
+    <table>
+      <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>isFasting</code></td><td>The final answer for the date, after all rules and exceptions</td></tr>
+        <tr><td><code>weeklyFast</code></td><td>The Wednesday/Friday rule is what applies</td></tr>
+        <tr><td><code>fastFreeSeason</code></td><td>Weekly fasting is suspended — the fifty days from Fasika to Pentecost (ሃምሳ)</td></tr>
+        <tr><td><code>feastOverride</code></td><td>A great feast of the Lord (Gena, Timket) overrides the weekly fast</td></tr>
+        <tr><td><code>periods</code></td><td>Named fasting periods active on the date, with <code>dayOfPeriod</code> progress</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>The weekly fast is not absolute.</b> Wednesdays and Fridays are
+    fasting days — except during the fifty days of ሃምሳ, and except when a great feast of the
+    Lord falls on one. Both exceptions are implemented and flagged, never silently applied.
+    Regional practice varies for some minor rules; where reviewed sources disagree, the API
+    does not claim one custom as universal.</div>
+
+    <div class="endpoint" id="fasts"><span class="method">GET</span><code class="path">/v1/fasts/<i>{year}</i></code></div>
+    <p>All seven canonical fasting periods of an Ethiopian year — the answer to
+    "when does Lent start this year?"</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/fasts/2018</span></pre>
+    <p>Each period includes:</p>
+    <ul>
+      <li>a stable <code>key</code> (e.g. <code>abiy_tsome</code>, <code>tsome_nebiyat</code>);</li>
+      <li>Amharic, transliterated, and English names;</li>
+      <li>fixed or movable status;</li>
+      <li>duration in days;</li>
+      <li>start and end dates in <strong>both</strong> calendars;</li>
+      <li>a short description.</li>
+    </ul>
+    <p>The response also states the weekly-fast rule itself, so a client can render the
+    complete fasting picture from one call.</p>
+
+    <div class="endpoint" id="feasts"><span class="method">GET</span><code class="path">/v1/feasts/<i>{year}</i></code></div>
+    <p>Every feast of an Ethiopian year.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Default</th><th>Values</th></tr></thead>
+      <tbody>
+        <tr><td><code>type</code></td><td><code>all</code></td><td><code>all</code>, <code>movable</code>, <code>fixed</code></td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/feasts/2018?type=movable"</span></pre>
+    <p>Each feast carries a stable <code>key</code>, localized names, its movable/fixed
+    marker, the resolved Gregorian and Ethiopian dates for that year, the weekday, and a
+    major-feast marker where applicable. Movable feasts are located by
+    <a href="bahire-hasab.html">Bahire Hasab</a>; fixed feasts by the Ethiopian month/day.</p>
+
+    <div class="callout"><b>Gena is not always January 7.</b> Ethiopian year 2016 began on
+    September 12, 2023 (2015 was a leap year), so every date until the following Gregorian
+    leap day shifted by one: Tahsas 29 fell on <b>January 8, 2024</b> — and Lalibela observed
+    it there. Timket shifts identically. Popular sources hardcode January 7; this API returns
+    the true calendar arithmetic, which is why <code>/v1/feasts</code> resolves dates per
+    year instead of publishing a fixed Gregorian table.</div>
+
+    <div class="pager">
+      <a href="dates.html"><b>Previous</b>← Dates &amp; conversion</a>
+      <a class="next" href="bahire-hasab.html"><b>Next</b>Bahire Hasab →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>

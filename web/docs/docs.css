@@ -1,0 +1,156 @@
+/* EOTCDev API documentation — shared shell. Same manuscript language as the
+   landing page: parchment ground, ink text, vermillion rubrics. */
+:root {
+  --parchment: #f4efe3;
+  --raised: #faf7ee;
+  --ink: #1c1710;
+  --ink-2: #5d5342;
+  --faint: #8a7d66;
+  --rule: #d9cfba;
+  --rule-soft: #e7dfcd;
+  --rubric: #a02c17;
+  --rubric-deep: #7c2010;
+  --terminal: #211b12;
+  --terminal-ink: #ece4d2;
+  --terminal-dim: #9c8f75;
+  --terminal-red: #e0745c;
+  --terminal-gold: #d9a94e;
+  --serif: "Fraunces", Georgia, serif;
+  --ethiopic: "Noto Serif Ethiopic", "Abyssinica SIL", "Nyala", serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  margin: 0; background: var(--parchment); color: var(--ink);
+  font: 15.5px/1.7 var(--serif);
+  -webkit-font-smoothing: antialiased;
+}
+.geez { font-family: var(--ethiopic); }
+a { color: var(--rubric); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* header */
+header { border-bottom: 1px solid var(--rule); }
+.bar {
+  max-width: 1180px; margin: 0 auto; padding: 16px 28px;
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.mark { font-size: 16px; font-weight: 600; color: var(--ink); }
+.mark .geez { color: var(--rubric); margin-right: 8px; }
+.bar nav { display: flex; gap: 22px; font-size: 14px; }
+.bar nav a { color: var(--ink-2); }
+.bar nav a:hover { color: var(--rubric); }
+
+/* layout */
+.shell {
+  max-width: 1180px; margin: 0 auto; padding: 0 28px;
+  display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 56px;
+}
+.sidebar { padding: 40px 0 60px; border-right: 1px solid var(--rule-soft); }
+.side-sticky { position: sticky; top: 24px; }
+.sidebar h5 {
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--faint); margin: 26px 0 8px; font-weight: 600;
+}
+.sidebar h5:first-child { margin-top: 0; }
+.sidebar a {
+  display: block; color: var(--ink-2); font-size: 14px; padding: 4px 0 4px 12px;
+  border-left: 2px solid transparent;
+}
+.sidebar a:hover { color: var(--rubric); text-decoration: none; }
+.sidebar a.active { color: var(--rubric-deep); border-left-color: var(--rubric); font-weight: 600; }
+
+main { padding: 40px 0 80px; max-width: 720px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--faint); }
+.crumb a:hover { color: var(--rubric); }
+
+h1 { font-size: 34px; font-weight: 500; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 8px; }
+.lede { color: var(--ink-2); font-size: 16.5px; margin: 0 0 34px; }
+h2 {
+  font-size: 22px; font-weight: 600; margin: 46px 0 12px; letter-spacing: -0.01em;
+  padding-top: 18px; border-top: 1px solid var(--rule-soft);
+}
+main > h2:first-of-type { border-top: none; padding-top: 0; }
+h3 { font-size: 17px; font-weight: 600; margin: 30px 0 8px; }
+h2 .anchor, h3 .anchor { opacity: 0; color: var(--faint); font-weight: 400; margin-left: 8px; font-size: 0.8em; }
+h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+p, ul, ol { color: var(--ink-2); }
+p strong, li strong { color: var(--ink); }
+li { margin: 4px 0; }
+
+code {
+  font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+  background: var(--raised); border: 1px solid var(--rule-soft);
+  border-radius: 3px; padding: 1px 5px;
+}
+pre {
+  background: var(--terminal); color: var(--terminal-ink);
+  border-radius: 6px; padding: 14px 18px; overflow-x: auto;
+  font: 12.5px/1.7 var(--mono); margin: 14px 0;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+pre .p { color: var(--terminal-dim); }
+pre .k { color: var(--terminal-gold); }
+pre .s { color: var(--terminal-red); }
+pre .cm { color: var(--terminal-dim); font-style: italic; }
+
+/* endpoint heading */
+.endpoint {
+  display: flex; align-items: center; gap: 12px; margin: 40px 0 6px;
+  padding-top: 20px; border-top: 1px solid var(--rule-soft);
+}
+.endpoint .method {
+  font: 600 11px var(--mono); letter-spacing: 0.06em; color: var(--parchment);
+  background: var(--ink); border-radius: 3px; padding: 3px 9px;
+}
+.endpoint .method.post { background: var(--rubric); }
+.endpoint code.path { font-size: 15px; background: none; border: none; padding: 0; font-weight: 600; }
+.endpoint code.path i { font-style: normal; color: var(--rubric); }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 14px 0; }
+th {
+  text-align: left; color: var(--faint); font-weight: 600; font-size: 11.5px;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 7px 14px 7px 0; border-bottom: 1px solid var(--rule);
+}
+td { padding: 7px 14px 7px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: top; color: var(--ink-2); }
+td:first-child { color: var(--ink); }
+td code { white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+
+.callout {
+  border-left: 3px solid var(--rubric); background: var(--raised);
+  border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 18px 0;
+  color: var(--ink-2); font-size: 14.5px;
+}
+.callout b { color: var(--ink); }
+.callout.plain { border-left-color: var(--rule); }
+
+.pager {
+  display: flex; justify-content: space-between; gap: 16px;
+  margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule);
+  font-size: 14.5px;
+}
+.pager a { color: var(--ink-2); }
+.pager a b { display: block; color: var(--rubric); font-size: 13px; font-weight: 600; }
+.pager a:hover { text-decoration: none; color: var(--rubric-deep); }
+.pager .next { text-align: right; margin-left: auto; }
+
+footer { border-top: 1px solid var(--rule); }
+.foot {
+  max-width: 1180px; margin: 0 auto; padding: 26px 28px 44px;
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  color: var(--faint); font-size: 13px;
+}
+.foot .geez { color: var(--rubric); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; gap: 0; }
+  .sidebar { border-right: none; border-bottom: 1px solid var(--rule); padding: 20px 0; }
+  .side-sticky { position: static; display: flex; flex-wrap: wrap; gap: 2px 22px; }
+  .sidebar h5 { flex-basis: 100%; margin: 12px 0 4px; }
+  .sidebar a { padding-left: 0; border-left: none; }
+  main { padding-top: 28px; }
+}

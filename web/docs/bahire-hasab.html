@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bahire Hasab — EOTCDev API Documentation</title>
+<meta name="description" content="The traditional Ethiopian computus, exposed with every intermediate value — and how it is verified.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html" class="active">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Bahire Hasab</div>
+    <h1>Bahire Hasab <span class="geez" style="font-size:0.7em;color:var(--rubric)">ባሕረ ሐሳብ</span></h1>
+    <p class="lede">"The sea of thought" — the traditional computation that locates every
+    movable fast and feast of the church year. The API exposes the whole calculation,
+    not just the answers, so you can check its work.</p>
+
+    <div class="endpoint" id="endpoint"><span class="method">GET</span><code class="path">/v1/bahire-hasab/<i>{year}</i></code></div>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/bahire-hasab/2018</span>
+{
+  <span class="k">"ethiopicYear"</span>: 2018,
+  <span class="k">"ameteAlem"</span>: 7518,
+  <span class="k">"evangelist"</span>: { … },
+  <span class="k">"computation"</span>: {
+    <span class="k">"medeb"</span>: 18,
+    <span class="k">"wenber"</span>: 17,
+    <span class="k">"abekte"</span>: 12,
+    <span class="k">"metqi"</span>: 18,
+    <span class="k">"mebajaHamer"</span>: { <span class="k">"ethiopic"</span>: <span class="s">"2018-…"</span>, <span class="k">"weekday"</span>: { … } },
+    <span class="k">"tewsakApplied"</span>: 0
+  },
+  <span class="k">"newYear"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2025-09-11"</span>, <span class="k">"isLeapYear"</span>: false, <span class="k">"pagumenDays"</span>: 5 },
+  <span class="k">"movableFeasts"</span>: [ … ]
+}</pre>
+
+    <h2 id="chain">The traditional chain<a class="anchor" href="#chain">¶</a></h2>
+    <pre>Amete Alem <span class="cm">(ዓመተ ዓለም — years since creation, EC + 5500)</span>
+  → Medeb <span class="cm">(መደብ)</span>
+  → Wenber <span class="cm">(ወንበር)</span>
+  → Abekte &amp; Metqi <span class="cm">(አበቅቴ · መጥቅዕ)</span>
+  → Mebaja Hamer <span class="cm">(መባጃ ሐመር)</span>
+  → weekday + Tewsak <span class="cm">(ተውሳክ)</span>
+  → ጾመ ነነዌ <span class="cm">(the Nineveh fast — the linchpin)</span>
+  → every other movable feast</pre>
+    <p><strong>Nineveh is the anchor.</strong> Once its Monday is fixed, all ten remaining
+    movable feasts sit a fixed Tewsak offset after it — Great Lent begins 14 days later,
+    Hosanna 62, Siklet 67, Fasika 69, Erget 108, Peraklitos 118. Each feast in
+    <code>movableFeasts</code> includes its offset from Nineveh so the structure is visible,
+    not just the result.</p>
+
+    <h2 id="invariants">Invariants the tests enforce<a class="anchor" href="#invariants">¶</a></h2>
+    <ul>
+      <li><code>Abekte + Metqi = 30</code> for all 401 verified years;</li>
+      <li>Nineveh always lands on a Monday; Fasika and Hosanna on a Sunday; Siklet on a Friday;</li>
+      <li>Fasika always falls within its canonical April 4 – May 8 window;</li>
+      <li>73,415 consecutive days round-trip EC → JDN → EC with no gaps or duplicates;</li>
+      <li>weekdays cross-checked against an independent implementation.</li>
+    </ul>
+
+    <h2 id="verification">The correctness argument<a class="anchor" href="#verification">¶</a></h2>
+    <p>Fasika is computed <strong>two completely independent ways</strong>: the traditional
+    Bahire Hasab chain above, and the Alexandrian computus (Meeus' Julian-calendar
+    algorithm). The test suite asserts they agree for <strong>every year from 1800 to 2200
+    EC</strong>. Two methods with nothing in common but the answer, agreeing for four
+    centuries, is not a coincidence — it is the strongest guarantee this project can offer
+    without a church-court ruling.</p>
+    <div class="callout plain">The evangelist of the year (ወንጌላዊ — Matthew, Mark, Luke, or
+    John, cycling with <code>Amete Alem mod 4</code>) is included in the response for
+    completeness; the new-year block states whether the year is a leap year (Year of Luke,
+    <code>year mod 4 = 3</code>) and therefore whether Pagumen has 5 or 6 days.</div>
+
+    <div class="pager">
+      <a href="fasting-feasts.html"><b>Previous</b>← Fasting &amp; feasts</a>
+      <a class="next" href="calendar-utils.html"><b>Next</b>Calendar utilities →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>

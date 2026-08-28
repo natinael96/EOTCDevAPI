@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gitsawe, readings &amp; Sinksar — EOTCDev API Documentation</title>
+<meta name="description" content="The lectionary endpoints: /v1/gitsawe, /v1/readings, /v1/sinksar — resolution semantics, reading structure, and the Bible reference model.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html" class="active">Gitsawe, readings &amp; Sinksar</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Gitsawe, readings &amp; Sinksar</div>
+    <h1>Gitsawe, readings &amp; Sinksar</h1>
+    <p class="lede">The date-level bridge between the Gitsawe lectionary
+    (<span class="geez">ግጻዌ</span>), the Sinksar (<span class="geez">ስንክሳር</span>), and the
+    Bible — with resolution semantics that say exactly what the API knows and doesn't.</p>
+
+    <div class="endpoint" id="gitsawe"><span class="method">GET</span><code class="path">/v1/gitsawe/<i>{date}</i></code></div>
+    <p>The complete bridge for one date: fixed-cycle Gitsawe appointments, Sinksar summary
+    metadata, the annual and monthly feast lists, and normalized Bible references.</p>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/gitsawe/2018-08-04?calendar=ethiopian"</span></pre>
+
+    <h3 id="resolution">Resolution semantics — read this first</h3>
+    <p>The response currently reports:</p>
+    <pre>{ <span class="k">"resolution"</span>: <span class="s">"fixed_candidate_only"</span> }</pre>
+    <p>This is an important, deliberate restriction. Only the <strong>fixed</strong> Gitsawe
+    cycle is transcribed so far. On a Sunday or a movable feast, the printed source may
+    appoint a different service order that takes precedence — and rather than pretending the
+    fixed appointment always wins, the API tells you when it knows a conflict is possible:</p>
+    <pre>{
+  <span class="k">"coverage"</span>: {
+    <span class="k">"fixedCycle"</span>: <span class="s">"transcribed"</span>,
+    <span class="k">"movableCycle"</span>: <span class="s">"not_transcribed"</span>,
+    <span class="k">"sundayCycle"</span>: <span class="s">"not_transcribed"</span>,
+    <span class="k">"occasionalCycle"</span>: <span class="s">"not_transcribed"</span>,
+    <span class="k">"bahireHasabTables"</span>: <span class="s">"not_transcribed"</span>
+  },
+  <span class="k">"resolutionFactors"</span>: {
+    <span class="k">"isSunday"</span>: true,
+    <span class="k">"movableFeasts"</span>: [<span class="s">"fasika"</span>],
+    <span class="k">"knownPrecedenceConflict"</span>: true,
+    <span class="k">"note"</span>: <span class="s">"Sunday and movable Gitsawe cycles are not yet transcribed; precedence is not resolved."</span>
+  }
+}</pre>
+    <div class="callout"><b>Consumer rule.</b> Respect <code>fixed_candidate_only</code> and
+    <code>knownPrecedenceConflict</code>. Present the fixed appointment as "the appointed
+    fixed-cycle reading", not as "today's service order", whenever a conflict is flagged.</div>
+
+    <h3 id="services">Service structure</h3>
+    <table>
+      <thead><tr><th>API key</th><th>Source label</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>matins</code></td><td class="geez">ዘነግህ</td><td>Morning office</td></tr>
+        <tr><td><code>liturgy</code></td><td class="geez">ዘቅዳሴ</td><td>Divine Liturgy</td></tr>
+        <tr><td><code>vespers</code></td><td class="geez">ዘሠርክ</td><td>Evening office</td></tr>
+      </tbody>
+    </table>
+    <p>Each service holds <code>psalms</code>, <code>gospels</code>,
+    <code>epistlesAndActs</code>, and the appointed <code>anaphora</code>
+    (<span class="geez">ቅዳሴ</span> — a chant name, not a Bible passage). Readings preserve
+    the source and the normalized layer side by side:</p>
+    <pre>{
+  <span class="k">"sourceField"</span>: <span class="s">"ወንጌል"</span>,
+  <span class="k">"alternate"</span>: false,
+  <span class="k">"sourceBook"</span>: <span class="s">"ዮሐንስ"</span>,
+  <span class="k">"bibleBook"</span>: <span class="s">"JHN"</span>,
+  <span class="k">"sourceCitation"</span>: <span class="s">"ም· ፲ ቍ‧ ፩ ፳፪"</span>,
+  <span class="k">"canonicalReference"</span>: {
+    <span class="k">"book"</span>: <span class="s">"JHN"</span>, <span class="k">"chapter"</span>: 10,
+    <span class="k">"verseStart"</span>: 1, <span class="k">"verseEnd"</span>: 22,
+    <span class="k">"toEndOfChapter"</span>: false,
+    <span class="k">"method"</span>: <span class="s">"printed_citation"</span>,
+    <span class="k">"confidence"</span>: <span class="s">"probable"</span>
+  }
+}</pre>
+    <p><strong>The source citation is never overwritten by normalization.</strong>
+    <code>alternate: true</code> marks a reading the source introduces with
+    <span class="geez">ዓዲ</span> ("again") — an additional or repeated appointment. Do not
+    discard it just because another reading of the same type exists.</p>
+
+    <div class="endpoint" id="readings"><span class="method">GET</span><code class="path">/v1/readings/<i>{date}</i></code></div>
+    <p>The recommended endpoint when you need <em>only</em> the appointed Bible readings —
+    no Sinksar entries, no source detail unrelated to reading selection. Acts is separated
+    from the other epistles for easier rendering:</p>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/readings/2018-12-22?calendar=ethiopian"</span>
+{
+  <span class="k">"date"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2026-08-28"</span>, <span class="k">"ethiopic"</span>: <span class="s">"2018-12-22"</span> },
+  <span class="k">"source"</span>: { <span class="k">"cycle"</span>: <span class="s">"fixed"</span>, <span class="k">"resolution"</span>: <span class="s">"fixed_candidate_only"</span> },
+  <span class="k">"services"</span>: {
+    <span class="k">"matins"</span>:  { <span class="k">"psalms"</span>: […], <span class="k">"gospels"</span>: […], <span class="k">"epistles"</span>: [], <span class="k">"acts"</span>: [], <span class="k">"anaphora"</span>: null },
+    <span class="k">"liturgy"</span>: { … },
+    <span class="k">"vespers"</span>: { … }
+  },
+  <span class="k">"bible"</span>: { <span class="k">"textIncluded"</span>: false, <span class="k">"license"</span>: <span class="s">"CC-BY-NC-ND-4.0"</span> }
+}</pre>
+
+    <div class="endpoint" id="sinksar"><span class="method">GET</span><code class="path">/v1/sinksar/<i>{date}</i></code></div>
+    <p>The focused view of the day's Sinksar commemorations — the annual
+    (<span class="geez">ዓመታዊ</span>) and monthly (<span class="geez">ወርኀዊ በዓላት</span>) lists
+    without the full Gitsawe payload.</p>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/sinksar/2018-01-01?calendar=ethiopian"</span>
+{
+  <span class="k">"date"</span>: { <span class="k">"ethiopic"</span>: <span class="s">"2018-01-01"</span>, <span class="k">"weekday"</span>: { … } },
+  <span class="k">"annualFeasts"</span>: {
+    <span class="k">"heading"</span>: <span class="s">"📌 መስከረም ፩ ቀን የሚከበሩ ዓመታዊ የቅዱሳን በዓላት"</span>,
+    <span class="k">"items"</span>: [
+      { <span class="k">"id"</span>: <span class="s">"1-1-annual-1"</span>, <span class="k">"title"</span>: <span class="s">"ርዕሰ ዓውደ ዓመት"</span>,
+        <span class="k">"sourceText"</span>: <span class="s">"፩.ርዕሰ ዓውደ ዓመት"</span> },
+      { <span class="k">"id"</span>: <span class="s">"1-1-annual-2"</span>, <span class="k">"title"</span>: <span class="s">"ቅዱስ በርተሎሜዎስ ሐዋርያ"</span>, … }
+    ]
+  },
+  <span class="k">"monthlyFeasts"</span>: {
+    <span class="k">"heading"</span>: <span class="s">"📌 ወርኀዊ በዓላት"</span>,
+    <span class="k">"items"</span>: [ { <span class="k">"title"</span>: <span class="s">"ልደታ ለማርያም ድንግል እግዝእትነ"</span>, … } ]
+  },
+  <span class="k">"entryCount"</span>: 9,
+  <span class="k">"fullTextAvailable"</span>: false,
+  <span class="k">"reason"</span>: <span class="s">"Full-text publication rights are not yet recorded."</span>
+}</pre>
+    <table>
+      <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>heading</code></td><td>The original printed summary heading, unmodified</td></tr>
+        <tr><td><code>items[].id</code></td><td>Stable derived item ID (<code>month-day-kind-n</code>)</td></tr>
+        <tr><td><code>items[].title</code></td><td>Number prefix removed, for display and search</td></tr>
+        <tr><td><code>items[].sourceText</code></td><td>The original numbered source line, preserved exactly</td></tr>
+        <tr><td><code>entryCount</code></td><td>Total Sinksar entries recorded for the day</td></tr>
+      </tbody>
+    </table>
+    <p>The compiler currently extracts 1,542 annual and 1,905 monthly feast items across the
+    year. A day may legitimately lack one of the two lists; absence is a <code>null</code>
+    heading and an empty items array — never an error.</p>
+
+    <h2 id="bible-model">The Bible reference model<a class="anchor" href="#bible-model">¶</a></h2>
+    <p>Canonical references use stable book IDs:</p>
+    <pre>MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL
+1TH 2TH 1TI 2TI TIT PHM HEB JAS 1PE 2PE 1JN 2JN 3JN JUD REV PSA</pre>
+    <ul>
+      <li><strong>Context-aware resolution:</strong> a bare <span class="geez">ዮሐንስ</span> in a
+        Gospel field is <code>JHN</code>; in an epistle list it is <code>1JN</code> unless
+        numbered otherwise.</li>
+      <li><strong>Confidence is explicit:</strong> <code>confirmed</code>,
+        <code>probable</code>, <code>ambiguous</code>, or <code>unresolved</code>. Most
+        citation-only links are <code>probable</code> — do not present them as manually
+        confirmed textual equivalence.</li>
+      <li><strong>"To end of chapter":</strong> when the source says
+        <span class="geez">ፍጻሜ ምዕራፍ</span>, the reference carries
+        <code>verseEnd: null, toEndOfChapter: true</code> so the start verse is never
+        misrepresented as the end.</li>
+    </ul>
+    <div class="callout"><b>Why no verse text?</b> The available local editions
+    (<code>am-1980</code>, <code>gez-1980</code>) are CC BY-NC-ND 4.0; this API is MIT. The
+    API therefore serves references, structure, and citations — never the restricted text.
+    Applications that display verse text must obtain a compatible edition and honour its
+    attribution, noncommercial, and no-derivatives terms.</div>
+
+    <div class="pager">
+      <a href="calendar-utils.html"><b>Previous</b>← Calendar utilities</a>
+      <a class="next" href="errors.html"><b>Next</b>Errors &amp; rate limits →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>

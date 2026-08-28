@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data &amp; sources — EOTCDev API Documentation</title>
+<meta name="description" content="Where the data comes from: sources, provenance, licensing boundaries, quality reporting, and known limitations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html" class="active">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Data &amp; sources</div>
+    <h1>Data &amp; sources</h1>
+    <p class="lede">Infrastructure you can trust has to say what it knows, what it inferred,
+    and what it doesn't have yet. This page is that statement.</p>
+
+    <h2 id="layers">The data layers<a class="anchor" href="#layers">¶</a></h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Source</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Calendar arithmetic</td><td>Pure code — JDN conversion, Bahire Hasab, computus</td><td>Verified against 9,154 shared vectors</td></tr>
+        <tr><td>Fasts &amp; feasts</td><td>Canonical rules, encoded and reviewed</td><td>Served, with exceptions flagged per date</td></tr>
+        <tr><td>Gitsawe fixed cycle</td><td>Scan transcription of <span class="geez">መጽሐፈ ግጻዌ ወመዝሙር ከነምልክቱ</span></td><td>366 day-records transcribed with scan pages and printed citations preserved</td></tr>
+        <tr><td>Sinksar summaries</td><td>Apache-2.0 dataset, 2,308 indexed entries</td><td>Titles, IDs, and annual/monthly lists served; narrative text withheld pending rights</td></tr>
+        <tr><td>Seasonal / monthly cycles, feast graph</td><td>Sinq import (MIT <code>gitsawe</code> npm dataset + Sinq curation), frozen snapshot with per-record provenance</td><td>Compiled and validated; not yet exposed as endpoints</td></tr>
+        <tr><td>Movable / Sunday / occasional Gitsawe, precedence</td><td>Printed source sections</td><td>Not yet transcribed — <code>fixed_candidate_only</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="provenance">Provenance, all the way down<a class="anchor" href="#provenance">¶</a></h2>
+    <p>Every data directory carries a machine-readable manifest recording title, editor,
+    publisher, edition, scan origin, access date, license status, and hashes. Imported
+    records keep their original source labels next to normalized values —
+    <strong>normalization never overwrites source evidence</strong>. Where two sources
+    disagree, the conflict is recorded in a reconciliation report instead of silently
+    picking a side.</p>
+
+    <h2 id="licensing">The licensing boundary<a class="anchor" href="#licensing">¶</a></h2>
+    <ul>
+      <li><strong>The API and its bundled data are MIT.</strong> Calendar facts, normalized
+        citation metadata, and confirmed-redistributable content only.</li>
+      <li><strong>Bible verse text is not bundled.</strong> The local validation editions
+        (<code>am-1980</code>, <code>gez-1980</code>) are CC BY-NC-ND 4.0 — incompatible with
+        MIT redistribution — so the API serves references, never verses.</li>
+      <li><strong>Sinksar narrative text and Gitsawe incipits</strong> stay out of the public
+        runtime until their publication rights are recorded. Responses say so explicitly
+        (<code>fullTextAvailable: false</code> with a <code>reason</code>).</li>
+      <li><strong>Unknown rights are treated as restricted</strong>, never as permission.</li>
+    </ul>
+
+    <h2 id="quality">Quality reporting &amp; review queue<a class="anchor" href="#quality">¶</a></h2>
+    <p>Data compilation generates public quality reports
+    (<code>data/gitsawe/quality-report.json</code>,
+    <code>data/sinq-gitsawe/quality-report.json</code>) tracking coverage counts, resolved
+    and unresolved Bible books, parsed and incomplete citations, and a structured review
+    queue. Nothing ambiguous is auto-corrected — each open item carries its source
+    coordinates (file, month/day, service, printed label) and waits for evidence:</p>
+    <table>
+      <thead><tr><th>Open review kind</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>incomplete_citation</code></td><td>Printed citation lacks a fully parseable chapter/verse</td></tr>
+        <tr><td><code>unresolved_bible_book</code></td><td>A source book label cannot be safely normalized</td></tr>
+        <tr><td><code>sinksar_day_heading_mismatch</code></td><td>Catalog day and printed summary heading disagree</td></tr>
+        <tr><td><code>slot_family_mismatch</code></td><td>An imported reading's book doesn't fit its lectionary slot</td></tr>
+        <tr><td><code>chapter_out_of_range</code></td><td>An imported citation names a chapter the book doesn't have</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="limitations">Known limitations<a class="anchor" href="#limitations">¶</a></h2>
+    <ol>
+      <li>Daily Gitsawe results are fixed-cycle candidates, not always final service orders.</li>
+      <li>Movable, Sunday, occasional, and printed Bahire Hasab Gitsawe sections are not yet
+        transcribed; liturgical precedence rules are not implemented.</li>
+      <li>Regional practice variants are not fully modeled — where reviewed sources disagree,
+        no single custom is claimed as universal.</li>
+      <li>Bible verse text is not included, by license.</li>
+      <li>A small structured review queue of source ambiguities remains open (see above) —
+        reported, not guessed at.</li>
+      <li>Self-hosted Python rate limiting is per-process; use a proxy limiter for fleets.</li>
+    </ol>
+    <p>The API reports incomplete coverage rather than concealing it. That is a feature.</p>
+
+    <h2 id="contributing">Contributing corrections<a class="anchor" href="#contributing">¶</a></h2>
+    <p>Corrections to calendar data are especially welcome — feast dates, commemorations,
+    regional variations in fasting practice.
+    <a href="https://github.com/natinael96/EOTCDevAPI/issues">Open an issue with a
+    source</a>: identify the edition, cite printed/scan pages, and keep original text
+    separate from the proposed normalization. For code-level changes, both implementations
+    move together: regenerate the shared fixtures (<code>make spec</code>), review the diff —
+    <em>a fixture diff is a behaviour change, and reviewing it is the point</em> — and run
+    <code>make ci</code>.</p>
+
+    <div class="pager">
+      <a href="errors.html"><b>Previous</b>← Errors &amp; rate limits</a>
+      <a class="next" href="index.html"><b>Back to start</b>Introduction →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>
