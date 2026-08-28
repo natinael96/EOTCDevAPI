@@ -216,6 +216,29 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 | GET | `/v1/gitsawe/{date}` | Gitsawe, Sinksar, and Bible-reference detail |
 | GET | `/v1/readings/{date}` | Focused daily Bible reading appointments |
 | GET | `/v1/sinksar/{date}` | Sinksar annual and monthly commemoration lists |
+| GET | `/v1/feasts/{year}/{key}` | One feast resolved for a year, by key, name, or alias |
+| GET | `/v1/feasts/search` | Homophone-aware feast search across names and aliases |
+| GET | `/v1/upcoming` | Upcoming feasts and fasts within a window |
+| GET | `/v1/calendar/range` | Fully described date range, up to 366 days |
+| GET | `/v1/bible/books` | Canon book metadata and verse counts |
+| GET | `/v1/bible/books/{id}` | One book with per-chapter verse counts |
+| GET | `/v1/bible/editions` | Bible editions registry and licensing |
+| GET | `/v1/bible/parse` | Citation parsing into canonical references |
+| GET | `/v1/bible/{edition}/{book}/{chapter}` | Chapter reference; text on licensed self-hosts only |
+
+Full request/response documentation for these newer endpoints lives in the hosted
+documentation (https://natinael96.github.io/EOTCDevAPI/docs/); the shared response
+fixtures in `spec/responses.json` remain the byte-level contract for all of them.
+Notes on the two least obvious:
+
+- **Feast search** folds Ethiopic homophones before matching (ሐ/ኀ→ሀ, ሠ→ሰ, ዐ→አ,
+  ፀ→ጸ, and the interchangeable first/fourth guttural orders), so ትንሳኤ finds ትንሣኤ
+  and ፆም finds ጾም. Every feast also carries a curated alias list (ፋሲካ/ትንሣኤ/Easter
+  are one feast).
+- **Bible text mode** is a self-host opt-in: set `EOTC_BIBLE_TEXT_DIR` to a
+  directory laid out like `data/bible/` on a Python deployment that holds a
+  licensed edition. Without it (including on the public Worker) the chapter
+  endpoint returns references with `textAvailable: false` and the license reason.
 
 ## 8. Service endpoints
 

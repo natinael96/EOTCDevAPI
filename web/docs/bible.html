@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bible · EOTCDev API Documentation</title>
+<meta name="description" content="The Bible API: canon metadata, verse counts, citation parsing, and the verse-text license boundary with self-host activation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit"><span class="geez">ግጻዌ</span>EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <a href="bible.html" class="active">Bible</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Bible</div>
+    <h1>Bible</h1>
+    <p class="lede">The layer the Gitsawe references point into: the canon, each book's
+    structure under the Ethiopian versification, a citation parser that reads printed
+    Ge'ez references, and an honest boundary around verse text.</p>
+
+    <div class="endpoint" id="books"><span class="method">GET</span><code class="path">/v1/bible/books</code></div>
+    <p>The canon as book metadata: 93 book records of the EOTC 81-book counting tradition,
+    as divided by the am-1980 edition.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Required</th><th>Values</th></tr></thead>
+      <tbody>
+        <tr><td><code>testament</code></td><td>No</td><td><code>old</code>, <code>new</code></td></tr>
+        <tr><td><code>section</code></td><td>No</td><td><code>Gospel</code>, <code>PaulineEpistle</code>, <code>Deuterocanonical</code>, …</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/bible/books?testament=new"</span>
+{
+  <span class="k">"versification"</span>: <span class="s">"am-1980"</span>,
+  <span class="k">"count"</span>: 35,
+  <span class="k">"books"</span>: [
+    { <span class="k">"id"</span>: <span class="s">"MAT"</span>, <span class="k">"order"</span>: 55, <span class="k">"slug"</span>: <span class="s">"matthew"</span>,
+      <span class="k">"section"</span>: <span class="s">"Gospel"</span>,
+      <span class="k">"names"</span>: { <span class="k">"english"</span>: <span class="s">"Matthew"</span>, <span class="k">"amharic"</span>: <span class="s">"የማቴዎስ ወንጌል"</span>,
+                  <span class="k">"amharicAbbreviation"</span>: <span class="s">"ማቴ"</span> },
+      <span class="k">"chapters"</span>: 28 }, …
+  ]
+}</pre>
+
+    <div class="endpoint" id="book"><span class="method">GET</span><code class="path">/v1/bible/books/<i>{id}</i></code></div>
+    <p>One book in detail, addressed by USFM-style ID (<code>JHN</code>), slug
+    (<code>psalms</code>), or any of its names in any script. Adds
+    <code>verseCounts</code>, the per-chapter verse totals, labeled with the
+    versification they come from; Ethiopian versification differs from Western
+    editions, so the label is part of the contract.</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/bible/books/psalms</span>
+{ <span class="k">"id"</span>: <span class="s">"PSA"</span>, <span class="k">"names"</span>: { <span class="k">"amharic"</span>: <span class="s">"መዝሙረ ዳዊት"</span> },
+  <span class="k">"chapters"</span>: 150, <span class="k">"versification"</span>: <span class="s">"am-1980"</span>,
+  <span class="k">"verseCounts"</span>: [6, 12, 8, …] }</pre>
+
+    <div class="endpoint" id="editions"><span class="method">GET</span><code class="path">/v1/bible/editions</code></div>
+    <p>The editions registry: identity, publisher, canon, license, and source for each
+    edition the API knows (<code>am-1980</code>, <code>gez-1980</code>, both from the
+    EOTCOpenSource 80-weahadu project, CC BY-NC-ND 4.0).</p>
+
+    <div class="endpoint" id="parse"><span class="method">GET</span><code class="path">/v1/bible/parse</code></div>
+    <p>The citation parser the Gitsawe compiler itself uses, exposed. It reads printed
+    Ge'ez citations, Amharic book names with Arabic or Ge'ez numerals, and Latin
+    references, and resolves the book with the same homophone folding as feast search:</p>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/bible/parse?q=ዮሐንስ ም· ፫ ቍ ፲፮"</span>
+{
+  <span class="k">"resolved"</span>: true,
+  <span class="k">"book"</span>: { <span class="k">"id"</span>: <span class="s">"JHN"</span>, <span class="k">"confidence"</span>: <span class="s">"partial"</span> },
+  <span class="k">"chapter"</span>: 3, <span class="k">"verseStart"</span>: 16, <span class="k">"verseEnd"</span>: null,
+  <span class="k">"withinBounds"</span>: true
+}
+
+<span class="p">$</span> curl <span class="s">"…/v1/bible/parse?q=መዝሙረ ዳዊት ፻፵፩ ቍ ፮ – ፯"</span>   <span class="cm"># a real Gitsawe ምስባክ citation</span>
+{ <span class="k">"book"</span>: { <span class="k">"id"</span>: <span class="s">"PSA"</span> }, <span class="k">"chapter"</span>: 141, <span class="k">"verseStart"</span>: 6, <span class="k">"verseEnd"</span>: 7 }
+
+<span class="p">$</span> curl <span class="s">"…/v1/bible/parse?q=1 Peter 2:9"</span>
+{ <span class="k">"book"</span>: { <span class="k">"id"</span>: <span class="s">"1PE"</span> }, <span class="k">"chapter"</span>: 2, <span class="k">"verseStart"</span>: 9 }</pre>
+    <ul>
+      <li><code>withinBounds</code> checks the reference against the edition's real
+        chapter and verse counts; an impossible citation parses but reports
+        <code>withinBounds: false</code>.</li>
+      <li><code>confidence</code> is <code>exact</code> for a full name match and
+        <code>partial</code> for an unambiguous shorthand; an ambiguous label
+        (a bare ዮሐንስ could be the Gospel or an epistle) resolves only when the
+        citation context or a numeral disambiguates it.</li>
+      <li>ፍጻሜ ምዕራፍ ("to end of chapter") citations return
+        <code>verseEnd: null, toEndOfChapter: true</code>.</li>
+    </ul>
+
+    <div class="endpoint" id="text"><span class="method">GET</span><code class="path">/v1/bible/<i>{edition}</i>/<i>{book}</i>/<i>{chapter}</i></code></div>
+    <p>The chapter endpoint always validates the reference and returns its structure.
+    What it will not do, on the public deployment, is serve the verse text: the
+    available editions are CC BY-NC-ND and the runtime is MIT, so text stays out.</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/bible/am-1980/JHN/3</span>
+{
+  <span class="k">"edition"</span>: { <span class="k">"id"</span>: <span class="s">"am-1980"</span>, <span class="k">"license"</span>: <span class="s">"CC-BY-NC-ND-4.0"</span> },
+  <span class="k">"book"</span>: { <span class="k">"id"</span>: <span class="s">"JHN"</span> },
+  <span class="k">"chapter"</span>: 3,
+  <span class="k">"verseCount"</span>: 36,
+  <span class="k">"verses"</span>: null,
+  <span class="k">"textAvailable"</span>: false,
+  <span class="k">"reason"</span>: <span class="s">"Verse text is not bundled with the public MIT runtime; the edition is CC BY-NC-ND."</span>
+}</pre>
+
+    <h2 id="self-host">Serving text on your own deployment<a class="anchor" href="#self-host">¶</a></h2>
+    <p>Self-hosted Python deployments whose operator holds a licensed copy of an edition
+    can activate text serving. Nothing ships in the repository; the opt-in is explicit:</p>
+    <pre><span class="p">$</span> export EOTC_BIBLE_TEXT_DIR=/path/to/bible-data   <span class="cm"># laid out like data/bible/</span>
+<span class="p">$</span> ./.venv/bin/uvicorn eotc.api:app --port 8000
+<span class="p">$</span> curl <span class="s">localhost:8000/v1/bible/am-1980/JHN/3</span>
+{ …, <span class="k">"verses"</span>: [ { <span class="k">"n"</span>: 1, <span class="k">"geezNumeral"</span>: <span class="s">"፩"</span>, <span class="k">"text"</span>: <span class="s">"…"</span> }, … ],
+  <span class="k">"textAvailable"</span>: true }</pre>
+    <div class="callout"><b>Your license, your responsibility.</b> The CC BY-NC-ND terms
+    (attribution, noncommercial, no derivatives) travel with the text you serve. The API
+    reports the edition's license in every chapter response so downstream consumers see
+    it too. Unknown rights are treated as restricted, never as permission.</div>
+
+    <div class="pager">
+      <a href="gitsawe.html"><b>Previous</b>← Gitsawe, readings &amp; Sinksar</a>
+      <a class="next" href="errors.html"><b>Next</b>Errors &amp; rate limits →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+</body>
+</html>

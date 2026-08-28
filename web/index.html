@@ -346,6 +346,7 @@
       <div class="ep"><span class="method">GET</span><span class="path">/v1/convert/<i>{date}</i></span><span class="desc">Convert between Ethiopian and Gregorian</span></div>
       <div class="ep"><span class="method post">POST</span><span class="path">/v1/calendar/convert/batch</span><span class="desc">Convert up to 366 non-contiguous dates in one call</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/<i>{year}</i>/<i>{month}</i></span><span class="desc">One Ethiopian month, day by day</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/range</span><span class="desc">Any date range, fully described, up to 366 days</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/season</span><span class="desc">Liturgical season of a date, with a UI theme key</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/geez-numeral</span><span class="desc">Arabic → Ge'ez numerals (2018 → ፳፻፲፰)</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/ics</span><span class="desc">iCalendar feed. Subscribe in Google, Apple, or Outlook</span></div>
@@ -355,6 +356,16 @@
       <div class="ep"><span class="method">GET</span><span class="path">/v1/fasting/<i>{date}</i></span><span class="desc">Is it a fasting day, and <em>why</em>: which fast, how long, day N of it</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/fasts/<i>{year}</i></span><span class="desc">All seven canonical fasts with start and end in both calendars</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/feasts/<i>{year}</i></span><span class="desc">Every feast of a year. <i style="font:12px var(--mono);color:var(--faint)">?type=movable|fixed</i></span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/feasts/<i>{year}</i>/<i>{key}</i></span><span class="desc">One feast resolved for a year, by key, name, or alias</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/feasts/search</span><span class="desc">Find a feast by any of its names, homophone-aware: ትንሳኤ finds ትንሣኤ</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/upcoming</span><span class="desc">The next feasts and fasts. <i style="font:12px var(--mono);color:var(--faint)">?days=30&amp;type=feasts|fasts</i></span></div>
+    </div>
+
+    <div class="group"><h3>Bible</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bible/books</span><span class="desc">The canon: book metadata and per-chapter verse counts</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bible/books/<i>{id}</i></span><span class="desc">One book in detail, by ID, slug, or any of its names</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bible/parse</span><span class="desc">Parse a printed citation (ዮሐንስ ም· ፫ ቍ ፲፮) into a canonical reference</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bible/<i>{edition}</i>/<i>{book}</i>/<i>{chapter}</i></span><span class="desc">Chapter reference; verse text serves only on licensed self-hosts</span></div>
     </div>
 
     <div class="group"><h3>Computation</h3>

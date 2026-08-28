@@ -48,6 +48,10 @@ Change one implementation without the other and a build fails.
 | `GET /v1/fasting/{date}` | Is it a fasting day, and **why** |
 | `GET /v1/fasts/{year}` | All fasting periods of an Ethiopian year |
 | `GET /v1/feasts/{year}` | All feasts. `?type=all\|movable\|fixed` |
+| `GET /v1/feasts/{year}/{key}` | One feast resolved for a year, by key, name, or alias |
+| `GET /v1/feasts/search` | Find a feast by any of its names, homophone-aware (ትንሳኤ finds ትንሣኤ). `?q=&year=` |
+| `GET /v1/upcoming` | Upcoming feasts and fasts. `?days=30&type=all\|feasts\|fasts` |
+| `GET /v1/calendar/range` | Describe any date range, up to 366 days. `?start=&end=` |
 | `GET /v1/bahire-hasab/{year}` | The full ባሕረ ሐሳብ computation |
 | `GET /v1/calendar/{year}/{month}` | One Ethiopian month, day by day |
 | `GET /v1/calendar/ics` | **iCalendar feed** — subscribe in Google/Apple/Outlook. `?year=&type=fasting\|feasts\|all` |
@@ -56,6 +60,9 @@ Change one implementation without the other and a build fails.
 | `GET /v1/gitsawe/{date}` | Gitsawe appointments + Sinksar commemorations + Bible references for a date |
 | `GET /v1/readings/{date}` | Focused daily Psalms, Gospels, Epistles, Acts, and anaphora from Gitsawe |
 | `GET /v1/sinksar/{date}` | The day's Sinksar annual (ዓመታዊ) and monthly (ወርኀዊ) commemoration lists |
+| `GET /v1/bible/books` | The canon: book metadata and per-chapter verse counts (am-1980 versification) |
+| `GET /v1/bible/parse` | Parse a printed citation (`ዮሐንስ ም· ፫ ቍ ፲፮`) into a canonical reference. `?q=` |
+| `GET /v1/bible/{edition}/{book}/{chapter}` | Chapter reference; verse text serves only on licensed self-hosts |
 | `POST /v1/calendar/convert/batch` | Convert up to 366 non-contiguous dates in one call |
 
 Years are **Amete Mihret** (the ordinary Ethiopian year, ≈ Gregorian − 8). Dates are `YYYY-MM-DD`.

@@ -35,6 +35,7 @@
     <a href="bahire-hasab.html">Bahire Hasab</a>
     <a href="calendar-utils.html">Calendar utilities</a>
     <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <a href="bible.html">Bible</a>
     <h5>Reference</h5>
     <a href="errors.html">Errors &amp; rate limits</a>
     <a href="data-sources.html">Data &amp; sources</a>
@@ -116,9 +117,28 @@
     <div class="callout"><b>Per-item errors.</b> An invalid entry never rejects the valid
     ones; it receives its own <code>error</code> in place. The whole request fails only when
     <code>dates</code> is missing, empty, not an array, or longer than 366 elements.</div>
-    <p>For a <em>contiguous</em> range, prefer
-    <a href="calendar-utils.html#month"><code>/v1/calendar/{year}/{month}</code></a>: one call
-    per Ethiopian month, fully described.</p>
+    <div class="endpoint" id="range"><span class="method">GET</span><code class="path">/v1/calendar/range</code></div>
+    <p>A <em>contiguous</em> range, fully described day by day, in one call. The right tool
+    for rendering a scrolling calendar or any window that crosses month boundaries.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Required</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>start</code></td><td>Yes</td><td>First day, inclusive</td></tr>
+        <tr><td><code>end</code></td><td>Yes</td><td>Last day, inclusive; at most 366 days after <code>start</code></td></tr>
+        <tr><td><code>calendar</code></td><td>No</td><td><code>gregorian</code> (default) or <code>ethiopian</code>, applied to both dates</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/calendar/range?start=2026-04-01&amp;end=2026-04-30"</span>
+{
+  <span class="k">"start"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2026-04-01"</span>, <span class="k">"ethiopic"</span>: <span class="s">"2018-07-23"</span> },
+  <span class="k">"end"</span>:   { <span class="k">"gregorian"</span>: <span class="s">"2026-04-30"</span>, <span class="k">"ethiopic"</span>: <span class="s">"2018-08-22"</span> },
+  <span class="k">"count"</span>: 30,
+  <span class="k">"days"</span>: [ <span class="cm">/* the same full description /v1/date returns, per day */</span> ]
+}</pre>
+    <p>Ranges over 366 days or with <code>end</code> before <code>start</code> return a
+    <code>400</code> with guidance. For an exact Ethiopian month, the
+    <a href="calendar-utils.html#month"><code>/v1/calendar/{year}/{month}</code></a> form is
+    equivalent and slightly more convenient.</p>
 
     <div class="pager">
       <a href="getting-started.html"><b>Previous</b>← Getting started</a>

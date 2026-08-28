@@ -35,6 +35,7 @@
     <a href="bahire-hasab.html">Bahire Hasab</a>
     <a href="calendar-utils.html">Calendar utilities</a>
     <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <a href="bible.html">Bible</a>
     <h5>Reference</h5>
     <a href="errors.html">Errors &amp; rate limits</a>
     <a href="data-sources.html">Data &amp; sources</a>
@@ -107,6 +108,62 @@
     marker, the resolved Gregorian and Ethiopian dates for that year, the weekday, and a
     major-feast marker where applicable. Movable feasts are located by
     <a href="bahire-hasab.html">Bahire Hasab</a>; fixed feasts by the Ethiopian month/day.</p>
+
+    <div class="endpoint" id="lookup"><span class="method">GET</span><code class="path">/v1/feasts/<i>{year}</i>/<i>{key}</i></code></div>
+    <p>One feast resolved for one year: "when is Fasika in 2018?" The path segment accepts
+    the stable key, any of the feast's names, or an alias, in any script:</p>
+    <pre><span class="p">$</span> curl …<span class="s">/v1/feasts/2018/fasika</span>       <span class="cm"># or …/v1/feasts/2018/ገና</span>
+{
+  <span class="k">"ethiopicYear"</span>: 2018, <span class="k">"key"</span>: <span class="s">"fasika"</span>,
+  <span class="k">"amharic"</span>: <span class="s">"ትንሣኤ"</span>, <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span>,
+  <span class="k">"movable"</span>: true,
+  <span class="k">"aliases"</span>: [<span class="s">"ፋሲካ"</span>, <span class="s">"ትንሣኤ"</span>, <span class="s">"Tinsae"</span>, <span class="s">"Easter"</span>, <span class="s">"Pascha"</span>, <span class="s">"Resurrection"</span>],
+  <span class="k">"date"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2026-04-12"</span>, <span class="k">"ethiopic"</span>: <span class="s">"2018-08-04"</span>,
+            <span class="k">"weekday"</span>: { <span class="k">"english"</span>: <span class="s">"Sunday"</span> } }
+}</pre>
+
+    <div class="endpoint" id="search"><span class="method">GET</span><code class="path">/v1/feasts/search</code></div>
+    <p>Find a feast by any of its names, with <strong>homophone-aware matching</strong>.
+    Ethiopic has letter series that sound identical (ሀ/ሐ/ኀ, ሰ/ሠ, አ/ዐ, ጸ/ፀ), so the same
+    feast is legitimately spelled several ways; the search folds every series to one
+    canonical form before comparing. ትንሳኤ finds ትንሣኤ, ፆም finds ጾም, and every feast also
+    carries curated aliases: ፋሲካ, ትንሣኤ, and Easter are one feast.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Required</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>q</code></td><td>Yes</td><td>Any name, any script, homophones welcome</td></tr>
+        <tr><td><code>year</code></td><td>No</td><td>Resolve each match to its date in this Ethiopian year</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/feasts/search?q=ትንሳኤ"</span>        <span class="cm"># ሳ for ሣ: still found</span>
+{ <span class="k">"count"</span>: 1, <span class="k">"matches"</span>: [ { <span class="k">"key"</span>: <span class="s">"fasika"</span>, <span class="k">"matchedOn"</span>: <span class="s">"amharic"</span>,
+                              <span class="k">"confidence"</span>: <span class="s">"exact"</span> } ] }
+
+<span class="p">$</span> curl <span class="s">"…/v1/feasts/search?q=easter&amp;year=2018"</span>
+{ <span class="k">"matches"</span>: [ { <span class="k">"key"</span>: <span class="s">"fasika"</span>, <span class="k">"matchedOn"</span>: <span class="s">"alias"</span>,
+                <span class="k">"date"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2026-04-12"</span> } } ] }</pre>
+
+    <div class="endpoint" id="upcoming"><span class="method">GET</span><code class="path">/v1/upcoming</code></div>
+    <p>What's next: every feast, fast beginning, and fast end inside a forward window.
+    The single most common calendar-app query, answered in one call.</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Default</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>days</code></td><td><code>30</code></td><td>Window length, 1 to 366</td></tr>
+        <tr><td><code>type</code></td><td><code>all</code></td><td><code>feasts</code>, <code>fasts</code>, or <code>all</code></td></tr>
+        <tr><td><code>from</code></td><td>today</td><td>Explicit start date for deterministic queries; <code>tz</code> applies otherwise</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="p">$</span> curl <span class="s">"…/v1/upcoming?from=2026-04-01&amp;days=30"</span>
+{
+  <span class="k">"from"</span>: { <span class="k">"gregorian"</span>: <span class="s">"2026-04-01"</span> }, <span class="k">"count"</span>: 4,
+  <span class="k">"items"</span>: [
+    { <span class="k">"daysAway"</span>: 4,  <span class="k">"kind"</span>: <span class="s">"feast"</span>,      <span class="k">"feast"</span>: { <span class="k">"key"</span>: <span class="s">"hosanna"</span> } },
+    { <span class="k">"daysAway"</span>: 9,  <span class="k">"kind"</span>: <span class="s">"feast"</span>,      <span class="k">"feast"</span>: { <span class="k">"key"</span>: <span class="s">"siklet"</span> } },
+    { <span class="k">"daysAway"</span>: 10, <span class="k">"kind"</span>: <span class="s">"fast_ends"</span>,  <span class="k">"fast"</span>:  { <span class="k">"key"</span>: <span class="s">"abiy_tsome"</span> } },
+    { <span class="k">"daysAway"</span>: 11, <span class="k">"kind"</span>: <span class="s">"feast"</span>,      <span class="k">"feast"</span>: { <span class="k">"key"</span>: <span class="s">"fasika"</span> } }
+  ]
+}</pre>
 
     <div class="callout"><b>Gena is not always January 7.</b> Ethiopian year 2016 began on
     September 12, 2023 (2015 was a leap year), so every date until the following Gregorian
