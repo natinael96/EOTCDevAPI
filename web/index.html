@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EOTCDev API — the Ethiopian Orthodox calendar, as infrastructure</title>
+<meta name="description" content="An open, free REST API for the Ethiopian Orthodox Tewahedo Church calendar: date conversion, fasting, feasts, Bahire Hasab, and the Gitsawe lectionary. No auth, no keys, no database.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+<style>
+  :root {
+    --parchment: #f4efe3;
+    --raised: #faf7ee;
+    --ink: #1c1710;
+    --ink-2: #5d5342;
+    --faint: #8a7d66;
+    --rule: #d9cfba;
+    --rule-soft: #e7dfcd;
+    --rubric: #a02c17;
+    --rubric-deep: #7c2010;
+    --terminal: #211b12;
+    --terminal-ink: #ece4d2;
+    --terminal-dim: #9c8f75;
+    --terminal-red: #e0745c;
+    --terminal-gold: #d9a94e;
+    --serif: "Fraunces", Georgia, serif;
+    --ethiopic: "Noto Serif Ethiopic", "Abyssinica SIL", "Nyala", serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--parchment); color: var(--ink);
+    font: 16px/1.65 var(--serif);
+    -webkit-font-smoothing: antialiased;
+  }
+  .geez { font-family: var(--ethiopic); }
+  a { color: var(--rubric); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- header ---------- */
+  header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--parchment);
+  }
+  .bar { display: flex; align-items: baseline; justify-content: space-between; padding: 18px 0; }
+  .mark { font-size: 17px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink); }
+  .mark .geez { color: var(--rubric); margin-right: 8px; }
+  nav { display: flex; gap: 26px; font-size: 14.5px; }
+  nav a { color: var(--ink-2); }
+  nav a:hover { color: var(--rubric); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 56px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+  .rubricline { font-family: var(--ethiopic); color: var(--rubric); font-size: 15px; letter-spacing: 0.14em; margin-bottom: 18px; }
+  h1 {
+    font-size: clamp(34px, 4.6vw, 52px); line-height: 1.08; margin: 0 0 20px;
+    font-weight: 500; letter-spacing: -0.015em;
+  }
+  h1 em { font-style: italic; color: var(--rubric-deep); }
+  .lede { font-size: 17.5px; color: var(--ink-2); max-width: 46ch; margin: 0 0 30px; }
+  .cta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-block; padding: 11px 22px; border-radius: 3px;
+    font-size: 15px; border: 1px solid var(--ink);
+  }
+  .btn.primary { background: var(--ink); color: var(--parchment); }
+  .btn.primary:hover { background: var(--rubric-deep); border-color: var(--rubric-deep); text-decoration: none; }
+  .btn.ghost { color: var(--ink); }
+  .btn.ghost:hover { border-color: var(--rubric); color: var(--rubric); text-decoration: none; }
+
+  /* terminal card */
+  .term {
+    background: var(--terminal); border-radius: 8px; overflow: hidden;
+    box-shadow: 0 24px 48px -24px rgba(28,23,16,0.5);
+    border: 1px solid rgba(28,23,16,0.9);
+  }
+  .term-bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; border-bottom: 1px solid rgba(236,228,210,0.08); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #4a4133; }
+  .term-title { margin-left: auto; font: 11px var(--mono); color: var(--terminal-dim); }
+  .term pre {
+    margin: 0; padding: 16px 18px 20px; overflow-x: auto;
+    font: 12.5px/1.7 var(--mono); color: var(--terminal-ink);
+  }
+  .term .p { color: var(--terminal-dim); }
+  .term .k { color: var(--terminal-gold); }
+  .term .s { color: var(--terminal-red); }
+  .term .cm { color: var(--terminal-dim); font-style: italic; }
+  .fixture-note { font: 12px var(--mono); color: var(--faint); margin-top: 10px; text-align: right; }
+
+  /* ---------- today ribbon ---------- */
+  .today {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    background: var(--raised);
+  }
+  .today-inner { display: flex; align-items: baseline; gap: 34px; padding: 20px 0; flex-wrap: wrap; }
+  .today-label { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rubric); font-weight: 600; }
+  .today-date { font-family: var(--ethiopic); font-size: 21px; font-weight: 500; }
+  .today-sub { color: var(--ink-2); font-size: 14.5px; }
+  .today-fasika { margin-left: auto; font-size: 14.5px; color: var(--ink-2); }
+  .today-fasika b { color: var(--rubric-deep); }
+  .today-sinksar {
+    display: none; grid-template-columns: 1fr 1fr; gap: 12px 40px;
+    padding: 0 0 20px; border-top: 1px dashed var(--rule);
+  }
+  .today-sinksar.on { display: grid; }
+  .sk-col { padding-top: 14px; }
+  .sk-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .sk-label .geez { color: var(--rubric); letter-spacing: 0.05em; text-transform: none; font-size: 13px; margin-right: 6px; }
+  .sk-list { font-family: var(--ethiopic); font-size: 15px; line-height: 1.9; margin: 4px 0 0; padding: 0; list-style: none; }
+  .sk-list li { display: inline; }
+  .sk-list li + li::before { content: "፤ "; color: var(--rubric); }
+  @media (max-width: 700px) { .today-sinksar { grid-template-columns: 1fr; gap: 0; } }
+
+  /* ---------- sections ---------- */
+  section { padding: 74px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sec-num { font-family: var(--ethiopic); color: var(--rubric); font-size: 18px; }
+  h2 { font-size: 30px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
+  .sec-sub { color: var(--ink-2); max-width: 62ch; margin: 10px 0 34px; }
+
+  /* numbers band */
+  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--raised); }
+  .num { padding: 26px 24px; border-right: 1px solid var(--rule-soft); }
+  .num:last-child { border-right: none; }
+  .num .v { font-size: 34px; font-weight: 500; letter-spacing: -0.02em; }
+  .num .g { font-family: var(--ethiopic); color: var(--rubric); font-size: 13px; margin-left: 8px; }
+  .num .l { color: var(--ink-2); font-size: 14px; margin-top: 4px; }
+
+  /* endpoints */
+  .group { margin-bottom: 34px; }
+  .group h3 { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin: 0 0 10px; }
+  .ep { display: grid; grid-template-columns: 58px minmax(230px, 340px) 1fr; gap: 18px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--rule-soft); }
+  .ep:last-child { border-bottom: none; }
+  .method { font: 600 11px var(--mono); letter-spacing: 0.06em; color: var(--parchment); background: var(--ink); border-radius: 3px; padding: 3px 0; text-align: center; }
+  .method.post { background: var(--rubric); }
+  .path { font: 13px var(--mono); color: var(--ink); word-break: break-all; }
+  .path i { font-style: normal; color: var(--rubric); }
+  .desc { color: var(--ink-2); font-size: 14.5px; }
+
+  /* bahire hasab chain */
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 26px 0; }
+  .link-box {
+    border: 1px solid var(--rule); background: var(--raised); border-radius: 4px;
+    padding: 9px 14px; font-size: 14px;
+  }
+  .link-box .geez { display: block; color: var(--rubric); font-size: 12.5px; }
+  .chain .arr { color: var(--faint); }
+  .link-box.linchpin { border-color: var(--rubric); box-shadow: 2px 2px 0 var(--rubric); }
+  .proof { border-left: 3px solid var(--rubric); padding: 4px 0 4px 20px; color: var(--ink-2); font-size: 15.5px; max-width: 66ch; font-style: italic; }
+  .proof b { color: var(--ink); font-style: normal; }
+
+  /* margin-note cards */
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .note-card { border: 1px solid var(--rule); border-radius: 6px; padding: 22px 24px; background: var(--raised); }
+  .note-card h4 { margin: 0 0 8px; font-size: 17px; font-weight: 600; }
+  .note-card h4 .geez { color: var(--rubric); font-weight: 500; }
+  .note-card p { margin: 0; color: var(--ink-2); font-size: 14.5px; }
+  .note-card code { font: 12px var(--mono); background: var(--parchment); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 1px 5px; }
+
+  /* ics */
+  .ics { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border: 1px solid var(--rule); border-radius: 6px; background: var(--raised); padding: 26px 28px; }
+  .ics-url { font: 13px var(--mono); background: var(--parchment); border: 1px dashed var(--rule); border-radius: 4px; padding: 12px 16px; overflow-x: auto; white-space: nowrap; }
+  .ics p { margin: 8px 0 0; color: var(--ink-2); font-size: 14px; }
+
+  /* data honesty */
+  .honesty { columns: 2; column-gap: 44px; color: var(--ink-2); font-size: 15px; }
+  .honesty p { margin: 0 0 16px; break-inside: avoid; }
+  .honesty b { color: var(--ink); }
+  .honesty code { font: 12.5px var(--mono); }
+
+  footer { margin-top: 90px; border-top: 1px solid var(--rule); padding: 30px 0 48px; }
+  .foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--faint); font-size: 13.5px; }
+  .foot .geez { color: var(--rubric); }
+
+  @media (max-width: 880px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 48px; }
+    .numbers { grid-template-columns: 1fr 1fr; }
+    .num:nth-child(2) { border-right: none; }
+    .num:nth-child(-n+2) { border-bottom: 1px solid var(--rule-soft); }
+    .notes { grid-template-columns: 1fr; }
+    .honesty { columns: 1; }
+    .ics { grid-template-columns: 1fr; }
+    .ep { grid-template-columns: 52px 1fr; }
+    .ep .desc { grid-column: 2; margin-top: -6px; }
+    .today-fasika { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark"><span class="geez">ግጻዌ</span>EOTCDev API</div>
+    <nav>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#bahirehasab">Bahire&nbsp;Hasab</a>
+      <a href="#data">Data</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap hero">
+  <div>
+    <div class="rubricline">ባሕረ ሐሳብ&ensp;·&ensp;ግጻዌ&ensp;·&ensp;ስንክሳር&ensp;·&ensp;በዓላት</div>
+    <h1>The Ethiopian Orthodox calendar, as <em>infrastructure</em>.</h1>
+    <p class="lede">An open, free REST API for the Tewahedo Church year — date conversion,
+    fasting, feasts, the full Bahire Hasab computation, and a date-level bridge between
+    the Gitsawe, Sinksar, and Bible. No auth. No API key. No database.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/natinael96/EOTCDevAPI">Read the source</a>
+      <a class="btn ghost" href="#endpoints">Browse endpoints</a>
+    </div>
+  </div>
+  <div>
+    <div class="term">
+      <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">sh — Easter Sunday, 2026</span></div>
+      <pre><span class="p">$</span> curl https://eotcdev-api.workers.dev<span class="s">/v1/date/2026-04-12</span>
+{
+  <span class="k">"gregorian"</span>: { <span class="k">"date"</span>: <span class="s">"2026-04-12"</span> },
+  <span class="k">"ethiopic"</span>:  { <span class="k">"date"</span>: <span class="s">"2018-08-04"</span>,
+                 <span class="k">"monthName"</span>: { <span class="k">"amharic"</span>: <span class="s">"ሚያዝያ"</span> } },
+  <span class="k">"weekday"</span>:   { <span class="k">"amharic"</span>: <span class="s">"እሑድ"</span>, <span class="k">"english"</span>: <span class="s">"Sunday"</span> },
+  <span class="k">"fasting"</span>:   { <span class="k">"isFasting"</span>: false,
+                 <span class="k">"fastFreeSeason"</span>: true },
+  <span class="k">"feasts"</span>: [{ <span class="k">"amharic"</span>: <span class="s">"ትንሣኤ"</span>,
+               <span class="k">"english"</span>: <span class="s">"Easter (Resurrection)"</span> }]
+}</pre>
+    </div>
+    <div class="fixture-note">real bytes — spec/responses.json, asserted by both test suites</div>
+  </div>
+</div>
+
+<div class="today">
+  <div class="wrap today-inner">
+    <span class="today-label">ዛሬ · Today</span>
+    <span class="today-date geez" id="t-eth">…</span>
+    <span class="today-sub" id="t-greg"></span>
+    <span class="today-fasika" id="t-fasika"></span>
+    <noscript><span class="today-sub">Enable JavaScript for today's Ethiopian date — or just <code>curl /v1/today</code>.</span></noscript>
+  </div>
+  <div class="wrap today-sinksar" id="t-sinksar">
+    <div class="sk-col">
+      <div class="sk-label"><span class="geez">ስንክሳር · ዓመታዊ</span> commemorations of the year</div>
+      <ul class="sk-list" id="sk-annual"></ul>
+    </div>
+    <div class="sk-col">
+      <div class="sk-label"><span class="geez">ወርኀዊ</span> commemorations of the month</div>
+      <ul class="sk-list" id="sk-monthly"></ul>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="numbers">
+      <div class="num"><span class="v">9,154</span><span class="g">፺፩፻፶፬</span><div class="l">golden test vectors, asserted by both implementations</div></div>
+      <div class="num"><span class="v">401</span><span class="g">ዓመት</span><div class="l">years of Fasika verified two independent ways (1800–2200 EC)</div></div>
+      <div class="num"><span class="v">73,415</span><span class="g">ዕለት</span><div class="l">consecutive days round-tripped with no gaps or duplicates</div></div>
+      <div class="num"><span class="v">2 = 1</span><div class="l">TypeScript and Python, held byte-identical by shared fixtures</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="endpoints">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">፩</span><h2>Endpoints</h2></div>
+    <p class="sec-sub">Everything is a GET unless marked. Years are Amete Mihret; dates are
+    <code style="font:12.5px var(--mono)">YYYY-MM-DD</code> in either calendar.</p>
+
+    <div class="group"><h3>Calendar</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/today</span><span class="desc">Today, fully described. <i style="font:12px var(--mono);color:var(--faint)">?tz=Africa/Addis_Ababa</i></span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/date/<i>{date}</i></span><span class="desc">Describe any date — both calendars, weekday, fasting, feasts</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/convert/<i>{date}</i></span><span class="desc">Convert between Ethiopian and Gregorian</span></div>
+      <div class="ep"><span class="method post">POST</span><span class="path">/v1/calendar/convert/batch</span><span class="desc">Convert up to 366 non-contiguous dates in one call</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/<i>{year}</i>/<i>{month}</i></span><span class="desc">One Ethiopian month, day by day</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/season</span><span class="desc">Liturgical season of a date, with a UI theme key</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/geez-numeral</span><span class="desc">Arabic → Ge'ez numerals (2018 → ፳፻፲፰)</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/calendar/ics</span><span class="desc">iCalendar feed — subscribe in Google, Apple, or Outlook</span></div>
+    </div>
+
+    <div class="group"><h3>Fasting &amp; feasts</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/fasting/<i>{date}</i></span><span class="desc">Is it a fasting day — and <em>why</em>: which fast, how long, day N of it</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/fasts/<i>{year}</i></span><span class="desc">All seven canonical fasts with start and end in both calendars</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/feasts/<i>{year}</i></span><span class="desc">Every feast of a year. <i style="font:12px var(--mono);color:var(--faint)">?type=movable|fixed</i></span></div>
+    </div>
+
+    <div class="group"><h3>Computation</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/bahire-hasab/<i>{year}</i></span><span class="desc">The full ባሕረ ሐሳብ — every intermediate value, not just answers</span></div>
+    </div>
+
+    <div class="group"><h3>Gitsawe &amp; readings</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/gitsawe/<i>{date}</i></span><span class="desc">Gitsawe appointments + Sinksar commemorations + Bible references</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/readings/<i>{date}</i></span><span class="desc">Focused daily Psalms, Gospels, Epistles, Acts, and anaphora</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/sinksar/<i>{date}</i></span><span class="desc">The day's Sinksar annual (ዓመታዊ) and monthly (ወርኀዊ) commemoration lists</span></div>
+    </div>
+
+    <div class="group"><h3>Service</h3>
+      <div class="ep"><span class="method">GET</span><span class="path">/</span><span class="desc">API identity and endpoint directory</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/health</span><span class="desc">Liveness check</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="bahirehasab">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">፪</span><h2>Bahire Hasab, shown working</h2></div>
+    <p class="sec-sub">Movable feasts come from ባሕረ ሐሳብ — “the sea of thought” — the traditional
+    computation the Church has run for centuries. The API exposes every intermediate value,
+    so you can check its work.</p>
+
+    <div class="chain">
+      <span class="link-box"><span class="geez">ዓመተ ዓለም</span>Amete Alem</span><span class="arr">→</span>
+      <span class="link-box"><span class="geez">መደብ</span>Medeb</span><span class="arr">→</span>
+      <span class="link-box"><span class="geez">ወንበር</span>Wenber</span><span class="arr">→</span>
+      <span class="link-box"><span class="geez">አበቅቴ · መጥቅዕ</span>Abekte &amp; Metqi</span><span class="arr">→</span>
+      <span class="link-box"><span class="geez">መባጃ ሐመር</span>Mebaja Hamer</span><span class="arr">→</span>
+      <span class="link-box linchpin"><span class="geez">ጾመ ነነዌ</span>Nineveh — the linchpin</span><span class="arr">→</span>
+      <span class="link-box">every movable feast, a fixed Tewsak offset later</span>
+    </div>
+
+    <p class="proof"><b>The correctness argument:</b> Fasika is computed two completely independent
+    ways — the traditional chain above, and the Alexandrian computus — and the test suite asserts
+    they agree for every year from 1800 to 2200 EC. Two methods with nothing in common but the
+    answer, agreeing for four centuries, is not a coincidence.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">፫</span><h2>Two subtleties this API gets right</h2></div>
+    <p class="sec-sub">Popular sources round these off. The arithmetic doesn't.</p>
+    <div class="notes">
+      <div class="note-card">
+        <h4><span class="geez">ገና</span> is not always January 7</h4>
+        <p>Ethiopian year 2016 began on Sept 12, 2023 — 2015 was a leap year — so every date until
+        the next Gregorian leap day shifted by one. Tahsas 29 fell on <b>January 8, 2024</b>, and
+        Lalibela observed it there. Timket shifts identically. This API returns the true
+        calendar arithmetic, not the approximation.</p>
+      </div>
+      <div class="note-card">
+        <h4>The weekly fast is not absolute</h4>
+        <p>Wednesdays and Fridays are fasting days — except during the fifty days from Fasika to
+        Pentecost (<span class="geez">ሃምሳ</span>), and except when a great feast of the Lord falls on one.
+        Both exceptions are implemented and flagged in the response as
+        <code>fastFreeSeason</code> and <code>feastOverride</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">፬</span><h2>Subscribe without writing code</h2></div>
+    <div class="ics" style="margin-top:26px">
+      <div>
+        <div class="ics-url" id="ics-url">https://&lt;host&gt;/v1/calendar/ics?year=2018&amp;type=fasting</div>
+        <p>Paste into Google Calendar (“From URL”), Apple Calendar, or Outlook — every fast becomes
+        an all-day event. The feed is byte-deterministic, so it caches cleanly.</p>
+      </div>
+      <a class="btn ghost" href="#" id="ics-copy" onclick="navigator.clipboard.writeText(document.getElementById('ics-url').textContent);this.textContent='Copied';return false;">Copy URL</a>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">፭</span><h2>Where the data comes from</h2></div>
+    <p class="sec-sub">Infrastructure you can trust has to say what it knows, what it inferred,
+    and what it doesn't have yet.</p>
+    <div class="honesty">
+      <p><b>The calendar core is pure arithmetic</b> — zero dependencies in both languages,
+      verified against a shared fixture of 9,154 vectors. Vendor the modules directly if you'd
+      rather not make a network call.</p>
+      <p><b>The Gitsawe fixed cycle</b> is transcribed from a printed edition
+      (<span class="geez">መጽሐፈ ግጻዌ ወመዝሙር ከነምልክቱ</span>), preserving printed citations, scan pages,
+      and transcription uncertainty. Seasonal and monthly cycles are imported from the open
+      MIT <code>gitsawe</code> dataset with per-record provenance.</p>
+      <p><b>Coverage is reported, never faked.</b> Until the movable-cycle precedence rules are
+      reviewed, <code>/v1/gitsawe</code> answers <code>resolution: "fixed_candidate_only"</code>
+      and exposes known conflicts instead of pretending the fixed appointment always wins.</p>
+      <p><b>Restricted text stays out.</b> Bible verse bodies and unreviewed liturgical text are
+      excluded from the MIT runtime until publication rights are recorded — references,
+      structure, and metadata are served instead.</p>
+      <p><b>Corrections are welcome.</b> Feast dates, commemorations, and regional variations in
+      fasting practice — please <a href="https://github.com/natinael96/EOTCDevAPI/issues">open an
+      issue with a source</a>. A fixture diff is a behaviour change, and reviewing it is the point.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span><span class="geez">፨</span>&ensp;EOTCDev API — MIT licensed, open to all builders.</span>
+    <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+  </div>
+</footer>
+
+<script>
+// Ported from ts/src/core/ethiopic.ts + bahirehasab.ts — same JDN arithmetic,
+// same epoch, same computus. Kept tiny; the API remains the source of truth.
+(function () {
+  var EPOCH = 1723856;
+  var MONTHS_AM = ["መስከረም","ጥቅምት","ኅዳር","ታኅሣሥ","ጥር","የካቲት","መጋቢት","ሚያዝያ","ግንቦት","ሰኔ","ሐምሌ","ነሐሴ","ጳጉሜን"];
+  var WD_AM = ["እሑድ","ሰኞ","ማክሰኞ","ረቡዕ","ሐሙስ","ዓርብ","ቅዳሜ"];
+  var WD_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  function gregorianToJDN(y, m, d) {
+    var a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
+    return d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4)
+      - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+  }
+  function jdnToEthiopic(jdn) {
+    var r = ((jdn - EPOCH) % 1461 + 1461) % 1461;
+    var n = (r % 365) + 365 * Math.floor(r / 1460);
+    return {
+      year: 4 * Math.floor((jdn - EPOCH) / 1461) + Math.floor(r / 365) - Math.floor(r / 1460),
+      month: Math.floor(n / 30) + 1,
+      day: (n % 30) + 1,
+    };
+  }
+  function julianToJDN(y, m, d) {
+    var a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
+    return d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - 32083;
+  }
+  function fasikaJDN(ethYear) {
+    var gy = ethYear + 8;
+    var a = gy % 4, b = gy % 7, c = gy % 19;
+    var d = (19 * c + 15) % 30, e = (2 * a + 4 * b - d + 34) % 7;
+    return julianToJDN(gy, Math.floor((d + e + 114) / 31), ((d + e + 114) % 31) + 1);
+  }
+  var G_ONES = ["","፩","፪","፫","፬","፭","፮","፯","፰","፱"];
+  var G_TENS = ["","፲","፳","፴","፵","፶","፷","፸","፹","፺"];
+  function toGeez(n) { // sufficient for 1..9999 (dates and years)
+    var out = "";
+    var h = Math.floor(n / 100), r = n % 100;
+    if (h > 1) out += toGeez(h);
+    if (h >= 1) out += "፻";
+    out += G_TENS[Math.floor(r / 10)] + G_ONES[r % 10];
+    return out;
+  }
+
+  var now = new Date();
+  var jdn = gregorianToJDN(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  var e = jdnToEthiopic(jdn);
+  var wd = ((jdn + 1) % 7 + 7) % 7;
+
+  document.getElementById("t-eth").textContent =
+    WD_AM[wd] + "፣ " + MONTHS_AM[e.month - 1] + " " + toGeez(e.day) + " ቀን፣ " + toGeez(e.year) + " ዓ.ም.";
+  document.getElementById("t-greg").textContent =
+    WD_EN[wd] + ", " + now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    + " — " + e.year + "-" + String(e.month).padStart(2, "0") + "-" + String(e.day).padStart(2, "0") + " EC";
+
+  var f = fasikaJDN(e.year);
+  if (f < jdn) f = fasikaJDN(e.year + 1);
+  var days = f - jdn;
+  document.getElementById("t-fasika").innerHTML = days === 0
+    ? "<b>ትንሣኤ — Fasika is today.</b>"
+    : "ትንሣኤ · Fasika in <b>" + days + " day" + (days === 1 ? "" : "s") + "</b>";
+
+  // Today's Sinksar commemorations — same data the API's /v1/sinksar serves.
+  fetch("sinksar.json").then(function (r) { return r.json(); }).then(function (sk) {
+    var day = sk[e.month + "-" + e.day];
+    if (!day || (!day.annual.length && !day.monthly.length)) return;
+    function fill(id, items) {
+      var ul = document.getElementById(id);
+      items.forEach(function (t) {
+        var li = document.createElement("li");
+        li.textContent = t;
+        ul.appendChild(li);
+      });
+      if (!items.length) ul.parentElement.style.display = "none";
+    }
+    fill("sk-annual", day.annual);
+    fill("sk-monthly", day.monthly);
+    document.getElementById("t-sinksar").classList.add("on");
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>
