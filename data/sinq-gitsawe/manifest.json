@@ -85,6 +85,12 @@
     "upstream-npm.json": {
       "generated": true,
       "description": "Provenance evidence extracted from the npm tarball: unique daily keys and seasonal raw keys published there."
+    },
+    "names-am.json": {
+      "sha256": "80953e98a0477514a5da7101a7ab8b3ae2a5f7eb158f131ca51e4fe5d3a49321",
+      "records": 94,
+      "recordKey": "canonical book ID",
+      "provenance": "Copied from Sinq's bible assets (app/src/main/assets/content/bible/names-am.json, revision 4b051fc). Amharic book titles and abbreviations are standard EOTC usage; the compilation was authored for Sinq by this repository's owner."
     }
   },
   "licenseDecisions": {
