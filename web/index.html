@@ -389,6 +389,7 @@
     <span>Subscribe in your calendar:</span>
     <a id="sub-fasting" href="#">ጾም · Fasting</a>
     <a id="sub-feasts" href="#">በዓላት · Feasts</a>
+    <a id="sub-readings" href="#">ግጻዌ · Readings</a>
     <a id="sub-all" href="#">ሁሉም · All</a>
     <span>works with Google, Apple, and Outlook</span>
   </div>
@@ -414,7 +415,7 @@
     <a href="docs/">documentation</a>.</p>
 
     <div class="group"><h3>Calendar</h3>
-      <div class="ep"><span class="method">GET</span><span class="path">/v1/today</span><span class="desc">Today, fully described. <i style="font:12px var(--mono);color:var(--faint)">?tz=Africa/Addis_Ababa</i></span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/today</span><span class="desc">Today, fully described. <i style="font:12px var(--mono);color:var(--faint)">?tz=Africa/Addis_Ababa&amp;include=readings,sinksar</i></span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/date/<i>{date}</i></span><span class="desc">Describe any date: both calendars, weekday, fasting, feasts</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/convert/<i>{date}</i></span><span class="desc">Convert between Ethiopian and Gregorian</span></div>
       <div class="ep"><span class="method post">POST</span><span class="path">/v1/calendar/convert/batch</span><span class="desc">Convert up to 366 non-contiguous dates in one call</span></div>
@@ -449,6 +450,7 @@
       <div class="ep"><span class="method">GET</span><span class="path">/v1/gitsawe/<i>{date}</i></span><span class="desc">Gitsawe appointments + Sinksar commemorations + Bible references</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/readings/<i>{date}</i></span><span class="desc">Focused daily Psalms, Gospels, Epistles, Acts, and anaphora</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/sinksar/<i>{date}</i></span><span class="desc">The day's Sinksar annual (ዓመታዊ) and monthly (ወርኀዊ) commemoration lists</span></div>
+      <div class="ep"><span class="method">GET</span><span class="path">/v1/sinksar/search</span><span class="desc">Which day is a saint commemorated? <i style="font:12px var(--mono);color:var(--faint)">?q=ሚካኤል&amp;year=2018</i></span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/gitsawe/seasons</span><span class="desc">Movable-cycle reading candidates by season (ነነዌ, ዐቢይ ጾም, ትንሣኤ…)</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/gitsawe/monthly</span><span class="desc">Monthly Sunday-cycle reading candidates with their mezmur</span></div>
       <div class="ep"><span class="method">GET</span><span class="path">/v1/gitsawe/feasts</span><span class="desc">The feast graph: feasts, sub-feasts, and mahlet service orders</span></div>
@@ -923,6 +925,7 @@
   // Calendar subscription links for the current Ethiopian year.
   document.getElementById("sub-fasting").href = API + "/v1/calendar/ics?year=" + e.year + "&type=fasting";
   document.getElementById("sub-feasts").href = API + "/v1/calendar/ics?year=" + e.year + "&type=feasts";
+  document.getElementById("sub-readings").href = API + "/v1/calendar/ics?year=" + e.year + "&type=readings";
   document.getElementById("sub-all").href = API + "/v1/calendar/ics?year=" + e.year + "&type=all";
 
   // Upcoming strip: at most five occasions within the next 30 days, computed

@@ -201,7 +201,7 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 |---|---|---|
 | GET | `/` | API identity and endpoint directory |
 | GET | `/v1/health` | Liveness check |
-| GET | `/v1/today` | Describe today in an IANA timezone |
+| GET | `/v1/today` | Describe today in an IANA timezone; `?include=readings,sinksar` |
 | GET | `/v1/date/{date}` | Fully describe a date |
 | GET | `/v1/convert/{date}` | Convert between calendars |
 | POST | `/v1/calendar/convert/batch` | Convert up to 366 dates |
@@ -212,10 +212,11 @@ JSON is UTF-8 and includes Amharic and Ge'ez text without ASCII escaping.
 | GET | `/v1/calendar/{year}/{month}` | Fully described Ethiopian month |
 | GET | `/v1/calendar/season` | Liturgical season for a date |
 | GET | `/v1/calendar/geez-numeral` | Convert an integer to Ge'ez numerals |
-| GET | `/v1/calendar/ics` | iCalendar fasting and feast feed |
+| GET | `/v1/calendar/ics` | iCalendar fasting, feast, and daily-readings feed |
 | GET | `/v1/gitsawe/{date}` | Gitsawe, Sinksar, and Bible-reference detail |
 | GET | `/v1/readings/{date}` | Focused daily Bible reading appointments |
 | GET | `/v1/sinksar/{date}` | Sinksar annual and monthly commemoration lists |
+| GET | `/v1/sinksar/search` | Find which day a commemoration is kept |
 | GET | `/v1/feasts/{year}/{key}` | One feast resolved for a year, by key, name, or alias |
 | GET | `/v1/feasts/search` | Homophone-aware feast search across names and aliases |
 | GET | `/v1/upcoming` | Upcoming feasts and fasts within a maximum 30-day window |
@@ -292,6 +293,7 @@ Query parameters:
 | Parameter | Required | Default | Description |
 |---|---:|---|---|
 | `tz` | No | `Africa/Addis_Ababa` | IANA timezone name |
+| `include` | No | — | Comma-separated: `readings`, `sinksar` |
 
 Example:
 
@@ -300,6 +302,21 @@ curl "http://localhost:8001/v1/today?tz=Africa/Addis_Ababa"
 ```
 
 The response contains the timezone plus the complete date description documented below.
+
+`include` adds the day's liturgical payloads so a daily application needs one request
+rather than three. It is opt-in, and omitting it returns exactly the response above.
+
+```bash
+curl "http://localhost:8001/v1/today?include=readings,sinksar"
+```
+
+- `readings` adds `{ source, services }`, the same service block that
+  `/v1/readings/{date}` returns.
+- `sinksar` adds `{ annual, monthly, entryCount }`, where `annual` and `monthly` are
+  the commemoration names kept on that day. The full Sinksar entries, with their
+  headings and source text, remain on `/v1/sinksar/{date}`.
+
+An unrecognized value is rejected with `400`.
 
 ### `GET /v1/date/{date}`
 
@@ -634,7 +651,7 @@ Query parameters:
 | Parameter | Required | Values |
 |---|---:|---|
 | `year` | Yes | Ethiopian year |
-| `type` | No | `all`, `fasting`, `feasts` |
+| `type` | No | `all`, `fasting`, `feasts`, `readings` |
 
 ```bash
 curl "http://localhost:8001/v1/calendar/ics?year=2018&type=all" \
@@ -643,6 +660,15 @@ curl "http://localhost:8001/v1/calendar/ics?year=2018&type=all" \
 
 The response is `text/calendar` and is byte-deterministic. It can be subscribed to from
 Google Calendar, Apple Calendar, Outlook, and compatible applications.
+
+`type=readings` is the daily lectionary: one all-day event per day of the Ethiopian
+year, titled with the day's commemoration, whose description carries the appointed
+readings for matins, the liturgy, and vespers.
+
+```bash
+curl "http://localhost:8001/v1/calendar/ics?year=2018&type=readings" \
+  -o eotc-readings-2018.ics
+```
 
 ## 14. Gitsawe endpoint
 
@@ -829,6 +855,30 @@ payload. Accepts the same `?calendar=gregorian|ethiopian` parameter as
 ```bash
 curl /v1/sinksar/2018-01-01?calendar=ethiopian
 ```
+
+### `GET /v1/sinksar/search`
+
+Answers the reverse question: on which day is a saint commemorated? Matching is
+homophone-folded, so a name spelled with any of the Ge'ez letters that share a sound
+still finds the entry.
+
+| Parameter | Required | Description |
+|---|---:|---|
+| `q` | Yes | Any part of a commemoration name |
+| `year` | No | Ethiopian year; resolves each match to a real date |
+
+```bash
+curl "/v1/sinksar/search?q=ሚካኤል&year=2018"
+```
+
+Each match carries `title`, `kind` (`annual` or `monthly`), `ethiopianMonth`,
+`ethiopianDay`, `monthName`, and `confidence` (`exact` or `partial`); with `year`, it
+also carries a `date` block with the Gregorian date, Ethiopian date, and weekday.
+Exact matches sort first, then calendar order.
+
+Monthly commemorations recur, so one name legitimately matches the same day in several
+months — `totalMatches` reports the full count and `truncated` reports whether the
+200-match ceiling was reached.
 
 ### Annual commemorations
 

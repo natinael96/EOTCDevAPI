@@ -34,7 +34,7 @@ writeFileSync(resolve(specDir, 'responses.json'), JSON.stringify(out, null, 1) +
 // The .ics feeds are compared as raw text, not JSON.
 const ics: Record<string, { status: number; body: string }> = {};
 for (const year of [2015, 2018]) {
-  for (const type of ['fasting', 'feasts', 'all']) {
+  for (const type of ['fasting', 'feasts', 'all', 'readings']) {
     const res = await app.request(`http://localhost/v1/calendar/ics?year=${year}&type=${type}`);
     ics[`/v1/calendar/ics?year=${year}&type=${type}`] = { status: res.status, body: await res.text() };
   }

@@ -3,9 +3,9 @@
   "method": "Per day, service, and slot: the Sinq reference is classified against the scan transcription's readings of the same slot group. Psalm references on both sides are first converted from the Ge'ez psalter (Septuagint) numbering to the Hebrew numbering the canonical references use. exact = book/chapter/verse bounds agree; equivalent_numbering = Psalm chapter off by one with the same start verse; partial = same book and chapter, different or missing verse bounds; conflict = the scan appoints a different chapter or book; unavailable = the scan has no parsed reading for the slot group. Caveat: the vespers office and the 65 scan-backfilled days were imported into Sinq FROM this repository's transcription, so their agreement validates the two parsers' round trip, not independent sources. Only matins/liturgy on the 301 npm-derived days compare genuinely independent data.",
   "summary": {
     "byClass": {
-      "exact": 2468,
-      "partial": 637,
-      "conflict": 204,
+      "exact": 2471,
+      "partial": 633,
+      "conflict": 205,
       "equivalent_numbering": 9,
       "unavailable": 11
     },
@@ -18,9 +18,9 @@
         "unavailable": 2
       },
       "liturgy": {
-        "partial": 446,
-        "conflict": 157,
-        "exact": 1274,
+        "partial": 442,
+        "conflict": 158,
+        "exact": 1277,
         "equivalent_numbering": 2,
         "unavailable": 3
       },
@@ -840,9 +840,9 @@
             "slot": "paulineEpistle",
             "sinq": {
               "book": "HEB",
-              "chapter": 15,
-              "verseStart": 23,
-              "verseEnd": 29
+              "chapter": null,
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -3918,8 +3918,8 @@
             "slot": "acts",
             "sinq": {
               "book": "ACT",
-              "chapter": 76,
-              "verseStart": 30,
+              "chapter": null,
+              "verseStart": null,
               "verseEnd": null
             },
             "class": "conflict"
@@ -4640,9 +4640,9 @@
             "slot": "paulineEpistle",
             "sinq": {
               "book": "2CO",
-              "chapter": 14,
-              "verseStart": 13,
-              "verseEnd": 22
+              "chapter": null,
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -4958,9 +4958,9 @@
             "slot": "paulineEpistle",
             "sinq": {
               "book": "EPH",
-              "chapter": 8,
-              "verseStart": 13,
-              "verseEnd": 19
+              "chapter": null,
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -4980,7 +4980,7 @@
               "book": "ACT",
               "chapter": 20,
               "verseStart": 28,
-              "verseEnd": 41
+              "verseEnd": null
             },
             "class": "partial"
           }
@@ -5922,8 +5922,8 @@
             "slot": "paulineEpistle",
             "sinq": {
               "book": "EPH",
-              "chapter": 7,
-              "verseStart": 14,
+              "chapter": null,
+              "verseStart": null,
               "verseEnd": null
             },
             "class": "conflict"
@@ -6221,8 +6221,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 111,
-              "verseStart": 12,
-              "verseEnd": 13
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -7132,7 +7132,7 @@
               "book": "MAT",
               "chapter": 2,
               "verseStart": 22,
-              "verseEnd": 24
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -7839,8 +7839,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 103,
-              "verseStart": 40,
-              "verseEnd": 41
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -8412,7 +8412,7 @@
               "book": "TIT",
               "chapter": 2,
               "verseStart": 1,
-              "verseEnd": 20
+              "verseEnd": null
             },
             "class": "partial"
           },
@@ -8666,7 +8666,7 @@
               "book": "MAT",
               "chapter": 21,
               "verseStart": 44,
-              "verseEnd": 47
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -8865,10 +8865,10 @@
             "sinq": {
               "book": "ACT",
               "chapter": 9,
-              "verseStart": 46,
+              "verseStart": null,
               "verseEnd": null
             },
-            "class": "partial"
+            "class": "exact"
           }
         ],
         "vespers": [
@@ -9321,8 +9321,8 @@
             "sinq": {
               "book": "MAT",
               "chapter": 14,
-              "verseStart": 37,
-              "verseEnd": 39
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -12748,7 +12748,7 @@
               "book": "LUK",
               "chapter": 1,
               "verseStart": 26,
-              "verseEnd": 107
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -14812,8 +14812,8 @@
             "slot": "gospel",
             "sinq": {
               "book": "MRK",
-              "chapter": 17,
-              "verseStart": 19,
+              "chapter": null,
+              "verseStart": null,
               "verseEnd": null
             },
             "class": "conflict"
@@ -14865,8 +14865,8 @@
             "sinq": {
               "book": "LUK",
               "chapter": 15,
-              "verseStart": 35,
-              "verseEnd": 37
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -15193,8 +15193,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 113,
-              "verseStart": 35,
-              "verseEnd": 37
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "unavailable"
           },
@@ -15204,7 +15204,7 @@
               "book": "MAT",
               "chapter": 20,
               "verseStart": 33,
-              "verseEnd": 35
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -15309,8 +15309,8 @@
             "sinq": {
               "book": "MRK",
               "chapter": 7,
-              "verseStart": 54,
-              "verseEnd": 57
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -15372,11 +15372,11 @@
             "slot": "paulineEpistle",
             "sinq": {
               "book": "EPH",
-              "chapter": 7,
-              "verseStart": 10,
+              "chapter": null,
+              "verseStart": null,
               "verseEnd": null
             },
-            "class": "partial"
+            "class": "conflict"
           },
           {
             "slot": "catholicEpistle",
@@ -15425,8 +15425,8 @@
             "sinq": {
               "book": "JHN",
               "chapter": 3,
-              "verseStart": 54,
-              "verseEnd": 57
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -15521,8 +15521,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 73,
-              "verseStart": 30,
-              "verseEnd": 34
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "unavailable"
           },
@@ -16379,8 +16379,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 96,
-              "verseStart": 15,
-              "verseEnd": 16
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "unavailable"
           }
@@ -17260,7 +17260,7 @@
               "book": "MRK",
               "chapter": 7,
               "verseStart": 30,
-              "verseEnd": 44
+              "verseEnd": null
             },
             "class": "conflict"
           }
@@ -20735,8 +20735,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 117,
-              "verseStart": 73,
-              "verseEnd": 74
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "unavailable"
           },
@@ -21276,7 +21276,7 @@
               "book": "JHN",
               "chapter": 7,
               "verseStart": 50,
-              "verseEnd": 54
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -22907,8 +22907,8 @@
             "sinq": {
               "book": "MAT",
               "chapter": 7,
-              "verseStart": 32,
-              "verseEnd": 37
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           }
@@ -22942,7 +22942,7 @@
               "verseStart": 20,
               "verseEnd": null
             },
-            "class": "partial"
+            "class": "exact"
           },
           {
             "slot": "catholicEpistle",
@@ -24307,8 +24307,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 114,
-              "verseStart": 23,
-              "verseEnd": 24
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -24338,7 +24338,7 @@
               "book": "3JN",
               "chapter": 1,
               "verseStart": 1,
-              "verseEnd": 19
+              "verseEnd": null
             },
             "class": "partial"
           },
@@ -28331,8 +28331,8 @@
             "sinq": {
               "book": "JHN",
               "chapter": 17,
-              "verseStart": 31,
-              "verseEnd": 32
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -29031,7 +29031,7 @@
             "sinq": {
               "book": "JHN",
               "chapter": 2,
-              "verseStart": 27,
+              "verseStart": null,
               "verseEnd": null
             },
             "class": "conflict"
@@ -30071,8 +30071,8 @@
             "sinq": {
               "book": "2CO",
               "chapter": 7,
-              "verseStart": 25,
-              "verseEnd": 35
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "conflict"
           },
@@ -34536,7 +34536,7 @@
               "book": "MAT",
               "chapter": 8,
               "verseStart": 33,
-              "verseEnd": 35
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -34748,7 +34748,7 @@
               "book": "MAT",
               "chapter": 13,
               "verseStart": 57,
-              "verseEnd": 59
+              "verseEnd": null
             },
             "class": "exact"
           }
@@ -36498,7 +36498,7 @@
               "verseStart": 14,
               "verseEnd": null
             },
-            "class": "partial"
+            "class": "exact"
           },
           {
             "slot": "acts",
@@ -36968,8 +36968,8 @@
             "slot": "catholicEpistle",
             "sinq": {
               "book": "2JN",
-              "chapter": 2,
-              "verseStart": 1,
+              "chapter": null,
+              "verseStart": null,
               "verseEnd": null
             },
             "class": "conflict"
@@ -38823,8 +38823,8 @@
             "sinq": {
               "book": "PSA",
               "chapter": 4,
-              "verseStart": 9,
-              "verseEnd": 10
+              "verseStart": null,
+              "verseEnd": null
             },
             "class": "unavailable"
           },

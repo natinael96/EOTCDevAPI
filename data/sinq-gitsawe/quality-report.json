@@ -25,7 +25,8 @@
       "normalized": 3624,
       "resolvedBooks": 3612,
       "unresolvedBooks": 12,
-      "slotFamilyMismatches": 32
+      "slotFamilyMismatches": 32,
+      "outOfRangeReferences": 42
     },
     "dailyProvenance": {
       "npmDerived": 301,
@@ -33,6 +34,16 @@
     }
   },
   "reviewItems": [
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 08-01 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "HEB",
+      "chapter": 15,
+      "chapterCount": 13,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
     {
       "kind": "psalm_citation_unmappable",
       "where": "daily 21-01 negh",
@@ -52,6 +63,57 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "chapter_out_of_range",
+      "where": "daily 06-02 kidassie",
+      "sourceSlot": "secondKahn",
+      "bibleBook": "ACT",
+      "chapter": 76,
+      "chapterCount": 28,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 13-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "2CO",
+      "chapter": 14,
+      "chapterCount": 13,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 16-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 8,
+      "chapterCount": 6,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 16-02 kidassie",
+      "sourceSlot": "secondKahn",
+      "bibleBook": "ACT",
+      "chapter": 20,
+      "verse": 41,
+      "verseCount": 38,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 25-02 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 7,
+      "chapterCount": 6,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "psalm_citation_unmappable",
       "where": "daily 28-02 kidassie",
       "sourceSlot": "msbak",
@@ -59,6 +121,28 @@
       "verseStart": 12,
       "verseEnd": 13,
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 28-02 kidassie",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 111,
+      "verse": 12,
+      "verseCount": 10,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 06-03 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 2,
+      "verse": 24,
+      "verseCount": 23,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",
@@ -78,6 +162,17 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 13-03 negh",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 103,
+      "verse": 40,
+      "verseCount": 22,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "psalm_citation_unmappable",
       "where": "daily 17-03 kidassie",
       "sourceSlot": "msbak",
@@ -94,6 +189,50 @@
       "verseStart": 14,
       "verseEnd": 15,
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 18-03 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "TIT",
+      "chapter": 2,
+      "verse": 20,
+      "verseCount": 15,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 20-03 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 21,
+      "verse": 47,
+      "verseCount": 46,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 22-03 kidassie",
+      "sourceSlot": "secondKahn",
+      "bibleBook": "ACT",
+      "chapter": 9,
+      "verse": 46,
+      "verseCount": 43,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 26-03 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 14,
+      "verse": 37,
+      "verseCount": 36,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "psalm_citation_unmappable",
@@ -138,6 +277,17 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 28-04 negh",
+      "sourceSlot": "wengel",
+      "bibleBook": "LUK",
+      "chapter": 1,
+      "verse": 107,
+      "verseCount": 80,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 28-04 kidassie",
       "sourceSlot": "secondDeacon",
@@ -154,6 +304,27 @@
       "bibleBook": "JHN"
     },
     {
+      "kind": "chapter_out_of_range",
+      "where": "daily 17-05 kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "MRK",
+      "chapter": 17,
+      "chapterCount": 16,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 17-05 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "LUK",
+      "chapter": 15,
+      "verse": 35,
+      "verseCount": 32,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "psalm_citation_unmappable",
       "where": "daily 20-05 serk",
       "sourceSlot": "msbak",
@@ -163,6 +334,60 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 20-05 serk",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 113,
+      "verse": 35,
+      "verseCount": 9,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 20-05 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 20,
+      "verse": 35,
+      "verseCount": 34,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 21-05 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MRK",
+      "chapter": 7,
+      "verse": 54,
+      "verseCount": 37,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 22-05 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "EPH",
+      "chapter": 7,
+      "chapterCount": 6,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 22-05 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "JHN",
+      "chapter": 3,
+      "verse": 54,
+      "verseCount": 36,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "psalm_citation_unmappable",
       "where": "daily 23-05 serk",
       "sourceSlot": "msbak",
@@ -170,6 +395,17 @@
       "verseStart": 30,
       "verseEnd": 34,
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 23-05 serk",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 73,
+      "verse": 30,
+      "verseCount": 28,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "psalm_citation_unmappable",
@@ -196,6 +432,17 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 01-06 serk",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 96,
+      "verse": 15,
+      "verseCount": 13,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "unresolved_bible_book",
       "where": "daily 01-06 serk",
       "sourceSlot": "wengel",
@@ -216,6 +463,17 @@
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ወንጌል 2",
       "bibleBook": "JHN"
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 10-06 negh",
+      "sourceSlot": "wengel",
+      "bibleBook": "MRK",
+      "chapter": 7,
+      "verse": 44,
+      "verseCount": 37,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",
@@ -256,6 +514,39 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 12-07 serk",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 117,
+      "verse": 73,
+      "verseCount": 2,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 17-07 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "JHN",
+      "chapter": 7,
+      "verse": 54,
+      "verseCount": 53,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 03-08 negh",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 7,
+      "verse": 32,
+      "verseCount": 29,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 09-08 kidassie",
       "sourceSlot": "secondDeacon",
@@ -293,6 +584,28 @@
       "verseStart": 23,
       "verseEnd": 24,
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 16-08 kidassie",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 114,
+      "verse": 23,
+      "verseCount": 8,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 16-08 kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "3JN",
+      "chapter": 1,
+      "verse": 19,
+      "verseCount": 15,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",
@@ -347,6 +660,17 @@
       "bibleBook": "REV"
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 23-09 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "JHN",
+      "chapter": 17,
+      "verse": 31,
+      "verseCount": 26,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 24-09 kidassie",
       "sourceSlot": "secondDeacon",
@@ -369,6 +693,17 @@
       "sourceBookTitle": null
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 30-09 kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "JHN",
+      "chapter": 2,
+      "verse": 27,
+      "verseCount": 25,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 30-09 kidassie",
       "sourceSlot": "secondDeacon",
@@ -381,6 +716,17 @@
       "where": "daily 01-10 serk",
       "sourceSlot": "wengel",
       "sourceBookTitle": null
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "daily 10-10 kidassie",
+      "sourceSlot": "firstDeacon",
+      "bibleBook": "2CO",
+      "chapter": 7,
+      "verse": 25,
+      "verseCount": 16,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",
@@ -458,12 +804,44 @@
       "sourceBookTitle": null
     },
     {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 22-11 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 8,
+      "verse": 35,
+      "verseCount": 34,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "daily 24-11 serk",
+      "sourceSlot": "wengel",
+      "bibleBook": "MAT",
+      "chapter": 13,
+      "verse": 59,
+      "verseCount": 58,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 27-11 kidassie",
       "sourceSlot": "secondDeacon",
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ወንጌል 1",
       "bibleBook": "JHN"
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "daily 16-12 kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "2JN",
+      "chapter": 2,
+      "chapterCount": 1,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",
@@ -483,6 +861,38 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "daily 03-13 serk",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 4,
+      "verse": 9,
+      "verseCount": 8,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "seasonal 06-abiyTsom kidassie",
+      "sourceSlot": "secondDeacon",
+      "bibleBook": "2PE",
+      "chapter": 5,
+      "chapterCount": 3,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_out_of_range",
+      "where": "seasonal 05-lidet kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "LUK",
+      "chapter": 2,
+      "verse": 336,
+      "verseCount": 52,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "psalm_citation_unmappable",
       "where": "seasonal 01-tnsae negh",
       "sourceSlot": "msbak",
@@ -492,12 +902,55 @@
       "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
+      "kind": "verse_out_of_range",
+      "where": "seasonal 01-tnsae negh",
+      "sourceSlot": "msbak",
+      "bibleBook": "PSA",
+      "chapter": 77,
+      "verse": 85,
+      "verseCount": 20,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "seasonal 04-tnsae kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "LUK",
+      "chapter": 24,
+      "verse": 445,
+      "verseCount": 53,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "seasonal 05-tnsae kidassie",
       "sourceSlot": "secondDeacon",
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ራዕይ",
       "bibleBook": "REV"
+    },
+    {
+      "kind": "verse_end_out_of_range",
+      "where": "seasonal 05-tnsae kidassie",
+      "sourceSlot": "secondKahn",
+      "bibleBook": "ACT",
+      "chapter": 10,
+      "verse": 54,
+      "verseCount": 48,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
+    },
+    {
+      "kind": "chapter_out_of_range",
+      "where": "seasonal 06-tnsae kidassie",
+      "sourceSlot": "wengel",
+      "bibleBook": "JHN",
+      "chapter": 24,
+      "chapterCount": 21,
+      "versification": "am-1980",
+      "note": "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves."
     },
     {
       "kind": "slot_family_mismatch",

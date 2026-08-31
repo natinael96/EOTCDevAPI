@@ -86,6 +86,32 @@ export function normalizeReadingField(raw) {
 }
 
 const PSALM_VERSE_COUNTS = bibleCatalog.books.find((book) => book.id === "PSA").verseCounts;
+const VERSE_COUNTS = new Map(bibleCatalog.books.map((book) => [book.id, book.verseCounts]));
+
+// A citation can parse cleanly and still name a chapter or verse the canon does
+// not have, when a Ge'ez numeral was misread or a book label was mis-assigned.
+// Such a reference cannot be linked, so it is narrowed to the part that is
+// verifiable rather than published as a canonical reference that resolves to
+// nothing. The printed citation is preserved separately in every case, and the
+// issue is reported so the scan can be reviewed.
+export function validateReference(bookId, chapter, verseStart, verseEnd) {
+  const counts = VERSE_COUNTS.get(bookId);
+  if (!counts || !chapter) return { chapter, verseStart, verseEnd, issue: null };
+  if (chapter > counts.length) {
+    return { chapter: null, verseStart: null, verseEnd: null,
+      issue: { kind: "chapter_out_of_range", chapter, chapterCount: counts.length } };
+  }
+  const verseCount = counts[chapter - 1];
+  if (verseStart && verseStart > verseCount) {
+    return { chapter, verseStart: null, verseEnd: null,
+      issue: { kind: "verse_out_of_range", chapter, verse: verseStart, verseCount } };
+  }
+  if (verseEnd && verseEnd > verseCount) {
+    return { chapter, verseStart, verseEnd: null,
+      issue: { kind: "verse_end_out_of_range", chapter, verse: verseEnd, verseCount } };
+  }
+  return { chapter, verseStart, verseEnd, issue: null };
+}
 
 // The Gitsawe and Sinq sources cite Psalms in the Ge'ez psalter's numbering,
 // which follows the Septuagint: one chapter behind the Hebrew numbering used

@@ -19,7 +19,7 @@ import { describeDay, iso, ethIso } from './core/day.ts';
 import { toGeez } from './core/geez.ts';
 import { seasonOf } from './core/seasons.ts';
 import { buildIcs } from './core/ical.ts';
-import { fixedGitsaweOn, gitsaweCoverage } from './core/gitsawe.ts';
+import { fixedGitsaweOn, gitsaweCoverage, searchSinksar } from './core/gitsawe.ts';
 import { bibleBooks, bibleBook, bibleEditions, bibleVersification, bibleCanonNote, resolveBook } from './core/bible.ts';
 import { sinqCatalog, sinqSeasonal, sinqMonthly, sinqFeasts, sinqSubFeasts, sinqMahlets } from './core/sinq.ts';
 import { parseCitation } from './core/citations.ts';
@@ -150,7 +150,7 @@ app.get('/', (c) =>
     note: 'All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no API key; a generous anonymous rate limit applies.',
     endpoints: {
       'GET /v1/health': 'Liveness check.',
-      'GET /v1/today': "Today, fully described. ?tz=Africa/Addis_Ababa",
+      'GET /v1/today': "Today, fully described. ?tz=Africa/Addis_Ababa&include=readings,sinksar",
       'GET /v1/date/{date}': 'Describe any date. ?calendar=gregorian|ethiopian',
       'GET /v1/convert/{date}': 'Convert between calendars. ?calendar=gregorian|ethiopian',
       'GET /v1/fasting/{date}': 'Is it a fasting day, and why. ?calendar=gregorian|ethiopian',
@@ -162,7 +162,7 @@ app.get('/', (c) =>
       'GET /v1/bahire-hasab/{year}': 'The full ባሕረ ሐሳብ computation.',
       'GET /v1/calendar/{year}/{month}': 'One Ethiopian month, day by day.',
       'GET /v1/calendar/range': 'Describe a date range, up to 366 days. ?start=&end=&calendar=',
-      'GET /v1/calendar/ics': 'iCalendar feed. ?year=2018&type=fasting|feasts|all',
+      'GET /v1/calendar/ics': 'iCalendar feed. ?year=2018&type=fasting|feasts|readings|all',
       'GET /v1/calendar/season': 'Liturgical season of a date. ?date=&calendar=',
       'GET /v1/calendar/geez-numeral': "Arabic to Ge'ez numerals. ?number=2018",
       'GET /v1/gitsawe/{date}': 'Fixed-cycle Gitsawe with Sinksar and canonical Bible links.',
@@ -192,8 +192,24 @@ app.get('/', (c) =>
 
 app.get('/v1/health', (c) => c.json({ status: 'ok', version: '0.1.0' }));
 
+// Optional payloads for /v1/today. A daily companion wants the readings and
+// the day's commemorations on one screen; everyone else wants the small
+// response they already have, so these are opt-in and the default is unchanged.
+const TODAY_INCLUDES = ['readings', 'sinksar'];
+
+function parseInclude(raw: string | undefined): Set<string> {
+  const wanted = (raw ?? '').split(',').map((part) => part.trim().toLowerCase()).filter(Boolean);
+  for (const name of wanted) {
+    if (!TODAY_INCLUDES.includes(name)) {
+      throw new ApiError(400, `Unknown include '${name}'.`, `Use ${TODAY_INCLUDES.join(' and/or ')}.`);
+    }
+  }
+  return new Set(wanted);
+}
+
 app.get('/v1/today', (c) => {
   const tz = c.req.query('tz') ?? 'Africa/Addis_Ababa';
+  const include = parseInclude(c.req.query('include'));
   let parts: Intl.DateTimeFormatPart[];
   try {
     parts = new Intl.DateTimeFormat('en-CA', {
@@ -204,7 +220,34 @@ app.get('/v1/today', (c) => {
   }
   const g = Object.fromEntries(parts.map((p) => [p.type, p.value]));
   const jdn = gregorianToJDN(Number(g.year), Number(g.month), Number(g.day));
-  return c.json({ timezone: tz, ...describeDay(jdn) });
+  const described = describeDay(jdn);
+  const body: Record<string, unknown> = { timezone: tz, ...described };
+  if (include.size) {
+    const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
+    if (include.has('readings')) {
+      const gitsawe = fixed?.gitsawe as { cycle: string; services: Record<string, any> } | undefined;
+      body.readings = gitsawe ? {
+        source: { cycle: gitsawe.cycle, resolution: 'fixed_candidate_only' },
+        services: readingServices(gitsawe),
+      } : null;
+    }
+    // Who is commemorated today: the annual and monthly names, as displayed.
+    // The full entries, with their headings and source text, stay on
+    // /v1/sinksar/{date}; this is the reading list, not the archive record.
+    if (include.has('sinksar')) {
+      const sinksar = fixed?.sinksar as {
+        entryCount: number;
+        annualFeasts: { items: { title: string }[] };
+        monthlyFeasts: { items: { title: string }[] };
+      } | undefined;
+      body.sinksar = sinksar ? {
+        annual: sinksar.annualFeasts.items.map((item) => item.title),
+        monthly: sinksar.monthlyFeasts.items.map((item) => item.title),
+        entryCount: sinksar.entryCount,
+      } : null;
+    }
+  }
+  return c.json(body);
 });
 
 app.get('/v1/date/:date', (c) => c.json(describeDay(parseDate(c.req.param('date'), cal(c)))));
@@ -348,6 +391,45 @@ app.get('/v1/gitsawe/:date', (c) => {
   });
 });
 
+// Registered before /v1/sinksar/:date so 'search' is not read as a date.
+const SINKSAR_SEARCH_LIMIT = 200;
+app.get('/v1/sinksar/search', (c) => {
+  const q = c.req.query('q');
+  if (!q || !q.trim()) {
+    throw new ApiError(400, "Missing query parameter 'q'.", 'Example: /v1/sinksar/search?q=ሚካኤል');
+  }
+  const yearParam = c.req.query('year');
+  const year = yearParam ? parseYear(yearParam) : null;
+  const all = searchSinksar(q);
+  const matches = all.slice(0, SINKSAR_SEARCH_LIMIT).map((match) => {
+    const ethiopic = ethIso(year ?? 1, match.ethiopianMonth, match.ethiopianDay);
+    return {
+      title: match.title,
+      kind: match.kind,
+      ethiopianMonth: match.ethiopianMonth,
+      ethiopianDay: match.ethiopianDay,
+      monthName: MONTHS[match.ethiopianMonth - 1],
+      confidence: match.confidence,
+      ...(year ? {
+        date: {
+          ethiopic,
+          gregorian: iso(ethiopicToJDN(year, match.ethiopianMonth, match.ethiopianDay)),
+          weekday: { ...WEEKDAYS[jdnToWeekday(ethiopicToJDN(year, match.ethiopianMonth, match.ethiopianDay))] },
+        },
+      } : {}),
+    };
+  });
+  return c.json({
+    query: q,
+    ethiopicYear: year,
+    count: matches.length,
+    totalMatches: all.length,
+    truncated: all.length > matches.length,
+    note: 'Monthly commemorations recur, so one name can match the same day in several months.',
+    matches,
+  });
+});
+
 app.get('/v1/sinksar/:date', (c) => {
   const jdn = parseDate(c.req.param('date'), cal(c));
   const described = describeDay(jdn);
@@ -374,19 +456,25 @@ app.get('/v1/sinksar/:date', (c) => {
   });
 });
 
-app.get('/v1/readings/:date', (c) => {
-  const jdn = parseDate(c.req.param('date'), cal(c));
-  const described = describeDay(jdn);
-  const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
-  if (!fixed) throw new ApiError(404, 'No fixed-cycle Gitsawe record for this date.');
-  const gitsawe = fixed.gitsawe as { cycle: string; services: Record<string, any> };
-  const services = Object.fromEntries(Object.entries(gitsawe.services).map(([name, service]) => [name, {
+// Shared by /v1/readings/{date} and /v1/today?include=readings, so the two can
+// never describe the same day's services differently.
+function readingServices(gitsawe: { services: Record<string, any> }) {
+  return Object.fromEntries(Object.entries(gitsawe.services).map(([name, service]) => [name, {
     psalms: service.psalms ?? [],
     gospels: service.gospels ?? [],
     epistles: (service.epistlesAndActs ?? []).filter((reading: any) => reading.bibleBook !== 'ACT'),
     acts: (service.epistlesAndActs ?? []).filter((reading: any) => reading.bibleBook === 'ACT'),
     anaphora: service.anaphora ?? null,
   }]));
+}
+
+app.get('/v1/readings/:date', (c) => {
+  const jdn = parseDate(c.req.param('date'), cal(c));
+  const described = describeDay(jdn);
+  const fixed = fixedGitsaweOn(described.ethiopic.month, described.ethiopic.day);
+  if (!fixed) throw new ApiError(404, 'No fixed-cycle Gitsawe record for this date.');
+  const gitsawe = fixed.gitsawe as { cycle: string; services: Record<string, any> };
+  const services = readingServices(gitsawe);
   const movableFeastKeys = described.feasts.filter((feast) => feast.movable).map((feast) => feast.key);
   return c.json({
     date: { gregorian: described.gregorian.date, ethiopic: described.ethiopic.date, weekday: described.weekday },
@@ -507,10 +595,10 @@ app.get('/v1/bahire-hasab/:year', (c) => {
 app.get('/v1/calendar/ics', (c) => {
   const year = parseYear(c.req.query('year') ?? '');
   const type = (c.req.query('type') ?? 'all').toLowerCase();
-  if (!['fasting', 'feasts', 'all'].includes(type)) {
-    throw new ApiError(400, `Unknown type '${type}'.`, "Use 'fasting', 'feasts' or 'all'.");
+  if (!['fasting', 'feasts', 'all', 'readings'].includes(type)) {
+    throw new ApiError(400, `Unknown type '${type}'.`, "Use 'fasting', 'feasts', 'readings' or 'all'.");
   }
-  return c.body(buildIcs(year, type as 'fasting' | 'feasts' | 'all'), 200, {
+  return c.body(buildIcs(year, type as 'fasting' | 'feasts' | 'all' | 'readings'), 200, {
     'content-type': 'text/calendar; charset=utf-8',
     'content-disposition': `attachment; filename="eotc-${type}-${year}.ics"`,
   });

@@ -237,3 +237,76 @@ describe('headers', () => {
     });
   });
 });
+
+describe('today includes', () => {
+  it('leaves the default response unchanged', async () => {
+    const { status, body } = await get('/v1/today');
+    expect(status).toBe(200);
+    expect(body.readings).toBeUndefined();
+    expect(body.sinksar).toBeUndefined();
+  });
+
+  it('adds the readings and the day\'s commemorations on request', async () => {
+    const { status, body } = await get('/v1/today?include=readings,sinksar');
+    expect(status).toBe(200);
+    expect(body.readings.source.resolution).toBe('fixed_candidate_only');
+    expect(Object.keys(body.readings.services)).toContain('liturgy');
+    expect(Array.isArray(body.sinksar.annual)).toBe(true);
+    expect(Array.isArray(body.sinksar.monthly)).toBe(true);
+    // The same day fetched on its own must list the same commemorations.
+    const iso = body.gregorian.date;
+    const { body: standalone } = await get(`/v1/sinksar/${iso}`);
+    expect(body.sinksar.annual).toEqual(
+      standalone.annualFeasts.items.map((item: any) => item.title));
+  });
+
+  it('rejects an unknown include', async () => {
+    const { status, body } = await get('/v1/today?include=bogus');
+    expect(status).toBe(400);
+    expect(body.hint).toContain('readings');
+  });
+});
+
+describe('sinksar search', () => {
+  it('finds a commemoration by name and orders exact matches first', async () => {
+    const { status, body } = await get(`/v1/sinksar/search?q=${encodeURIComponent('እንድርያኖስ')}`);
+    expect(status).toBe(200);
+    expect(body.count).toBeGreaterThan(0);
+    expect(body.matches[0].title).toContain('እንድርያኖስ');
+    // Nehase 25 is where the Sinksar keeps Endryanos.
+    expect(body.matches.some((m: any) => m.ethiopianMonth === 12 && m.ethiopianDay === 25)).toBe(true);
+  });
+
+  it('resolves matches to real dates when a year is given', async () => {
+    const { body } = await get(`/v1/sinksar/search?q=${encodeURIComponent('ሚካኤል')}&year=2018`);
+    expect(body.ethiopicYear).toBe(2018);
+    const monthly = body.matches.find((m: any) => m.kind === 'monthly');
+    expect(monthly.date.gregorian).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(monthly.date.weekday.english).toBeTruthy();
+  });
+
+  it('is not shadowed by the date route and requires a query', async () => {
+    expect((await get('/v1/sinksar/2026-08-31')).status).toBe(200);
+    const missing = await get('/v1/sinksar/search');
+    expect(missing.status).toBe(400);
+    expect(missing.body.message).toContain("'q'");
+  });
+});
+
+describe('readings calendar feed', () => {
+  it('serves a daily lectionary subscription', async () => {
+    const res = await app.request('http://localhost/v1/calendar/ics?year=2018&type=readings');
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).toContain('BEGIN:VCALENDAR');
+    expect(text).toContain('CATEGORIES:READING');
+    // One event per day of the year, and the corrected psalm numbering.
+    expect(text.match(/BEGIN:VEVENT/g)!.length).toBe(365);
+    expect(text).toContain('መዝሙ 65:11-12');
+  });
+
+  it('rejects an unknown feed type', async () => {
+    const res = await app.request('http://localhost/v1/calendar/ics?year=2018&type=bogus');
+    expect(res.status).toBe(400);
+  });
+});

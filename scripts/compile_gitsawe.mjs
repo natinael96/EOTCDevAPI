@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalBookId, geezPsalterToCanonical, geezToInteger, normalizeReadingField, parseCitation } from "./gitsawe_lib.mjs";
+import { canonicalBookId, geezPsalterToCanonical, geezToInteger, normalizeReadingField, parseCitation, validateReference } from "./gitsawe_lib.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
@@ -12,7 +12,7 @@ const report = {
     daysWithAnnualSummary: 0, daysWithMonthlySummary: 0,
     annualFeasts: 0, monthlyFeasts: 0,
   },
-  bibleLinks: { resolvedBooks: 0, unresolvedBooks: 0, parsedCitations: 0, incompleteCitations: 0 },
+  bibleLinks: { resolvedBooks: 0, unresolvedBooks: 0, parsedCitations: 0, incompleteCitations: 0, outOfRangeReferences: 0 },
   reviewItems: [],
   warnings: [],
 };
@@ -37,18 +37,23 @@ function normalizedReading(reading, fieldType, inheritedBook = null) {
   const mapped = book === "PSA" && citation.chapter
     ? geezPsalterToCanonical(citation.chapter, citation.verseStart, citation.verseEnd, citation.toEndOfChapter)
     : citation;
+  // Narrow anything the canon cannot actually contain, so a published
+  // reference always resolves to a real chapter and verse.
+  const checked = mapped
+    ? validateReference(book, mapped.chapter, mapped.verseStart, mapped.verseEnd)
+    : null;
   return {
     sourceBook,
     bibleBook: book,
     sourceCitation: citation.source,
-    canonicalReference: book && citation.chapter && mapped ? {
+    canonicalReference: book && citation.chapter && checked && checked.chapter ? {
       book,
-      chapter: mapped.chapter,
-      verseStart: mapped.verseStart,
-      verseEnd: mapped.verseEnd,
-      toEndOfChapter: mapped.toEndOfChapter,
+      chapter: checked.chapter,
+      verseStart: checked.verseStart,
+      verseEnd: checked.verseEnd,
+      toEndOfChapter: checked.verseStart ? mapped.toEndOfChapter : false,
       method: book === "PSA" ? "printed_citation_geez_psalter" : "printed_citation",
-      confidence: mapped.verseStart ? "probable" : "unresolved",
+      confidence: checked.verseStart ? "probable" : "unresolved",
     } : null,
   };
 }
@@ -143,6 +148,26 @@ for (const file of fs.readdirSync(path.join(root, "data/gitsawe")).filter((x) =>
               note: "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved.",
             });
           }
+          const psalterMapped = book === "PSA" && citation.chapter
+            ? geezPsalterToCanonical(citation.chapter, citation.verseStart, citation.verseEnd, citation.toEndOfChapter)
+            : citation;
+          const checked = psalterMapped
+            ? validateReference(book, psalterMapped.chapter, psalterMapped.verseStart, psalterMapped.verseEnd)
+            : null;
+          if (checked?.issue) {
+            report.bibleLinks.outOfRangeReferences++;
+            report.reviewItems.push({
+              kind: checked.issue.kind, file, ethiopianMonth: data.month_index,
+              ethiopianDay: index + 1, service: serviceName, sourceField,
+              sourceBook: sourceBook || null, bibleBook: book,
+              sourceCitation: citation.source,
+              chapter: checked.issue.chapter,
+              ...(checked.issue.kind === "chapter_out_of_range"
+                ? { chapterCount: checked.issue.chapterCount }
+                : { verse: checked.issue.verse, verseCount: checked.issue.verseCount }),
+              note: "The printed citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves.",
+            });
+          }
           if (citation.chapter && citation.verseStart) report.bibleLinks.parsedCitations++;
           else {
             report.bibleLinks.incompleteCitations++;
@@ -176,7 +201,10 @@ for (let month = 1; month <= 13; month++) {
       .map((line) => line.trim()).filter(Boolean)
       .map((line, itemIndex) => ({
         id: `${month}-${day.day}-${kind}-${itemIndex + 1}`,
-        title: line.replace(/^[፩-፼]+\s*[.፡።፣፤፥፦:)\]-]*\s*/, "").trim(),
+        // Source lines are numbered in either script. A Ge'ez numeral is
+        // unambiguous on its own; an Arabic one must carry a separator so a
+        // name that legitimately opens with a digit is left intact.
+        title: line.replace(/^(?:[፩-፼]+\s*[.፡።፣፤፥፦:)\]-]*|\d+\s*[.፡።፣፤፥፦:)\]-]+)\s*/, "").trim(),
         sourceText: line,
       }));
     const annualEntry = day.entries.find((entry) => entry.title.startsWith("📌") && entry.title.includes("ዓመታዊ"));
@@ -236,6 +264,7 @@ console.log(`Gitsawe: ${report.gitsawe.days} days, ${report.gitsawe.readings} re
 console.log(`Sinksar: ${report.sinksar.days} days, ${report.sinksar.entries} entries`);
 console.log(`Sinksar summaries: ${report.sinksar.annualFeasts} annual, ${report.sinksar.monthlyFeasts} monthly feast items`);
 console.log(`Bible book links: ${report.bibleLinks.resolvedBooks} resolved, ${report.bibleLinks.unresolvedBooks} unresolved`);
+console.log(`Reference integrity: ${report.bibleLinks.outOfRangeReferences} citations narrowed as out of range`);
 console.log(`Warnings: ${report.warnings.length}`);
 
 if (report.gitsawe.days !== 366 || report.sinksar.days !== 366) process.exitCode = 1;

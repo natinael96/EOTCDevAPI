@@ -11,10 +11,15 @@ Port of ts/src/core/ical.ts -- output is asserted byte-identical.
 
 from __future__ import annotations
 
+import re
+from typing import Any
+
 from .bahirehasab import movable_feasts
-from .ethiopic import jdn_to_gregorian
+from .bible import bible_book
+from .ethiopic import MONTHS, days_in_ethiopic_month, ethiopic_to_jdn, jdn_to_gregorian
 from .fasts import fast_periods
 from .feasts import fixed_feasts
+from .gitsawe import fixed_gitsawe_on
 
 
 def _ics_date(jdn: int) -> str:
@@ -72,9 +77,79 @@ def _render(events: list[dict], cal_name: str) -> str:
     return "\r\n".join(lines) + "\r\n"
 
 
+def _reference_label(reading: dict[str, Any]) -> str:
+    """One reading rendered for a calendar description: the Amharic book
+    abbreviation with chapter and verses, falling back to the printed label when
+    the citation could not be resolved to a canonical reference."""
+    ref = reading.get("canonicalReference")
+    if ref and ref.get("chapter"):
+        book = bible_book(ref["book"])
+        name = (book or {}).get("names", {}).get("amharicAbbreviation") or ref["book"]
+        out = f"{name} {ref['chapter']}"
+        if ref.get("verseStart"):
+            out += f":{ref['verseStart']}"
+            if ref.get("verseEnd") and ref["verseEnd"] != ref["verseStart"]:
+                out += f"-{ref['verseEnd']}"
+            elif ref.get("toEndOfChapter"):
+                out += "-"
+        return out
+    printed = " ".join(x for x in (reading.get("sourceBook"), reading.get("sourceCitation")) if x)
+    return printed.strip()
+
+
+_SERVICE_LABELS = (("matins", "ዘነግህ"), ("liturgy", "ዘቅዳሴ"), ("vespers", "ዘሠርክ"))
+# Matches the TypeScript /\s*[።፡]\s*$/ exactly: one trailing mark, not a run.
+_TRAILING_MARK = re.compile(r"\s*[።፡]\s*$")
+
+
+def _readings_description(services: dict[str, Any]) -> str:
+    """The day's services as description lines, in service order."""
+    lines: list[str] = []
+    for name, label in _SERVICE_LABELS:
+        service = services.get(name)
+        if not service:
+            continue
+        parts: list[str] = []
+        for reading in service.get("psalms", []):
+            parts.append(f"ምስባክ {_reference_label(reading)}")
+        for reading in service.get("epistlesAndActs", []):
+            parts.append(f"ንባብ {_reference_label(reading)}")
+        for reading in service.get("gospels", []):
+            parts.append(f"ወንጌል {_reference_label(reading)}")
+        if service.get("anaphora"):
+            parts.append(f"ቅዳሴ {_TRAILING_MARK.sub('', str(service['anaphora']))}")
+        if parts:
+            lines.append(f"{label}: {' · '.join(parts)}")
+    return "\n".join(lines)
+
+
 def build_ics(year: int, type: str) -> str:
-    """Build the .ics text for an Ethiopian year. type: fasting | feasts | all."""
+    """Build the .ics text for an Ethiopian year.
+    type: fasting | feasts | readings | all."""
     events: list[dict] = []
+
+    # The daily lectionary is its own subscription: one all-day event per day
+    # carrying that day's appointed readings, not the year's fasts and feasts.
+    if type == "readings":
+        for month in range(1, 14):
+            for day in range(1, days_in_ethiopic_month(year, month) + 1):
+                fixed = fixed_gitsawe_on(month, day)
+                if not fixed:
+                    continue
+                gitsawe_data = fixed["gitsawe"]
+                description = _readings_description(gitsawe_data["services"])
+                if not description:
+                    continue
+                jdn = ethiopic_to_jdn(year, month, day)
+                commemoration = _TRAILING_MARK.sub("", gitsawe_data.get("commemoration") or "").strip()
+                events.append({
+                    "uid": f"readings-{year}-{month}-{day}",
+                    "startJDN": jdn, "endJDN": jdn,
+                    "summary": f"{MONTHS[month - 1]['amharic']} {day} · {commemoration or 'ግጻዌ'}",
+                    "description": description,
+                    "categories": "READING",
+                })
+        return _render(events, f"EOTC ግጻዌ · Daily Readings · {year} EC")
 
     if type != "feasts":
         for p in fast_periods(year):

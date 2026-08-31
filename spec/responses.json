@@ -12,7 +12,7 @@
    "note": "All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no API key; a generous anonymous rate limit applies.",
    "endpoints": {
     "GET /v1/health": "Liveness check.",
-    "GET /v1/today": "Today, fully described. ?tz=Africa/Addis_Ababa",
+    "GET /v1/today": "Today, fully described. ?tz=Africa/Addis_Ababa&include=readings,sinksar",
     "GET /v1/date/{date}": "Describe any date. ?calendar=gregorian|ethiopian",
     "GET /v1/convert/{date}": "Convert between calendars. ?calendar=gregorian|ethiopian",
     "GET /v1/fasting/{date}": "Is it a fasting day, and why. ?calendar=gregorian|ethiopian",
@@ -24,7 +24,7 @@
     "GET /v1/bahire-hasab/{year}": "The full ባሕረ ሐሳብ computation.",
     "GET /v1/calendar/{year}/{month}": "One Ethiopian month, day by day.",
     "GET /v1/calendar/range": "Describe a date range, up to 366 days. ?start=&end=&calendar=",
-    "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
+    "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|readings|all",
     "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
     "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
     "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
@@ -6265,11 +6265,11 @@
         "canonicalReference": {
          "book": "ROM",
          "chapter": 14,
-         "verseStart": 25,
+         "verseStart": null,
          "verseEnd": null,
-         "toEndOfChapter": true,
+         "toEndOfChapter": false,
          "method": "printed_citation",
-         "confidence": "probable"
+         "confidence": "unresolved"
         }
        },
        {
@@ -6614,6 +6614,851 @@
   "body": {
    "error": "bad_request",
    "message": "'2026-02-31' is not a real Gregorian date."
+  }
+ },
+ "/v1/sinksar/search?q=%E1%88%9A%E1%8A%AB%E1%8A%A4%E1%88%8D": {
+  "status": 200,
+  "body": {
+   "query": "ሚካኤል",
+   "ethiopicYear": null,
+   "count": 39,
+   "totalMatches": 39,
+   "truncated": false,
+   "note": "Monthly commemorations recur, so one name can match the same day in several months.",
+   "matches": [
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "annual",
+     "ethiopianMonth": 1,
+     "ethiopianDay": 9,
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 1,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 1,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ በጸሎተ ሚካኤል ኢትዮዽያዊ (ፍልሠቱ)",
+     "kind": "annual",
+     "ethiopianMonth": 2,
+     "ethiopianDay": 6,
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 2,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "annual",
+     "ethiopianMonth": 2,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 2,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ዓምደ ሚካኤል ጻድቅ (የሠራዊት አለቃ)",
+     "kind": "annual",
+     "ethiopianMonth": 3,
+     "ethiopianDay": 3,
+     "monthName": {
+      "n": 3,
+      "amharic": "ኅዳር",
+      "translit": "Hidar"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 4,
+     "ethiopianDay": 11,
+     "monthName": {
+      "n": 4,
+      "amharic": "ታኅሣሥ",
+      "translit": "Tahsas"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 4,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 4,
+      "amharic": "ታኅሣሥ",
+      "translit": "Tahsas"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘቀልሞን",
+     "kind": "annual",
+     "ethiopianMonth": 4,
+     "ethiopianDay": 13,
+     "monthName": {
+      "n": 4,
+      "amharic": "ታኅሣሥ",
+      "translit": "Tahsas"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 4,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 4,
+      "amharic": "ታኅሣሥ",
+      "translit": "Tahsas"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "annual",
+     "ethiopianMonth": 5,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 5,
+      "amharic": "ጥር",
+      "translit": "Tir"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላዕክት",
+     "kind": "monthly",
+     "ethiopianMonth": 6,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 6,
+      "amharic": "የካቲት",
+      "translit": "Yekatit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 6,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 6,
+      "amharic": "የካቲት",
+      "translit": "Yekatit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘሀገረ አትሪብና አባ ዮሐንስ ዘሀገረ ቡርልስ (፪ቱ አባቶች ሃይማኖተ አበውን: ግፃዌንና ስንክሳርን ያዘጋጁ ናቸው)",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 1,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላዕክት (ጠንቁዋዩን በለዓምን የገሰጸበትና አህያዋን እንድትናገር ያደረገበት)",
+     "kind": "monthly",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ አባ ሚካኤል ሊቀ ዻዻሳት",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 16,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ሊቀ ዻዻሳት",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 20,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ዮሐንስ ዘአክሱም (ድርሳነ ሚካኤልን መጻፉ የሚነገርለት አባት)",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 30,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘእስክንድርያ",
+     "kind": "annual",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 3,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘእስክንድርያ",
+     "kind": "annual",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 4,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላዕክት",
+     "kind": "monthly",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘኢየሩሳሌም",
+     "kind": "annual",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 22,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ዘእስክንድርያ",
+     "kind": "annual",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 22,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ገዳማዊ",
+     "kind": "annual",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 10,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላዕክት",
+     "kind": "monthly",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅድስት እናታችን ዐስበ ሚካኤል (ኢትዮዽያዊት)",
+     "kind": "annual",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 16,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አባ ሚካኤል ሊቀ ዻዻሳት",
+     "kind": "annual",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 30,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "እናታችን ቅድስት ክርስቶስ ክብራ (ኢትዮዽያዊት የአቡነ በጸሎተ ሚካኤል እህት)",
+     "kind": "annual",
+     "ethiopianMonth": 10,
+     "ethiopianDay": 11,
+     "monthName": {
+      "n": 10,
+      "amharic": "ሰኔ",
+      "translit": "Sene"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 10,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 10,
+      "amharic": "ሰኔ",
+      "translit": "Sene"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ዓምደ ሚካኤል ኢትዮዽያዊ (ፍልሠቱ)",
+     "kind": "annual",
+     "ethiopianMonth": 10,
+     "ethiopianDay": 29,
+     "monthName": {
+      "n": 10,
+      "amharic": "ሰኔ",
+      "translit": "Sene"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 11,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 11,
+      "amharic": "ሐምሌ",
+      "translit": "Hamle"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)፣",
+     "kind": "monthly",
+     "ethiopianMonth": 11,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 11,
+      "amharic": "ሐምሌ",
+      "translit": "Hamle"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "ቅዱስ ሚካኤል ሊቀ መላእክት",
+     "kind": "monthly",
+     "ethiopianMonth": 12,
+     "ethiopianDay": 12,
+     "monthName": {
+      "n": 12,
+      "amharic": "ነሐሴ",
+      "translit": "Nehase"
+     },
+     "confidence": "partial"
+    },
+    {
+     "title": "አቡነ አረጋዊ (ዘሚካኤል)",
+     "kind": "monthly",
+     "ethiopianMonth": 12,
+     "ethiopianDay": 14,
+     "monthName": {
+      "n": 12,
+      "amharic": "ነሐሴ",
+      "translit": "Nehase"
+     },
+     "confidence": "partial"
+    }
+   ]
+  }
+ },
+ "/v1/sinksar/search?q=%E1%89%B0%E1%8A%AD%E1%88%88%20%E1%88%83%E1%8B%AD%E1%88%9B%E1%8A%96%E1%89%B5&year=2018": {
+  "status": 200,
+  "body": {
+   "query": "ተክለ ሃይማኖት",
+   "ethiopicYear": 2018,
+   "count": 13,
+   "totalMatches": 13,
+   "truncated": false,
+   "note": "Monthly commemorations recur, so one name can match the same day in several months.",
+   "matches": [
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት (መምሕረ ትሩፋት)",
+     "kind": "monthly",
+     "ethiopianMonth": 1,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 1,
+      "amharic": "መስከረም",
+      "translit": "Meskerem"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-01-24",
+      "gregorian": "2025-10-04",
+      "weekday": {
+       "n": 6,
+       "amharic": "ቅዳሜ",
+       "translit": "Kidame",
+       "english": "Saturday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት (መምሕረ ትሩፋት)",
+     "kind": "monthly",
+     "ethiopianMonth": 2,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 2,
+      "amharic": "ጥቅምት",
+      "translit": "Tikimt"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-02-24",
+      "gregorian": "2025-11-03",
+      "weekday": {
+       "n": 1,
+       "amharic": "ሰኞ",
+       "translit": "Segno",
+       "english": "Monday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት (መምሕረ ትሩፋት)",
+     "kind": "monthly",
+     "ethiopianMonth": 3,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 3,
+      "amharic": "ኅዳር",
+      "translit": "Hidar"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-03-24",
+      "gregorian": "2025-12-03",
+      "weekday": {
+       "n": 3,
+       "amharic": "ረቡዕ",
+       "translit": "Rebue",
+       "english": "Wednesday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት",
+     "kind": "annual",
+     "ethiopianMonth": 4,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 4,
+      "amharic": "ታኅሣሥ",
+      "translit": "Tahsas"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-04-24",
+      "gregorian": "2026-01-02",
+      "weekday": {
+       "n": 5,
+       "amharic": "ዓርብ",
+       "translit": "Arb",
+       "english": "Friday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት (መምሕረ ትሩፋት)",
+     "kind": "monthly",
+     "ethiopianMonth": 6,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 6,
+      "amharic": "የካቲት",
+      "translit": "Yekatit"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-06-24",
+      "gregorian": "2026-03-03",
+      "weekday": {
+       "n": 2,
+       "amharic": "ማክሰኞ",
+       "translit": "Maksegno",
+       "english": "Tuesday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ ተክለ ሃይማኖት (ጽንሰቱ)",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-07-24",
+      "gregorian": "2026-04-02",
+      "weekday": {
+       "n": 4,
+       "amharic": "ሐሙስ",
+       "translit": "Hamus",
+       "english": "Thursday"
+      }
+     }
+    },
+    {
+     "title": "ጻድቁ አቡነ ተክለ ሃይማኖት",
+     "kind": "annual",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 22,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-08-22",
+      "gregorian": "2026-04-30",
+      "weekday": {
+       "n": 4,
+       "amharic": "ሐሙስ",
+       "translit": "Hamus",
+       "english": "Thursday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት",
+     "kind": "monthly",
+     "ethiopianMonth": 8,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 8,
+      "amharic": "ሚያዝያ",
+      "translit": "Miyazya"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-08-24",
+      "gregorian": "2026-05-02",
+      "weekday": {
+       "n": 6,
+       "amharic": "ቅዳሜ",
+       "translit": "Kidame",
+       "english": "Saturday"
+      }
+     }
+    },
+    {
+     "title": "አቡነ ዮሐኒ ዘደብረ ዳሞ (አቡነ ተክለ ሃይማኖትንና አቡነ ኢየሱስ ሞዐን ለምንኩስና ያበቁ)",
+     "kind": "annual",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 8,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-09-08",
+      "gregorian": "2026-05-16",
+      "weekday": {
+       "n": 6,
+       "amharic": "ቅዳሜ",
+       "translit": "Kidame",
+       "english": "Saturday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት",
+     "kind": "monthly",
+     "ethiopianMonth": 9,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 9,
+      "amharic": "ግንቦት",
+      "translit": "Ginbot"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-09-24",
+      "gregorian": "2026-06-01",
+      "weekday": {
+       "n": 1,
+       "amharic": "ሰኞ",
+       "translit": "Segno",
+       "english": "Monday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት",
+     "kind": "monthly",
+     "ethiopianMonth": 10,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 10,
+      "amharic": "ሰኔ",
+      "translit": "Sene"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-10-24",
+      "gregorian": "2026-07-01",
+      "weekday": {
+       "n": 3,
+       "amharic": "ረቡዕ",
+       "translit": "Rebue",
+       "english": "Wednesday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት",
+     "kind": "monthly",
+     "ethiopianMonth": 11,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 11,
+      "amharic": "ሐምሌ",
+      "translit": "Hamle"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-11-24",
+      "gregorian": "2026-07-31",
+      "weekday": {
+       "n": 5,
+       "amharic": "ዓርብ",
+       "translit": "Arb",
+       "english": "Friday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ አቡነ ተክለ ሃይማኖት (መምሕረ ትሩፋት)",
+     "kind": "annual",
+     "ethiopianMonth": 12,
+     "ethiopianDay": 24,
+     "monthName": {
+      "n": 12,
+      "amharic": "ነሐሴ",
+      "translit": "Nehase"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-12-24",
+      "gregorian": "2026-08-30",
+      "weekday": {
+       "n": 0,
+       "amharic": "እሑድ",
+       "translit": "Ehud",
+       "english": "Sunday"
+      }
+     }
+    }
+   ]
+  }
+ },
+ "/v1/sinksar/search?q=%E1%8A%A5%E1%8A%95%E1%8B%B5%E1%88%AD%E1%8B%AB%E1%8A%96%E1%88%B5&year=2018": {
+  "status": 200,
+  "body": {
+   "query": "እንድርያኖስ",
+   "ethiopicYear": 2018,
+   "count": 2,
+   "totalMatches": 2,
+   "truncated": false,
+   "note": "Monthly commemorations recur, so one name can match the same day in several months.",
+   "matches": [
+    {
+     "title": "ቅዱስ እንድርያኖስ ሰማዕት",
+     "kind": "annual",
+     "ethiopianMonth": 7,
+     "ethiopianDay": 9,
+     "monthName": {
+      "n": 7,
+      "amharic": "መጋቢት",
+      "translit": "Megabit"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-07-09",
+      "gregorian": "2026-03-18",
+      "weekday": {
+       "n": 3,
+       "amharic": "ረቡዕ",
+       "translit": "Rebue",
+       "english": "Wednesday"
+      }
+     }
+    },
+    {
+     "title": "ቅዱስ እንድርያኖስ ሰማዕት",
+     "kind": "annual",
+     "ethiopianMonth": 12,
+     "ethiopianDay": 25,
+     "monthName": {
+      "n": 12,
+      "amharic": "ነሐሴ",
+      "translit": "Nehase"
+     },
+     "confidence": "partial",
+     "date": {
+      "ethiopic": "2018-12-25",
+      "gregorian": "2026-08-31",
+      "weekday": {
+       "n": 1,
+       "amharic": "ሰኞ",
+       "translit": "Segno",
+       "english": "Monday"
+      }
+     }
+    }
+   ]
+  }
+ },
+ "/v1/sinksar/search": {
+  "status": 400,
+  "body": {
+   "error": "bad_request",
+   "message": "Missing query parameter 'q'.",
+   "hint": "Example: /v1/sinksar/search?q=ሚካኤል"
   }
  },
  "/v1/bible/books": {
@@ -10898,11 +11743,11 @@
         "canonicalReference": {
          "book": "ROM",
          "chapter": 14,
-         "verseStart": 25,
+         "verseStart": null,
          "verseEnd": null,
-         "toEndOfChapter": true,
+         "toEndOfChapter": false,
          "method": "printed_citation",
-         "confidence": "probable"
+         "confidence": "unresolved"
         }
        },
        {
@@ -12273,9 +13118,9 @@
            "sourceBookTitle": "የጴጥሮስ መልዕክት ፪",
            "bibleBook": "2PE",
            "familyMatch": true,
-           "chapter": 5,
-           "verseStart": 1,
-           "verseEnd": 12,
+           "chapter": null,
+           "verseStart": null,
+           "verseEnd": null,
            "endText": "ምስለ ሰልዋኖስ",
            "endNote": null,
            "sourceCitation": null
@@ -14652,8 +15497,8 @@
            "bibleBook": "LUK",
            "familyMatch": true,
            "chapter": 2,
-           "verseStart": 336,
-           "verseEnd": 42,
+           "verseStart": null,
+           "verseEnd": null,
            "endText": "ወአመ ኮነ ፍጹመ",
            "endNote": null,
            "sourceCitation": null
@@ -14892,8 +15737,8 @@
            "bibleBook": "PSA",
            "familyMatch": true,
            "chapter": 77,
-           "verseStart": 85,
-           "verseEnd": 86,
+           "verseStart": null,
+           "verseEnd": null,
            "endText": null,
            "endNote": null,
            "sourceCitation": null
@@ -15454,7 +16299,7 @@
            "familyMatch": true,
            "chapter": 24,
            "verseStart": 33,
-           "verseEnd": 445,
+           "verseEnd": null,
            "endText": "ወእምዝ ከሰተ",
            "endNote": null,
            "sourceCitation": null
@@ -15651,7 +16496,7 @@
            "familyMatch": true,
            "chapter": 10,
            "verseStart": 39,
-           "verseEnd": 54,
+           "verseEnd": null,
            "endText": "ወእንዘ ይነግሮ",
            "endNote": null,
            "sourceCitation": null
@@ -15714,8 +16559,8 @@
            "sourceBookTitle": "የዮሐንስ ወንጌል",
            "bibleBook": "JHN",
            "familyMatch": true,
-           "chapter": 24,
-           "verseStart": 15,
+           "chapter": null,
+           "verseStart": null,
            "verseEnd": null,
            "endText": null,
            "endNote": null,
@@ -18311,9 +19156,9 @@
            "sourceBookTitle": "የጴጥሮስ መልዕክት ፪",
            "bibleBook": "2PE",
            "familyMatch": true,
-           "chapter": 5,
-           "verseStart": 1,
-           "verseEnd": 12,
+           "chapter": null,
+           "verseStart": null,
+           "verseEnd": null,
            "endText": "ምስለ ሰልዋኖስ",
            "endNote": null,
            "sourceCitation": null
@@ -21212,11 +22057,11 @@
        "canonicalReference": {
         "book": "ROM",
         "chapter": 14,
-        "verseStart": 25,
+        "verseStart": null,
         "verseEnd": null,
-        "toEndOfChapter": true,
+        "toEndOfChapter": false,
         "method": "printed_citation",
-        "confidence": "probable"
+        "confidence": "unresolved"
        }
       },
       {
@@ -21759,7 +22604,7 @@
   "body": {
    "error": "bad_request",
    "message": "Unknown type 'bogus'.",
-   "hint": "Use 'fasting', 'feasts' or 'all'."
+   "hint": "Use 'fasting', 'feasts', 'readings' or 'all'."
   }
  },
  "POST /v1/calendar/convert/batch #0": {

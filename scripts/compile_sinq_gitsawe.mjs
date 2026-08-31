@@ -8,7 +8,7 @@
 // titles, matching metadata, and the feast graph are carried through.
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalBookId, geezPsalterToCanonical, geezToInteger } from "./gitsawe_lib.mjs";
+import { canonicalBookId, geezPsalterToCanonical, geezToInteger, validateReference } from "./gitsawe_lib.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
@@ -38,7 +38,7 @@ const report = {
       months: months.length, packages: packages.length,
     },
     output: {},
-    readings: { normalized: 0, resolvedBooks: 0, unresolvedBooks: 0, slotFamilyMismatches: 0 },
+    readings: { normalized: 0, resolvedBooks: 0, unresolvedBooks: 0, slotFamilyMismatches: 0, outOfRangeReferences: 0 },
     dailyProvenance: { npmDerived: 0, scanBackfilled: 0 },
   },
   reviewItems: [],
@@ -137,6 +137,17 @@ function normalizedReading(reading, sourceSlot, where) {
     else review({ kind: "psalm_citation_unmappable", where, sourceSlot,
       chapter, verseStart, verseEnd,
       note: "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept." });
+  }
+  // Range-check against the MIT metadata catalog, which is always present, so
+  // the check runs in CI too; a reference the canon cannot contain is narrowed
+  // to the part that resolves rather than published as a dead link.
+  const checked = validateReference(bibleBook, chapter, verseStart, verseEnd);
+  if (checked.issue) {
+    report.counts.readings.outOfRangeReferences++;
+    review({ kind: checked.issue.kind, where, sourceSlot, bibleBook,
+      ...checked.issue, versification: "am-1980",
+      note: "The source citation names a chapter or verse the canon does not contain; the reference was narrowed to what resolves." });
+    ({ chapter, verseStart, verseEnd } = checked);
   }
   if (bibleBook && chapter && chapterCounts.has(bibleBook) && chapter > chapterCounts.get(bibleBook)) {
     localReport.reviewItems.push({ kind: "chapter_out_of_range", where, sourceSlot,

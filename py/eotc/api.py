@@ -37,7 +37,7 @@ from .fasts import fast_periods
 from .feasts import fixed_feasts
 from .geez import to_geez
 from .ical import build_ics
-from .gitsawe import fixed_gitsawe_on, gitsawe_coverage
+from .gitsawe import fixed_gitsawe_on, gitsawe_coverage, search_sinksar
 from .sinq import (
     sinq_catalog, sinq_feasts, sinq_mahlets, sinq_monthly, sinq_seasonal,
     sinq_sub_feasts,
@@ -230,7 +230,7 @@ async def index() -> dict[str, Any]:
         "note": "All Ethiopian years are Amete Mihret. Dates are YYYY-MM-DD. No auth, no API key; a generous anonymous rate limit applies.",
         "endpoints": {
             "GET /v1/health": "Liveness check.",
-            "GET /v1/today": "Today, fully described. ?tz=Africa/Addis_Ababa",
+            "GET /v1/today": "Today, fully described. ?tz=Africa/Addis_Ababa&include=readings,sinksar",
             "GET /v1/date/{date}": "Describe any date. ?calendar=gregorian|ethiopian",
             "GET /v1/convert/{date}": "Convert between calendars. ?calendar=gregorian|ethiopian",
             "GET /v1/fasting/{date}": "Is it a fasting day, and why. ?calendar=gregorian|ethiopian",
@@ -242,7 +242,7 @@ async def index() -> dict[str, Any]:
             "GET /v1/bahire-hasab/{year}": "The full ባሕረ ሐሳብ computation.",
             "GET /v1/calendar/{year}/{month}": "One Ethiopian month, day by day.",
             "GET /v1/calendar/range": "Describe a date range, up to 366 days. ?start=&end=&calendar=",
-            "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|all",
+            "GET /v1/calendar/ics": "iCalendar feed. ?year=2018&type=fasting|feasts|readings|all",
             "GET /v1/calendar/season": "Liturgical season of a date. ?date=&calendar=",
             "GET /v1/calendar/geez-numeral": "Arabic to Ge'ez numerals. ?number=2018",
             "GET /v1/gitsawe/{date}": "Fixed-cycle Gitsawe with Sinksar and canonical Bible links.",
@@ -271,15 +271,68 @@ async def health() -> dict[str, str]:
     return {"status": "ok", "version": VERSION}
 
 
+def _reading_services(gitsawe_data: dict[str, Any]) -> dict[str, Any]:
+    """Shared by /v1/readings/{date} and /v1/today?include=readings, so the two
+    can never describe the same day's services differently."""
+    services: dict[str, Any] = {}
+    for name, service in gitsawe_data["services"].items():
+        epistles_and_acts = service.get("epistlesAndActs", [])
+        services[name] = {
+            "psalms": service.get("psalms", []),
+            "gospels": service.get("gospels", []),
+            "epistles": [r for r in epistles_and_acts if r.get("bibleBook") != "ACT"],
+            "acts": [r for r in epistles_and_acts if r.get("bibleBook") == "ACT"],
+            "anaphora": service.get("anaphora"),
+        }
+    return services
+
+
+# Optional payloads for /v1/today. A daily companion wants the readings and the
+# day's commemorations on one screen; everyone else wants the small response
+# they already have, so these are opt-in and the default is unchanged.
+_TODAY_INCLUDES = ["readings", "sinksar"]
+
+
+def _parse_include(raw: str | None) -> set[str]:
+    wanted = [part.strip().lower() for part in (raw or "").split(",") if part.strip()]
+    for name in wanted:
+        if name not in _TODAY_INCLUDES:
+            raise ApiError(400, f"Unknown include '{name}'.",
+                           f"Use {' and/or '.join(_TODAY_INCLUDES)}.")
+    return set(wanted)
+
+
 @app.get("/v1/today", summary="Describe today")
-async def today(tz: str = Query("Africa/Addis_Ababa", description="IANA timezone name")) -> dict[str, Any]:
+async def today(tz: str = Query("Africa/Addis_Ababa", description="IANA timezone name"),
+                include: str = Query(None, description="readings and/or sinksar")) -> dict[str, Any]:
     try:
         now = datetime.now(ZoneInfo(tz))
     except (ZoneInfoNotFoundError, ValueError, KeyError):
         raise ApiError(400, f"Unknown timezone '{tz}'.",
                        "Use an IANA name, e.g. Africa/Addis_Ababa.")
+    wanted = _parse_include(include)
     jdn = gregorian_to_jdn(now.year, now.month, now.day)
-    return {"timezone": tz, **describe_day(jdn)}
+    described = describe_day(jdn)
+    body: dict[str, Any] = {"timezone": tz, **described}
+    if wanted:
+        fixed = fixed_gitsawe_on(described["ethiopic"]["month"], described["ethiopic"]["day"])
+        if "readings" in wanted:
+            gitsawe_data = fixed["gitsawe"] if fixed else None
+            body["readings"] = {
+                "source": {"cycle": gitsawe_data["cycle"], "resolution": "fixed_candidate_only"},
+                "services": _reading_services(gitsawe_data),
+            } if gitsawe_data else None
+        # Who is commemorated today: the annual and monthly names, as displayed.
+        # The full entries, with their headings and source text, stay on
+        # /v1/sinksar/{date}; this is the reading list, not the archive record.
+        if "sinksar" in wanted:
+            sinksar_data = fixed["sinksar"] if fixed else None
+            body["sinksar"] = {
+                "annual": [i["title"] for i in sinksar_data["annualFeasts"]["items"]],
+                "monthly": [i["title"] for i in sinksar_data["monthlyFeasts"]["items"]],
+                "entryCount": sinksar_data["entryCount"],
+            } if sinksar_data else None
+    return body
 
 
 @app.get("/v1/date/{date}", summary="Describe any date")
@@ -421,6 +474,46 @@ async def gitsawe(date: str, calendar: str = Query("gregorian")) -> dict[str, An
     }
 
 
+# Registered before /v1/sinksar/{date} so 'search' is not read as a date.
+_SINKSAR_SEARCH_LIMIT = 200
+
+
+@app.get("/v1/sinksar/search", summary="Find which day a commemoration is kept")
+async def sinksar_search(q: str = Query(None), year: str = Query(None)) -> dict[str, Any]:
+    if not q or not q.strip():
+        raise ApiError(400, "Missing query parameter 'q'.",
+                       "Example: /v1/sinksar/search?q=ሚካኤል")
+    resolved_year = parse_year(year) if year else None
+    all_matches = search_sinksar(q)
+    matches: list[dict[str, Any]] = []
+    for match in all_matches[:_SINKSAR_SEARCH_LIMIT]:
+        entry: dict[str, Any] = {
+            "title": match["title"],
+            "kind": match["kind"],
+            "ethiopianMonth": match["ethiopianMonth"],
+            "ethiopianDay": match["ethiopianDay"],
+            "monthName": MONTHS[match["ethiopianMonth"] - 1],
+            "confidence": match["confidence"],
+        }
+        if resolved_year:
+            jdn = ethiopic_to_jdn(resolved_year, match["ethiopianMonth"], match["ethiopianDay"])
+            entry["date"] = {
+                "ethiopic": eth_iso(resolved_year, match["ethiopianMonth"], match["ethiopianDay"]),
+                "gregorian": iso(jdn),
+                "weekday": _wd(jdn_to_weekday(jdn)),
+            }
+        matches.append(entry)
+    return {
+        "query": q,
+        "ethiopicYear": resolved_year,
+        "count": len(matches),
+        "totalMatches": len(all_matches),
+        "truncated": len(all_matches) > len(matches),
+        "note": "Monthly commemorations recur, so one name can match the same day in several months.",
+        "matches": matches,
+    }
+
+
 @app.get("/v1/sinksar/{date}", summary="Sinksar annual and monthly commemorations for a date")
 async def sinksar(date: str, calendar: str = Query("gregorian")) -> dict[str, Any]:
     jdn = parse_date(date, calendar.lower())
@@ -451,16 +544,7 @@ async def readings(date: str, calendar: str = Query("gregorian")) -> dict[str, A
     if fixed is None:
         raise ApiError(404, "No fixed-cycle Gitsawe record for this date.")
     gitsawe_data = fixed["gitsawe"]
-    services: dict[str, Any] = {}
-    for name, service in gitsawe_data["services"].items():
-        epistles_and_acts = service.get("epistlesAndActs", [])
-        services[name] = {
-            "psalms": service.get("psalms", []),
-            "gospels": service.get("gospels", []),
-            "epistles": [r for r in epistles_and_acts if r.get("bibleBook") != "ACT"],
-            "acts": [r for r in epistles_and_acts if r.get("bibleBook") == "ACT"],
-            "anaphora": service.get("anaphora"),
-        }
+    services = _reading_services(gitsawe_data)
     movable_keys = [f["key"] for f in described["feasts"] if f["movable"]]
     is_sunday = described["weekday"]["n"] == 0
     return {
@@ -848,8 +932,8 @@ async def bahire_hasab_endpoint(year: str) -> dict[str, Any]:
 async def calendar_ics(year: str = Query(""), type: str = Query("all")) -> Response:
     y = parse_year(year)
     t = type.lower()
-    if t not in ("fasting", "feasts", "all"):
-        raise ApiError(400, f"Unknown type '{t}'.", "Use 'fasting', 'feasts' or 'all'.")
+    if t not in ("fasting", "feasts", "all", "readings"):
+        raise ApiError(400, f"Unknown type '{t}'.", "Use 'fasting', 'feasts', 'readings' or 'all'.")
     return Response(
         content=build_ics(y, t),
         media_type="text/calendar; charset=utf-8",
