@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integration recipes · EOTCDev API Documentation</title>
+<meta name="description" content="Copy-paste recipes for building against the API: today's screen, fasting checks, upcoming occasions, date conversion, and saint lookup.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="docs.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>፨</text></svg>">
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="mark"><a href="../" style="color:inherit">EOTCDev API</a></div>
+    <nav>
+      <a href="index.html">Documentation</a>
+      <a href="../#endpoints">Endpoints</a>
+      <a href="https://github.com/natinael96/EOTCDevAPI">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar"><div class="side-sticky">
+    <h5>Start here</h5>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html">Getting started</a>
+    <a href="integration.html" class="active">Integration recipes</a>
+    <h5>Endpoints</h5>
+    <a href="dates.html">Dates &amp; conversion</a>
+    <a href="fasting-feasts.html">Fasting &amp; feasts</a>
+    <a href="bahire-hasab.html">Bahire Hasab</a>
+    <a href="calendar-utils.html">Calendar utilities</a>
+    <a href="gitsawe.html">Gitsawe, readings &amp; Sinksar</a>
+    <a href="bible.html">Bible</a>
+    <h5>Reference</h5>
+    <a href="errors.html">Errors &amp; rate limits</a>
+    <a href="data-sources.html">Data &amp; sources</a>
+  </div></aside>
+
+  <main>
+    <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Integration recipes</div>
+    <h1>Integration recipes</h1>
+    <p class="lede">Complete programs for the jobs people actually build: a daily screen,
+    a fasting check, an upcoming-occasions strip, date conversion, and a saint lookup.
+    No key, no account, no SDK.</p>
+
+    <div class="callout"><b>These run.</b> The JavaScript and Python recipes below are the
+    files in <code>examples/</code>, executed against a live server by <code>make
+    examples</code> on every CI run and inlined here from source — so nothing on this page
+    can quietly stop working. The Kotlin and Swift snippets are written against the same
+    responses but are not run by CI.</div>
+
+    <h2 id="know-first">Four things worth knowing first<a class="anchor" href="#know-first">¶</a></h2>
+    <p>These are the mistakes this particular API invites. Every recipe below encodes them,
+    but they are worth stating plainly.</p>
+
+    <p><strong>Never work out “today” from the device clock.</strong> A phone in Toronto at
+    9pm is already on the next Ethiopian day in Addis Ababa. Computing the date locally
+    shows the wrong commemorations to everyone west of Ethiopia for part of every day. Call
+    <code>/v1/today</code> and name the timezone the day should be reckoned in, or pass an
+    explicit date to a dated endpoint.</p>
+
+    <p><strong>The year has thirteen months.</strong> Pagumen is month 13 and has 5 days, or
+    6 in the year before a leap year. Any loop over months runs <code>1..13</code>, and
+    month lengths come from the API rather than a hardcoded table.</p>
+
+    <p><strong>Bible references use ordinary Hebrew numbering.</strong> The Gitsawe prints
+    Psalm citations in the Ge'ez psalter's numbering, which runs a chapter behind for most
+    of the psalter. <code>canonicalReference</code> has already been converted, so it points
+    at the right passage in a normal Bible edition and will often differ by one from the
+    printed citation in <code>sourceCitation</code>. Link from
+    <code>canonicalReference</code>; show <code>sourceCitation</code> when you want to show
+    what the book prints. Where a citation could not be resolved,
+    <code>canonicalReference</code> is <code>null</code> rather than a wrong guess.</p>
+
+    <p><strong>Identify your client.</strong> The public deployment sits behind Cloudflare,
+    which rejects the default <code>Python-urllib/3.x</code> user agent with a
+    <code>403</code>. Send any descriptive <code>User-Agent</code>. Browsers and Node's
+    <code>fetch</code> set one for you.</p>
+
+    <div class="callout plain"><b>Caching.</b> Dated endpoints are immutable and served with
+    <code>max-age=86400</code>. Clock-dependent routes — <code>/v1/today</code>, and
+    <code>/v1/upcoming</code> without a <code>from</code> — are served with
+    <code>max-age=60, must-revalidate</code>. Honour those headers rather than polling: a
+    daily-reading screen needs one request per day, not one per minute.</div>
+
+    <h2 id="today">1 · Today's screen<a class="anchor" href="#today">¶</a></h2>
+    <p>The flagship request. <code>include</code> is opt-in and additive: without it you get
+    the date and fasting status; with it, a single call fills an entire screen with the
+    Ethiopian date, the fasting state, who is commemorated, and the appointed readings.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="today-js">JavaScript</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-py">Python</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-kt">Kotlin</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-sw">Swift</button>
+    </div>
+    <div class="tab-panel" id="today-js">
+<!-- example:examples/today.js -->
+<pre><code>/**
+ * Today's screen: the Ethiopian date, whether it is a fast, who is
+ * commemorated, and the readings appointed for the day -- in one request.
+ *
+ * Run: node examples/today.js
+ */
+const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+
+// Ask the API what "today" is. Do not build this from the device clock: a phone
+// in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a
+// locally computed date shows the wrong commemorations. Name the timezone the
+// day should be reckoned in and let the server resolve it.
+//
+// `include` is opt-in. Without it this returns just the date and fasting status;
+// with it, one request fills the whole screen.
+const url = `${API}/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar`;
+const response = await fetch(url);
+if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
+const day = await response.json();
+
+console.log(`${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.`);
+console.log(`${day.weekday.amharic} · ${day.gregorian.date} · ${day.ethiopic.date} EC`);
+console.log(day.fasting.isFasting ? `ጾም · ${day.fasting.reason}` : 'Not a fasting day.');
+
+// Who is commemorated. `annual` is kept once a year; `monthly` recurs on this
+// day of every month, so both lists belong on the screen.
+for (const [label, names] of [['ዓመታዊ · annual', day.sinksar.annual],
+                              ['ወርኀዊ · monthly', day.sinksar.monthly]]) {
+  if (!names.length) continue;
+  console.log(`\n${label}`);
+  for (const name of names) console.log(`  ${name}`);
+}
+
+/**
+ * Render one reading. `canonicalReference` is the linkable form: its chapter and
+ * verse numbers follow the Hebrew numbering used by ordinary Bible editions, not
+ * the Ge'ez psalter numbering printed in the Gitsawe, so a Psalm reference here
+ * can legitimately differ by one from the printed citation. It is null when the
+ * printed citation could not be resolved, and `sourceCitation` always survives.
+ */
+function reference(reading) {
+  const ref = reading.canonicalReference;
+  if (!ref) return `${reading.sourceBook} ${reading.sourceCitation} (unresolved)`;
+  const verses = ref.verseStart
+    ? `:${ref.verseStart}${ref.verseEnd &amp;&amp; ref.verseEnd !== ref.verseStart ? `-${ref.verseEnd}` : ''}`
+    : '';
+  return `${ref.book} ${ref.chapter}${verses}`;
+}
+
+const liturgy = day.readings.services.liturgy;
+console.log('\nቅዳሴ · liturgy');
+for (const psalm of liturgy.psalms) console.log(`  ምስባክ  ${reference(psalm)}`);
+for (const epistle of liturgy.epistles) console.log(`  ንባብ   ${reference(epistle)}`);
+for (const gospel of liturgy.gospels) console.log(`  ወንጌል  ${reference(gospel)}`);
+if (liturgy.anaphora) console.log(`  ቅዳሴ   ${liturgy.anaphora}`);</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="today-py" hidden>
+      <p>Standard library only, so there is nothing to install. <code>requests</code> and
+      <code>httpx</code> work identically; only the transport lines change.</p>
+<!-- example:examples/today.py -->
+<pre><code>"""
+Today's screen: the Ethiopian date, whether it is a fast, who is commemorated,
+and the readings appointed for the day -- in one request.
+
+Run: python examples/today.py
+
+Uses only the standard library so it runs anywhere. `requests` or `httpx` work
+the same way; only the two transport lines change.
+"""
+
+import json
+import os
+import urllib.request
+
+API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
+
+
+# Identify your application. The public deployment sits behind Cloudflare, which
+# rejects the default "Python-urllib/3.x" user agent with a 403; any descriptive
+# User-Agent is accepted, and it also lets the maintainers see what is calling.
+HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+
+
+def get(path: str) -&gt; dict:
+    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+# Ask the API what "today" is. Do not build this from the device clock: a phone
+# in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a
+# locally computed date shows the wrong commemorations. Name the timezone the
+# day should be reckoned in and let the server resolve it.
+#
+# `include` is opt-in. Without it this returns just the date and fasting status;
+# with it, one request fills the whole screen.
+day = get("/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar")
+
+print(f"{day['ethiopic']['monthName']['amharic']} {day['ethiopic']['day']}, "
+      f"{day['ethiopic']['year']} ዓ.ም.")
+print(f"{day['weekday']['amharic']} · {day['gregorian']['date']} · {day['ethiopic']['date']} EC")
+print(f"ጾም · {day['fasting']['reason']}" if day["fasting"]["isFasting"]
+      else "Not a fasting day.")
+
+# Who is commemorated. `annual` is kept once a year; `monthly` recurs on this day
+# of every month, so both lists belong on the screen.
+for label, names in (("ዓመታዊ · annual", day["sinksar"]["annual"]),
+                     ("ወርኀዊ · monthly", day["sinksar"]["monthly"])):
+    if not names:
+        continue
+    print(f"\n{label}")
+    for name in names:
+        print(f"  {name}")
+
+
+def reference(reading: dict) -&gt; str:
+    """Render one reading.
+
+    `canonicalReference` is the linkable form: its chapter and verse numbers
+    follow the Hebrew numbering used by ordinary Bible editions, not the Ge'ez
+    psalter numbering printed in the Gitsawe, so a Psalm reference here can
+    legitimately differ by one from the printed citation. It is None when the
+    printed citation could not be resolved, and `sourceCitation` always survives.
+    """
+    ref = reading.get("canonicalReference")
+    if not ref:
+        return f"{reading['sourceBook']} {reading['sourceCitation']} (unresolved)"
+    verses = ""
+    if ref["verseStart"]:
+        verses = f":{ref['verseStart']}"
+        if ref["verseEnd"] and ref["verseEnd"] != ref["verseStart"]:
+            verses += f"-{ref['verseEnd']}"
+    return f"{ref['book']} {ref['chapter']}{verses}"
+
+
+liturgy = day["readings"]["services"]["liturgy"]
+print("\nቅዳሴ · liturgy")
+for psalm in liturgy["psalms"]:
+    print(f"  ምስባክ  {reference(psalm)}")
+for epistle in liturgy["epistles"]:
+    print(f"  ንባብ   {reference(epistle)}")
+for gospel in liturgy["gospels"]:
+    print(f"  ወንጌል  {reference(gospel)}")
+if liturgy["anaphora"]:
+    print(f"  ቅዳሴ   {liturgy['anaphora']}")</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="today-kt" hidden>
+      <p>Illustrative — not executed by CI. Model only the fields you use;
+      <code>ignoreUnknownKeys</code> keeps the app working as the API adds fields, which it
+      does additively rather than by changing existing shapes.</p>
+<pre><code>import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.net.HttpURLConnection
+import java.net.URL
+
+@Serializable data class Named(val amharic: String, val english: String? = null)
+@Serializable data class Ethiopic(val date: String, val day: Int, val year: Int,
+                                  val monthName: Named)
+@Serializable data class Fasting(val isFasting: Boolean, val reason: String)
+@Serializable data class Sinksar(val annual: List&lt;String&gt;, val monthly: List&lt;String&gt;)
+@Serializable data class Today(val ethiopic: Ethiopic, val weekday: Named,
+                               val fasting: Fasting, val sinksar: Sinksar? = null)
+
+private val json = Json { ignoreUnknownKeys = true }
+
+fun today(): Today {
+    // Reckon the day in Addis Ababa rather than from the device clock, or a user
+    // in another timezone sees the wrong commemorations for part of every day.
+    val url = URL("https://eotcdev-api.natinael-96.workers.dev" +
+        "/v1/today?tz=Africa/Addis_Ababa&amp;include=sinksar")
+    val connection = (url.openConnection() as HttpURLConnection).apply {
+        setRequestProperty("User-Agent", "my-eotc-app/1.0")
+        connectTimeout = 15_000
+        readTimeout = 15_000
+    }
+    connection.inputStream.bufferedReader().use { reader -&gt;
+        return json.decodeFromString&lt;Today&gt;(reader.readText())
+    }
+}
+
+fun main() {
+    val day = today()
+    println("${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.")
+    println(if (day.fasting.isFasting) "ጾም · ${day.fasting.reason}" else "Not a fasting day.")
+    day.sinksar?.annual?.forEach { println("  $it") }
+}</code></pre>
+    </div>
+    <div class="tab-panel" id="today-sw" hidden>
+      <p>Illustrative — not executed by CI. Optionals cover the payloads that appear only
+      when <code>include</code> asks for them.</p>
+<pre><code>import Foundation
+
+struct Named: Decodable { let amharic: String; let english: String? }
+struct Ethiopic: Decodable { let date: String; let day: Int; let year: Int
+                             let monthName: Named }
+struct Fasting: Decodable { let isFasting: Bool; let reason: String }
+struct Sinksar: Decodable { let annual: [String]; let monthly: [String] }
+struct Today: Decodable { let ethiopic: Ethiopic; let weekday: Named
+                          let fasting: Fasting; let sinksar: Sinksar? }
+
+func fetchToday() async throws -&gt; Today {
+    // Reckon the day in Addis Ababa rather than from the device clock, or a user
+    // in another timezone sees the wrong commemorations for part of every day.
+    var components = URLComponents(
+        string: "https://eotcdev-api.natinael-96.workers.dev/v1/today")!
+    components.queryItems = [
+        URLQueryItem(name: "tz", value: "Africa/Addis_Ababa"),
+        URLQueryItem(name: "include", value: "sinksar"),
+    ]
+    var request = URLRequest(url: components.url!)
+    request.setValue("my-eotc-app/1.0", forHTTPHeaderField: "User-Agent")
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+        throw URLError(.badServerResponse)
+    }
+    return try JSONDecoder().decode(Today.self, from: data)
+}
+
+let day = try await fetchToday()
+print("\(day.ethiopic.monthName.amharic) \(day.ethiopic.day), \(day.ethiopic.year) ዓ.ም.")
+print(day.fasting.isFasting ? "ጾም · \(day.fasting.reason)" : "Not a fasting day.")
+day.sinksar?.annual.forEach { print("  \($0)") }</code></pre>
+    </div>
+
+    <p>Output:</p>
+<pre>ነሐሴ 25, 2018 ዓ.ም.
+ሰኞ · 2026-08-31 · 2018-12-25 EC
+<span class="cm">Not a fasting day.</span>
+
+ዓመታዊ · annual
+  ቅዱስ እንድርያኖስ ሰማዕት
+  "፳፬ቱ" ሰማዕታት (ማሕበሩ)
+  …
+
+ቅዳሴ · liturgy
+  ምስባክ  <span class="k">PSA 39:7-8</span>
+  ንባብ   <span class="k">EPH 6:10-19</span>
+  ወንጌል  <span class="k">MRK 3:7-13</span>
+  ቅዳሴ   ዘባስልዮስ ።</pre>
+
+    <p><code>sinksar.annual</code> is kept once a year; <code>sinksar.monthly</code> recurs
+    on that day of every month. Both belong on the screen — the monthly list is why a parish
+    calendar shows ቅዱስ ሚካኤል on the twelfth of each month.</p>
+
+    <h2 id="fasting">2 · Is it a fasting day?<a class="anchor" href="#fasting">¶</a></h2>
+    <p>The most common single question, and the one with the subtlest answer: a day can fall
+    inside a fasting period and still not be a fast, because the weekly Wednesday and Friday
+    fast is suspended for the fifty days after Fasika and on the great feasts of the Lord.
+    Always show <code>reason</code>, which states which rule applied, rather than deriving
+    your own explanation from <code>isFasting</code>.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="fast-js">JavaScript</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="fast-py">Python</button>
+    </div>
+    <div class="tab-panel" id="fast-js">
+<!-- example:examples/fasting.js -->
+<pre><code>/**
+ * Is it a fasting day, and why?
+ *
+ * Run: node examples/fasting.js [YYYY-MM-DD]
+ */
+const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+
+// A date given on the command line is Gregorian; with no argument the API's own
+// "today" is used, reckoned in Addis Ababa. Deriving the date from the device
+// clock would put users west of Addis on the wrong day for part of every day.
+const date = process.argv[2];
+const url = date
+  ? `${API}/v1/fasting/${date}`
+  : `${API}/v1/today?tz=Africa/Addis_Ababa`;
+
+const response = await fetch(url);
+if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
+const body = await response.json();
+
+// /v1/today nests the same information under `fasting`; /v1/fasting spreads it.
+const fasting = body.fasting ?? body;
+const on = body.gregorian?.date ?? body.gregorian;
+
+console.log(`${on}: ${fasting.isFasting ? 'ጾም · fasting' : 'not a fasting day'}`);
+console.log(`  ${fasting.reason}`);
+
+// `periods` names the fasts the day falls inside, which is what a UI should
+// label the day with. A day can sit inside a period and still not be a fast:
+// the weekly Wednesday and Friday fast is suspended for the fifty days after
+// Fasika and on the great feasts of the Lord, and `reason` says so.
+for (const period of fasting.periods ?? []) {
+  console.log(`  in ${period.amharic} · ${period.english}`);
+}</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="fast-py" hidden>
+<!-- example:examples/fasting.py -->
+<pre><code>"""
+Is it a fasting day, and why?
+
+Run: python examples/fasting.py [YYYY-MM-DD]
+"""
+
+import json
+import os
+import sys
+import urllib.request
+
+API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
+# The public deployment sits behind Cloudflare, which rejects the default
+# "Python-urllib/3.x" user agent with a 403. Any descriptive User-Agent works.
+HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+
+
+def get(path: str) -&gt; dict:
+    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+# A date given on the command line is Gregorian; with no argument the API's own
+# "today" is used, reckoned in Addis Ababa. Deriving the date from the device
+# clock would put users west of Addis on the wrong day for part of every day.
+date = sys.argv[1] if len(sys.argv) &gt; 1 else None
+body = get(f"/v1/fasting/{date}") if date else get("/v1/today?tz=Africa/Addis_Ababa")
+
+# /v1/today nests the same information under `fasting`; /v1/fasting spreads it.
+fasting = body.get("fasting", body)
+on = body["gregorian"]["date"] if isinstance(body.get("gregorian"), dict) else body["gregorian"]
+
+print(f"{on}: {'ጾም · fasting' if fasting['isFasting'] else 'not a fasting day'}")
+print(f"  {fasting['reason']}")
+
+# `periods` names the fasts the day falls inside, which is what a UI should label
+# the day with. A day can sit inside a period and still not be a fast: the weekly
+# Wednesday and Friday fast is suspended for the fifty days after Fasika and on
+# the great feasts of the Lord, and `reason` says so.
+for period in fasting.get("periods", []):
+    print(f"  in {period['amharic']} · {period['english']}")</code></pre>
+<!-- /example -->
+    </div>
+
+<pre><span class="p">$</span> python examples/fasting.py <span class="s">2026-04-15</span>
+2026-04-15: not a fasting day
+  <span class="cm">Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.</span></pre>
+
+    <h2 id="upcoming">3 · What is coming up<a class="anchor" href="#upcoming">¶</a></h2>
+    <p>Feasts and fasts inside a window of at most 30 days. Each item is either a feast day
+    or the opening of a fasting period, carrying a <code>feast</code> or a <code>fast</code>
+    object accordingly; <code>kind</code> is what distinguishes them. A movable fast can open
+    on the same day as the feast that names it, so ጾመ ነነዌ legitimately appears twice.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="up-js">JavaScript</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="up-py">Python</button>
+    </div>
+    <div class="tab-panel" id="up-js">
+<!-- example:examples/upcoming.js -->
+<pre><code>/**
+ * What is coming up: feasts and fasts within the next 30 days.
+ *
+ * Run: node examples/upcoming.js
+ */
+const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+
+// `days` is capped at 30. Omitting `from` anchors the window to the API's own
+// today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from
+// a fixed date instead. Note the cache difference: the anchored form is
+// revalidated every 60 seconds, the dated form is cacheable for a day.
+const response = await fetch(`${API}/v1/upcoming?days=30&amp;type=all`);
+if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
+const { from, count, items } = await response.json();
+
+console.log(`${count} occasions in the 30 days from ${from.gregorian}\n`);
+for (const item of items) {
+  // Each item is either a feast day or the first day of a fasting period, and
+  // carries the matching object. A movable fast can open on the same day as the
+  // feast that names it, so both appear -- `kind` is what tells them apart.
+  const occasion = item.feast ?? item.fast;
+  const label = item.kind === 'fast_begins'
+    ? `${occasion.amharic} begins (${occasion.days} days)`
+    : occasion.amharic;
+  const away = item.daysAway === 0 ? 'today'
+    : item.daysAway === 1 ? 'tomorrow'
+    : `in ${item.daysAway} days`;
+  console.log(`${item.gregorian}  ${label} · ${occasion.english} — ${away}`);
+}</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="up-py" hidden>
+<!-- example:examples/upcoming.py -->
+<pre><code>"""
+What is coming up: feasts and fasts within the next 30 days.
+
+Run: python examples/upcoming.py
+"""
+
+import json
+import os
+import urllib.request
+
+API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
+HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+
+
+def get(path: str) -&gt; dict:
+    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+# `days` is capped at 30. Omitting `from` anchors the window to the API's own
+# today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from
+# a fixed date instead. Note the cache difference: the anchored form is
+# revalidated every 60 seconds, the dated form is cacheable for a day.
+body = get("/v1/upcoming?days=30&amp;type=all")
+
+print(f"{body['count']} occasions in the 30 days from {body['from']['gregorian']}\n")
+for item in body["items"]:
+    # Each item is either a feast day or the first day of a fasting period, and
+    # carries the matching object. A movable fast can open on the same day as the
+    # feast that names it, so both appear -- `kind` is what tells them apart.
+    occasion = item.get("feast") or item["fast"]
+    if item["kind"] == "fast_begins":
+        label = f"{occasion['amharic']} begins ({occasion['days']} days)"
+    else:
+        label = occasion["amharic"]
+    if item["daysAway"] == 0:
+        away = "today"
+    elif item["daysAway"] == 1:
+        away = "tomorrow"
+    else:
+        away = f"in {item['daysAway']} days"
+    print(f"{item['gregorian']}  {label} · {occasion['english']} — {away}")</code></pre>
+<!-- /example -->
+    </div>
+
+    <h2 id="convert">4 · Converting dates<a class="anchor" href="#convert">¶</a></h2>
+    <p>Input is Gregorian unless <code>?calendar=ethiopian</code> says otherwise. Ethiopian
+    years are Amete Mihret. For a list of dates, the batch endpoint converts up to 366 in one
+    round trip and reports bad dates per item instead of failing the request.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="conv-js">JavaScript</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="conv-py">Python</button>
+    </div>
+    <div class="tab-panel" id="conv-js">
+<!-- example:examples/convert.js -->
+<pre><code>/**
+ * Converting between the Ethiopian and Gregorian calendars.
+ *
+ * Run: node examples/convert.js
+ */
+const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+
+async function get(path) {
+  const response = await fetch(`${API}${path}`);
+  if (!response.ok) throw new Error(`EOTC API returned ${response.status} for ${path}`);
+  return response.json();
+}
+
+// Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.
+const forward = await get('/v1/convert/2026-04-12');
+console.log(`${forward.gregorian.date}  -&gt;  ${forward.ethiopic.date} EC (${forward.weekday.english})`);
+
+// Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year
+// has 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code
+// that loops over months must go 1..13, not 1..12.
+const back = await get('/v1/convert/2018-13-05?calendar=ethiopian');
+console.log(`${back.ethiopic.date} EC  -&gt;  ${back.gregorian.date} (${back.weekday.english})`);
+
+// A list of dates converts in one round trip, up to 366 per request. Individual
+// bad dates come back as per-item errors rather than failing the whole batch.
+const batch = await fetch(`${API}/v1/calendar/convert/batch`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ dates: ['2026-01-07', '2026-09-11', '2026-02-31'] }),
+});
+for (const result of (await batch.json()).results) {
+  console.log(result.error ? `${result.input}  -&gt;  ${result.error}`
+                           : `${result.input}  -&gt;  ${result.ethiopic.date} EC`);
+}</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="conv-py" hidden>
+<!-- example:examples/convert.py -->
+<pre><code>"""
+Converting between the Ethiopian and Gregorian calendars.
+
+Run: python examples/convert.py
+"""
+
+import json
+import os
+import urllib.request
+
+API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
+HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+
+
+def get(path: str) -&gt; dict:
+    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+def post(path: str, payload: dict) -&gt; dict:
+    request = urllib.request.Request(
+        f"{API}{path}", method="POST", data=json.dumps(payload).encode(),
+        headers={**HEADERS, "Content-Type": "application/json"})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+# Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.
+forward = get("/v1/convert/2026-04-12")
+print(f"{forward['gregorian']['date']}  -&gt;  {forward['ethiopic']['date']} EC "
+      f"({forward['weekday']['english']})")
+
+# Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year has
+# 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code that
+# loops over months must go 1..13, not 1..12.
+back = get("/v1/convert/2018-13-05?calendar=ethiopian")
+print(f"{back['ethiopic']['date']} EC  -&gt;  {back['gregorian']['date']} "
+      f"({back['weekday']['english']})")
+
+# A list of dates converts in one round trip, up to 366 per request. Individual
+# bad dates come back as per-item errors rather than failing the whole batch.
+batch = post("/v1/calendar/convert/batch",
+             {"dates": ["2026-01-07", "2026-09-11", "2026-02-31"]})
+for result in batch["results"]:
+    if "error" in result:
+        print(f"{result['input']}  -&gt;  {result['error']}")
+    else:
+        print(f"{result['input']}  -&gt;  {result['ethiopic']['date']} EC")</code></pre>
+<!-- /example -->
+    </div>
+
+    <h2 id="saint">5 · When is a saint commemorated?<a class="anchor" href="#saint">¶</a></h2>
+    <p>The reverse of the daily lookup. Matching is homophone-folded, so a name spelled with
+    any of the Ge'ez letters that share a sound still finds the entry — a search for ሃይማኖት
+    and one for ሓይማኖት return the same saint. Passing an Ethiopian year resolves every match
+    to a real date and weekday.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="saint-js">JavaScript</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="saint-py">Python</button>
+    </div>
+    <div class="tab-panel" id="saint-js">
+<!-- example:examples/saint.js -->
+<pre><code>/**
+ * On which day is a saint commemorated?
+ *
+ * Run: node examples/saint.js [name]
+ */
+const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+
+const query = process.argv[2] ?? 'ተክለ ሃይማኖት';
+const year = 2018; // Ethiopian year; resolves each match to a real date.
+
+// Matching is homophone-folded, so a name spelled with any of the Ge'ez letters
+// that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.
+const url = `${API}/v1/sinksar/search?q=${encodeURIComponent(query)}&amp;year=${year}`;
+const response = await fetch(url);
+if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
+const { totalMatches, truncated, matches } = await response.json();
+
+console.log(`${totalMatches} match(es) for "${query}"${truncated ? ' (truncated)' : ''}\n`);
+for (const match of matches) {
+  // A monthly commemoration recurs on this day of every month, so one saint
+  // legitimately appears many times; an annual one is kept on a single day.
+  const recurrence = match.kind === 'monthly' ? 'monthly' : 'annual ';
+  console.log(`${recurrence}  ${match.monthName.amharic} ${match.ethiopianDay}`
+    + `  ${match.date.gregorian}  ${match.title}`);
+}</code></pre>
+<!-- /example -->
+    </div>
+    <div class="tab-panel" id="saint-py" hidden>
+<!-- example:examples/saint.py -->
+<pre><code>"""
+On which day is a saint commemorated?
+
+Run: python examples/saint.py [name]
+"""
+
+import json
+import os
+import sys
+import urllib.parse
+import urllib.request
+
+API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
+HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+
+
+def get(path: str) -&gt; dict:
+    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+query = sys.argv[1] if len(sys.argv) &gt; 1 else "ተክለ ሃይማኖት"
+year = 2018  # Ethiopian year; resolves each match to a real date.
+
+# Matching is homophone-folded, so a name spelled with any of the Ge'ez letters
+# that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.
+body = get(f"/v1/sinksar/search?q={urllib.parse.quote(query)}&amp;year={year}")
+
+truncated = " (truncated)" if body["truncated"] else ""
+print(f"{body['totalMatches']} match(es) for \"{query}\"{truncated}\n")
+for match in body["matches"]:
+    # A monthly commemoration recurs on this day of every month, so one saint
+    # legitimately appears many times; an annual one is kept on a single day.
+    recurrence = "monthly" if match["kind"] == "monthly" else "annual "
+    print(f"{recurrence}  {match['monthName']['amharic']} {match['ethiopianDay']}"
+          f"  {match['date']['gregorian']}  {match['title']}")</code></pre>
+<!-- /example -->
+    </div>
+
+    <h2 id="subscribe">6 · Calendar subscription, no code<a class="anchor" href="#subscribe">¶</a></h2>
+    <p>Any calendar application that accepts a URL can subscribe to a year directly. The
+    feeds are byte-deterministic, so they cache cleanly and never churn.</p>
+    <table>
+      <thead><tr><th>Feed</th><th>URL</th></tr></thead>
+      <tbody>
+        <tr><td>Fasts</td><td><code>…/v1/calendar/ics?year=2018&amp;type=fasting</code></td></tr>
+        <tr><td>Feasts</td><td><code>…/v1/calendar/ics?year=2018&amp;type=feasts</code></td></tr>
+        <tr><td>Both</td><td><code>…/v1/calendar/ics?year=2018&amp;type=all</code></td></tr>
+        <tr><td>Daily readings</td><td><code>…/v1/calendar/ics?year=2018&amp;type=readings</code></td></tr>
+      </tbody>
+    </table>
+    <p><code>type=readings</code> is the daily lectionary: one all-day event per day of the
+    Ethiopian year, titled with that day's commemoration, described with the readings
+    appointed for matins, the liturgy, and vespers. Paste the URL into Google Calendar
+    (“From URL”), Apple Calendar, or Outlook.</p>
+
+    <h2 id="errors">Handling errors<a class="anchor" href="#errors">¶</a></h2>
+    <p>Every failure is JSON with the same shape, so one handler covers them all.</p>
+<pre>{
+  <span class="k">"error"</span>: <span class="s">"bad_request"</span>,
+  <span class="k">"message"</span>: <span class="s">"Unknown include 'bogus'."</span>,
+  <span class="k">"hint"</span>: <span class="s">"Use readings and/or sinksar."</span>
+}</pre>
+    <p>Status codes and what to do about them are covered in
+    <a href="errors.html">Errors &amp; rate limits</a>.</p>
+
+    <h2 id="run">Running the examples yourself<a class="anchor" href="#run">¶</a></h2>
+<pre><span class="p">$</span> node examples/today.js
+<span class="p">$</span> python examples/today.py</pre>
+    <p>Against a local server, exactly as CI runs them:</p>
+<pre><span class="p">$</span> make examples</pre>
+
+    <div class="pager">
+      <a href="getting-started.html"><b>Previous</b>← Getting started</a>
+      <a class="next" href="dates.html"><b>Next</b>Dates &amp; conversion →</a>
+    </div>
+  </main>
+</div>
+
+<footer><div class="foot">
+  <span><span class="geez">፨</span>&ensp;EOTCDev API · MIT licensed.</span>
+  <span><a href="https://github.com/natinael96/EOTCDevAPI">github.com/natinael96/EOTCDevAPI</a></span>
+</div></footer>
+
+<script>
+  // Language tabs: one selected panel per group, keyboard reachable as buttons.
+  for (const group of document.querySelectorAll('.tabs')) {
+    group.addEventListener('click', function (event) {
+      const button = event.target.closest('.tab-btn');
+      if (!button) return;
+      for (const other of group.querySelectorAll('.tab-btn')) {
+        const selected = other === button;
+        other.setAttribute('aria-selected', String(selected));
+        document.getElementById(other.dataset.tab).hidden = !selected;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

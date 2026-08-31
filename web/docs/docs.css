@@ -190,3 +190,20 @@ footer { border-top: 1px solid var(--rule); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ---------- language tabs (integration recipes) ---------- */
+.tabs {
+  display: flex; gap: 4px; margin: 18px 0 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.tab-btn {
+  font: 600 13px var(--serif); color: var(--ink-2);
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 7px 13px; cursor: pointer; border-radius: 3px 3px 0 0;
+}
+.tab-btn:hover { color: var(--rubric); }
+.tab-btn[aria-selected="true"] {
+  color: var(--rubric-deep); border-bottom-color: var(--rubric); background: var(--raised);
+}
+.tab-panel[hidden] { display: none; }
+.tab-panel pre { margin-top: 12px; }

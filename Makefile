@@ -49,12 +49,13 @@ gitsawe:            ## Compile and validate the Gitsawe, Sinq, and Bible catalog
 examples:           ## Run the documentation examples against a local API
 	./scripts/run_examples.sh $(PY)
 
-sync-docs:          ## Inline examples/ into docs/INTEGRATION.md
+sync-docs:          ## Inline examples/ into the integration guides
 	node scripts/sync_examples.mjs
 
 check-generated: spec gitsawe sync-docs   ## Fail when generated fixtures, Gitsawe artifacts, or docs are stale
 	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js \
-		data/sinq-gitsawe py/eotc/sinq_catalog.js py/eotc/bible_catalog.js docs/INTEGRATION.md
+		data/sinq-gitsawe py/eotc/sinq_catalog.js py/eotc/bible_catalog.js \
+		docs/INTEGRATION.md web/docs/integration.html
 
 ci: validate-json gitsawe check-generated test-ts test-py typecheck examples   ## Run the complete CI verification suite
 
