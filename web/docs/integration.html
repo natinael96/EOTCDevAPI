@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Integration recipes · EOTCDev API Documentation</title>
-<meta name="description" content="Copy-paste recipes for building against the API: today's screen, fasting checks, upcoming occasions, date conversion, and saint lookup.">
+<meta name="description" content="Copy-paste code for building against the API: today's screen, fasting checks, upcoming occasions, date conversion, and saint lookup.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Serif+Ethiopic:wght@400;500;600&display=swap">
@@ -45,62 +45,36 @@
   <main>
     <div class="crumb"><a href="../">EOTCDev API</a> / <a href="index.html">Documentation</a> / Integration recipes</div>
     <h1>Integration recipes</h1>
-    <p class="lede">Complete programs for the jobs people actually build: a daily screen,
-    a fasting check, an upcoming-occasions strip, date conversion, and a saint lookup.
-    No key, no account, no SDK.</p>
+    <p class="lede">Complete programs for the common jobs. No key, no account, no SDK.</p>
 
-    <div class="callout"><b>These run.</b> The JavaScript and Python recipes below are the
-    files in <code>examples/</code>, executed against a live server by <code>make
-    examples</code> on every CI run and inlined here from source — so nothing on this page
-    can quietly stop working. The Kotlin and Swift snippets are written against the same
-    responses but are not run by CI.</div>
+    <h2 id="know-first">Before you start<a class="anchor" href="#know-first">¶</a></h2>
+    <ul>
+      <li><strong>Never work out “today” from the device clock.</strong> A phone in Toronto
+      at 9pm is already on the next Ethiopian day in Addis Ababa. Call
+      <code>/v1/today</code> with a <code>tz</code>, or pass an explicit date.</li>
+      <li><strong>The year has thirteen months.</strong> Pagumen is month 13, with 5 days or
+      6 before a leap year. Loops run <code>1..13</code>.</li>
+      <li><strong>Bible references use ordinary Hebrew numbering.</strong>
+      <code>canonicalReference</code> is already converted from the Ge'ez psalter numbering
+      the Gitsawe prints, so it can differ by one from <code>sourceCitation</code>. It is
+      <code>null</code> where a citation could not be resolved.</li>
+      <li><strong>Send a <code>User-Agent</code>.</strong> Cloudflare rejects the default
+      <code>Python-urllib/3.x</code> with a <code>403</code>.</li>
+      <li><strong>Respect the cache headers.</strong> Dated routes are immutable
+      (<code>max-age=86400</code>); <code>/v1/today</code> revalidates every 60 seconds.</li>
+    </ul>
 
-    <h2 id="know-first">Four things worth knowing first<a class="anchor" href="#know-first">¶</a></h2>
-    <p>These are the mistakes this particular API invites. Every recipe below encodes them,
-    but they are worth stating plainly.</p>
+    <h2 id="today">Today's screen<a class="anchor" href="#today">¶</a></h2>
+    <p>The Ethiopian date, fasting status, commemorations, and readings in one request.
+    <code>include</code> is opt-in; without it you get just the date and fasting status.</p>
 
-    <p><strong>Never work out “today” from the device clock.</strong> A phone in Toronto at
-    9pm is already on the next Ethiopian day in Addis Ababa. Computing the date locally
-    shows the wrong commemorations to everyone west of Ethiopia for part of every day. Call
-    <code>/v1/today</code> and name the timezone the day should be reckoned in, or pass an
-    explicit date to a dated endpoint.</p>
-
-    <p><strong>The year has thirteen months.</strong> Pagumen is month 13 and has 5 days, or
-    6 in the year before a leap year. Any loop over months runs <code>1..13</code>, and
-    month lengths come from the API rather than a hardcoded table.</p>
-
-    <p><strong>Bible references use ordinary Hebrew numbering.</strong> The Gitsawe prints
-    Psalm citations in the Ge'ez psalter's numbering, which runs a chapter behind for most
-    of the psalter. <code>canonicalReference</code> has already been converted, so it points
-    at the right passage in a normal Bible edition and will often differ by one from the
-    printed citation in <code>sourceCitation</code>. Link from
-    <code>canonicalReference</code>; show <code>sourceCitation</code> when you want to show
-    what the book prints. Where a citation could not be resolved,
-    <code>canonicalReference</code> is <code>null</code> rather than a wrong guess.</p>
-
-    <p><strong>Identify your client.</strong> The public deployment sits behind Cloudflare,
-    which rejects the default <code>Python-urllib/3.x</code> user agent with a
-    <code>403</code>. Send any descriptive <code>User-Agent</code>. Browsers and Node's
-    <code>fetch</code> set one for you.</p>
-
-    <div class="callout plain"><b>Caching.</b> Dated endpoints are immutable and served with
-    <code>max-age=86400</code>. Clock-dependent routes — <code>/v1/today</code>, and
-    <code>/v1/upcoming</code> without a <code>from</code> — are served with
-    <code>max-age=60, must-revalidate</code>. Honour those headers rather than polling: a
-    daily-reading screen needs one request per day, not one per minute.</div>
-
-    <h2 id="today">1 · Today's screen<a class="anchor" href="#today">¶</a></h2>
-    <p>The flagship request. <code>include</code> is opt-in and additive: without it you get
-    the date and fasting status; with it, a single call fills an entire screen with the
-    Ethiopian date, the fasting state, who is commemorated, and the appointed readings.</p>
-
-    <div class="tabs" role="tablist">
-      <button class="tab-btn" role="tab" aria-selected="true" data-tab="today-js">JavaScript</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-py">Python</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-kt">Kotlin</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="today-sw">Swift</button>
+    <div class="tabs" role="tablist" aria-label="Today's screen">
+      <button class="tab-btn" type="button" role="tab" id="tab-today-js" aria-controls="today-js" aria-selected="true" data-tab="today-js">JavaScript</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-today-py" aria-controls="today-py" aria-selected="false" data-tab="today-py">Python</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-today-kt" aria-controls="today-kt" aria-selected="false" data-tab="today-kt">Kotlin</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-today-sw" aria-controls="today-sw" aria-selected="false" data-tab="today-sw">Swift</button>
     </div>
-    <div class="tab-panel" id="today-js">
+    <div class="tab-panel" id="today-js" role="tabpanel" aria-labelledby="tab-today-js"><h6>JavaScript</h6>
 <!-- example:examples/today.js -->
 <pre><code>/**
  * Today's screen: the Ethiopian date, whether it is a fast, who is
@@ -159,9 +133,7 @@ for (const gospel of liturgy.gospels) console.log(`  ወንጌል  ${reference(g
 if (liturgy.anaphora) console.log(`  ቅዳሴ   ${liturgy.anaphora}`);</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="today-py" hidden>
-      <p>Standard library only, so there is nothing to install. <code>requests</code> and
-      <code>httpx</code> work identically; only the transport lines change.</p>
+    <div class="tab-panel" id="today-py" role="tabpanel" aria-labelledby="tab-today-py"><h6>Python</h6>
 <!-- example:examples/today.py -->
 <pre><code>"""
 Today's screen: the Ethiopian date, whether it is a fast, who is commemorated,
@@ -250,10 +222,7 @@ if liturgy["anaphora"]:
     print(f"  ቅዳሴ   {liturgy['anaphora']}")</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="today-kt" hidden>
-      <p>Illustrative — not executed by CI. Model only the fields you use;
-      <code>ignoreUnknownKeys</code> keeps the app working as the API adds fields, which it
-      does additively rather than by changing existing shapes.</p>
+    <div class="tab-panel" id="today-kt" role="tabpanel" aria-labelledby="tab-today-kt"><h6>Kotlin</h6>
 <pre><code>import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.net.HttpURLConnection
@@ -270,8 +239,7 @@ import java.net.URL
 private val json = Json { ignoreUnknownKeys = true }
 
 fun today(): Today {
-    // Reckon the day in Addis Ababa rather than from the device clock, or a user
-    // in another timezone sees the wrong commemorations for part of every day.
+    // Reckon the day in Addis Ababa, not from the device clock.
     val url = URL("https://eotcdev-api.natinael-96.workers.dev" +
         "/v1/today?tz=Africa/Addis_Ababa&amp;include=sinksar")
     val connection = (url.openConnection() as HttpURLConnection).apply {
@@ -282,18 +250,9 @@ fun today(): Today {
     connection.inputStream.bufferedReader().use { reader -&gt;
         return json.decodeFromString&lt;Today&gt;(reader.readText())
     }
-}
-
-fun main() {
-    val day = today()
-    println("${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.")
-    println(if (day.fasting.isFasting) "ጾም · ${day.fasting.reason}" else "Not a fasting day.")
-    day.sinksar?.annual?.forEach { println("  $it") }
 }</code></pre>
     </div>
-    <div class="tab-panel" id="today-sw" hidden>
-      <p>Illustrative — not executed by CI. Optionals cover the payloads that appear only
-      when <code>include</code> asks for them.</p>
+    <div class="tab-panel" id="today-sw" role="tabpanel" aria-labelledby="tab-today-sw"><h6>Swift</h6>
 <pre><code>import Foundation
 
 struct Named: Decodable { let amharic: String; let english: String? }
@@ -305,8 +264,7 @@ struct Today: Decodable { let ethiopic: Ethiopic; let weekday: Named
                           let fasting: Fasting; let sinksar: Sinksar? }
 
 func fetchToday() async throws -&gt; Today {
-    // Reckon the day in Addis Ababa rather than from the device clock, or a user
-    // in another timezone sees the wrong commemorations for part of every day.
+    // Reckon the day in Addis Ababa, not from the device clock.
     var components = URLComponents(
         string: "https://eotcdev-api.natinael-96.workers.dev/v1/today")!
     components.queryItems = [
@@ -320,46 +278,20 @@ func fetchToday() async throws -&gt; Today {
         throw URLError(.badServerResponse)
     }
     return try JSONDecoder().decode(Today.self, from: data)
-}
-
-let day = try await fetchToday()
-print("\(day.ethiopic.monthName.amharic) \(day.ethiopic.day), \(day.ethiopic.year) ዓ.ም.")
-print(day.fasting.isFasting ? "ጾም · \(day.fasting.reason)" : "Not a fasting day.")
-day.sinksar?.annual.forEach { print("  \($0)") }</code></pre>
+}</code></pre>
     </div>
 
-    <p>Output:</p>
-<pre>ነሐሴ 25, 2018 ዓ.ም.
-ሰኞ · 2026-08-31 · 2018-12-25 EC
-<span class="cm">Not a fasting day.</span>
+    <h2 id="fasting">Is it a fasting day?<a class="anchor" href="#fasting">¶</a></h2>
+    <p>A day can fall inside a fasting period and still not be a fast: the weekly Wednesday
+    and Friday fast is suspended for the fifty days after Fasika and on the great feasts of
+    the Lord. Show <code>reason</code> rather than deriving your own from
+    <code>isFasting</code>.</p>
 
-ዓመታዊ · annual
-  ቅዱስ እንድርያኖስ ሰማዕት
-  "፳፬ቱ" ሰማዕታት (ማሕበሩ)
-  …
-
-ቅዳሴ · liturgy
-  ምስባክ  <span class="k">PSA 39:7-8</span>
-  ንባብ   <span class="k">EPH 6:10-19</span>
-  ወንጌል  <span class="k">MRK 3:7-13</span>
-  ቅዳሴ   ዘባስልዮስ ።</pre>
-
-    <p><code>sinksar.annual</code> is kept once a year; <code>sinksar.monthly</code> recurs
-    on that day of every month. Both belong on the screen — the monthly list is why a parish
-    calendar shows ቅዱስ ሚካኤል on the twelfth of each month.</p>
-
-    <h2 id="fasting">2 · Is it a fasting day?<a class="anchor" href="#fasting">¶</a></h2>
-    <p>The most common single question, and the one with the subtlest answer: a day can fall
-    inside a fasting period and still not be a fast, because the weekly Wednesday and Friday
-    fast is suspended for the fifty days after Fasika and on the great feasts of the Lord.
-    Always show <code>reason</code>, which states which rule applied, rather than deriving
-    your own explanation from <code>isFasting</code>.</p>
-
-    <div class="tabs" role="tablist">
-      <button class="tab-btn" role="tab" aria-selected="true" data-tab="fast-js">JavaScript</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="fast-py">Python</button>
+    <div class="tabs" role="tablist" aria-label="Fasting check">
+      <button class="tab-btn" type="button" role="tab" id="tab-fast-js" aria-controls="fast-js" aria-selected="true" data-tab="fast-js">JavaScript</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-fast-py" aria-controls="fast-py" aria-selected="false" data-tab="fast-py">Python</button>
     </div>
-    <div class="tab-panel" id="fast-js">
+    <div class="tab-panel" id="fast-js" role="tabpanel" aria-labelledby="tab-fast-js"><h6>JavaScript</h6>
 <!-- example:examples/fasting.js -->
 <pre><code>/**
  * Is it a fasting day, and why?
@@ -396,7 +328,7 @@ for (const period of fasting.periods ?? []) {
 }</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="fast-py" hidden>
+    <div class="tab-panel" id="fast-py" role="tabpanel" aria-labelledby="tab-fast-py"><h6>Python</h6>
 <!-- example:examples/fasting.py -->
 <pre><code>"""
 Is it a fasting day, and why?
@@ -443,21 +375,16 @@ for period in fasting.get("periods", []):
 <!-- /example -->
     </div>
 
-<pre><span class="p">$</span> python examples/fasting.py <span class="s">2026-04-15</span>
-2026-04-15: not a fasting day
-  <span class="cm">Not a fasting day: the weekly fast is lifted during the fifty days after Fasika.</span></pre>
+    <h2 id="upcoming">What is coming up<a class="anchor" href="#upcoming">¶</a></h2>
+    <p>Feasts and fasts within at most 30 days. Each item is a feast day or the opening of a
+    fasting period, carrying a <code>feast</code> or <code>fast</code> object;
+    <code>kind</code> distinguishes them.</p>
 
-    <h2 id="upcoming">3 · What is coming up<a class="anchor" href="#upcoming">¶</a></h2>
-    <p>Feasts and fasts inside a window of at most 30 days. Each item is either a feast day
-    or the opening of a fasting period, carrying a <code>feast</code> or a <code>fast</code>
-    object accordingly; <code>kind</code> is what distinguishes them. A movable fast can open
-    on the same day as the feast that names it, so ጾመ ነነዌ legitimately appears twice.</p>
-
-    <div class="tabs" role="tablist">
-      <button class="tab-btn" role="tab" aria-selected="true" data-tab="up-js">JavaScript</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="up-py">Python</button>
+    <div class="tabs" role="tablist" aria-label="Upcoming occasions">
+      <button class="tab-btn" type="button" role="tab" id="tab-up-js" aria-controls="up-js" aria-selected="true" data-tab="up-js">JavaScript</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-up-py" aria-controls="up-py" aria-selected="false" data-tab="up-py">Python</button>
     </div>
-    <div class="tab-panel" id="up-js">
+    <div class="tab-panel" id="up-js" role="tabpanel" aria-labelledby="tab-up-js"><h6>JavaScript</h6>
 <!-- example:examples/upcoming.js -->
 <pre><code>/**
  * What is coming up: feasts and fasts within the next 30 days.
@@ -490,7 +417,7 @@ for (const item of items) {
 }</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="up-py" hidden>
+    <div class="tab-panel" id="up-py" role="tabpanel" aria-labelledby="tab-up-py"><h6>Python</h6>
 <!-- example:examples/upcoming.py -->
 <pre><code>"""
 What is coming up: feasts and fasts within the next 30 days.
@@ -538,16 +465,15 @@ for item in body["items"]:
 <!-- /example -->
     </div>
 
-    <h2 id="convert">4 · Converting dates<a class="anchor" href="#convert">¶</a></h2>
-    <p>Input is Gregorian unless <code>?calendar=ethiopian</code> says otherwise. Ethiopian
-    years are Amete Mihret. For a list of dates, the batch endpoint converts up to 366 in one
-    round trip and reports bad dates per item instead of failing the request.</p>
+    <h2 id="convert">Converting dates<a class="anchor" href="#convert">¶</a></h2>
+    <p>Input is Gregorian unless <code>?calendar=ethiopian</code> says otherwise. The batch
+    endpoint converts up to 366 dates in one request, reporting bad ones per item.</p>
 
-    <div class="tabs" role="tablist">
-      <button class="tab-btn" role="tab" aria-selected="true" data-tab="conv-js">JavaScript</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="conv-py">Python</button>
+    <div class="tabs" role="tablist" aria-label="Date conversion">
+      <button class="tab-btn" type="button" role="tab" id="tab-conv-js" aria-controls="conv-js" aria-selected="true" data-tab="conv-js">JavaScript</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-conv-py" aria-controls="conv-py" aria-selected="false" data-tab="conv-py">Python</button>
     </div>
-    <div class="tab-panel" id="conv-js">
+    <div class="tab-panel" id="conv-js" role="tabpanel" aria-labelledby="tab-conv-js"><h6>JavaScript</h6>
 <!-- example:examples/convert.js -->
 <pre><code>/**
  * Converting between the Ethiopian and Gregorian calendars.
@@ -585,7 +511,7 @@ for (const result of (await batch.json()).results) {
 }</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="conv-py" hidden>
+    <div class="tab-panel" id="conv-py" role="tabpanel" aria-labelledby="tab-conv-py"><h6>Python</h6>
 <!-- example:examples/convert.py -->
 <pre><code>"""
 Converting between the Ethiopian and Gregorian calendars.
@@ -639,17 +565,15 @@ for result in batch["results"]:
 <!-- /example -->
     </div>
 
-    <h2 id="saint">5 · When is a saint commemorated?<a class="anchor" href="#saint">¶</a></h2>
-    <p>The reverse of the daily lookup. Matching is homophone-folded, so a name spelled with
-    any of the Ge'ez letters that share a sound still finds the entry — a search for ሃይማኖት
-    and one for ሓይማኖት return the same saint. Passing an Ethiopian year resolves every match
-    to a real date and weekday.</p>
+    <h2 id="saint">When is a saint commemorated?<a class="anchor" href="#saint">¶</a></h2>
+    <p>Matching is homophone-folded, so ሃይማኖት and ሓይማኖት find the same saint. Passing an
+    Ethiopian year resolves each match to a real date.</p>
 
-    <div class="tabs" role="tablist">
-      <button class="tab-btn" role="tab" aria-selected="true" data-tab="saint-js">JavaScript</button>
-      <button class="tab-btn" role="tab" aria-selected="false" data-tab="saint-py">Python</button>
+    <div class="tabs" role="tablist" aria-label="Saint lookup">
+      <button class="tab-btn" type="button" role="tab" id="tab-saint-js" aria-controls="saint-js" aria-selected="true" data-tab="saint-js">JavaScript</button>
+      <button class="tab-btn" type="button" role="tab" id="tab-saint-py" aria-controls="saint-py" aria-selected="false" data-tab="saint-py">Python</button>
     </div>
-    <div class="tab-panel" id="saint-js">
+    <div class="tab-panel" id="saint-js" role="tabpanel" aria-labelledby="tab-saint-js"><h6>JavaScript</h6>
 <!-- example:examples/saint.js -->
 <pre><code>/**
  * On which day is a saint commemorated?
@@ -678,7 +602,7 @@ for (const match of matches) {
 }</code></pre>
 <!-- /example -->
     </div>
-    <div class="tab-panel" id="saint-py" hidden>
+    <div class="tab-panel" id="saint-py" role="tabpanel" aria-labelledby="tab-saint-py"><h6>Python</h6>
 <!-- example:examples/saint.py -->
 <pre><code>"""
 On which day is a saint commemorated?
@@ -720,9 +644,8 @@ for match in body["matches"]:
 <!-- /example -->
     </div>
 
-    <h2 id="subscribe">6 · Calendar subscription, no code<a class="anchor" href="#subscribe">¶</a></h2>
-    <p>Any calendar application that accepts a URL can subscribe to a year directly. The
-    feeds are byte-deterministic, so they cache cleanly and never churn.</p>
+    <h2 id="subscribe">Calendar subscription<a class="anchor" href="#subscribe">¶</a></h2>
+    <p>Any calendar application that accepts a URL can subscribe directly. No code needed.</p>
     <table>
       <thead><tr><th>Feed</th><th>URL</th></tr></thead>
       <tbody>
@@ -732,26 +655,6 @@ for match in body["matches"]:
         <tr><td>Daily readings</td><td><code>…/v1/calendar/ics?year=2018&amp;type=readings</code></td></tr>
       </tbody>
     </table>
-    <p><code>type=readings</code> is the daily lectionary: one all-day event per day of the
-    Ethiopian year, titled with that day's commemoration, described with the readings
-    appointed for matins, the liturgy, and vespers. Paste the URL into Google Calendar
-    (“From URL”), Apple Calendar, or Outlook.</p>
-
-    <h2 id="errors">Handling errors<a class="anchor" href="#errors">¶</a></h2>
-    <p>Every failure is JSON with the same shape, so one handler covers them all.</p>
-<pre>{
-  <span class="k">"error"</span>: <span class="s">"bad_request"</span>,
-  <span class="k">"message"</span>: <span class="s">"Unknown include 'bogus'."</span>,
-  <span class="k">"hint"</span>: <span class="s">"Use readings and/or sinksar."</span>
-}</pre>
-    <p>Status codes and what to do about them are covered in
-    <a href="errors.html">Errors &amp; rate limits</a>.</p>
-
-    <h2 id="run">Running the examples yourself<a class="anchor" href="#run">¶</a></h2>
-<pre><span class="p">$</span> node examples/today.js
-<span class="p">$</span> python examples/today.py</pre>
-    <p>Against a local server, exactly as CI runs them:</p>
-<pre><span class="p">$</span> make examples</pre>
 
     <div class="pager">
       <a href="getting-started.html"><b>Previous</b>← Getting started</a>
@@ -766,16 +669,37 @@ for match in body["matches"]:
 </div></footer>
 
 <script>
-  // Language tabs: one selected panel per group, keyboard reachable as buttons.
+  // Progressive enhancement: the markup leaves every panel visible and labelled,
+  // so all languages are readable if this never runs.
+  document.body.classList.add('js-tabs');
   for (const group of document.querySelectorAll('.tabs')) {
+    const buttons = Array.from(group.querySelectorAll('.tab-btn'));
+    const select = function (button) {
+      for (const other of buttons) {
+        const on = other === button;
+        other.setAttribute('aria-selected', String(on));
+        other.tabIndex = on ? 0 : -1;
+        document.getElementById(other.dataset.tab).hidden = !on;
+      }
+    };
+    select(buttons[0]);
     group.addEventListener('click', function (event) {
       const button = event.target.closest('.tab-btn');
-      if (!button) return;
-      for (const other of group.querySelectorAll('.tab-btn')) {
-        const selected = other === button;
-        other.setAttribute('aria-selected', String(selected));
-        document.getElementById(other.dataset.tab).hidden = !selected;
-      }
+      if (button) select(button);
+    });
+    // A tablist is expected to move under the arrow keys, not Tab.
+    group.addEventListener('keydown', function (event) {
+      const index = buttons.indexOf(document.activeElement);
+      if (index < 0) return;
+      let next;
+      if (event.key === 'ArrowRight') next = (index + 1) % buttons.length;
+      else if (event.key === 'ArrowLeft') next = (index - 1 + buttons.length) % buttons.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = buttons.length - 1;
+      else return;
+      event.preventDefault();
+      select(buttons[next]);
+      buttons[next].focus();
     });
   }
 </script>

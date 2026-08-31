@@ -193,17 +193,28 @@ footer { border-top: 1px solid var(--rule); }
 
 /* ---------- language tabs (integration recipes) ---------- */
 .tabs {
-  display: flex; gap: 4px; margin: 18px 0 0;
+  display: flex; flex-wrap: wrap; gap: 4px; margin: 18px 0 0;
   border-bottom: 1px solid var(--rule-soft);
 }
 .tab-btn {
   font: 600 13px var(--serif); color: var(--ink-2);
   background: none; border: none; border-bottom: 2px solid transparent;
   padding: 7px 13px; cursor: pointer; border-radius: 3px 3px 0 0;
+  /* Pull the underline down onto the strip's own rule so the selected tab
+     joins it rather than floating a pixel above it. */
+  margin-bottom: -1px;
 }
 .tab-btn:hover { color: var(--rubric); }
+.tab-btn:focus-visible { outline: 3px solid var(--rubric); outline-offset: -3px; }
 .tab-btn[aria-selected="true"] {
   color: var(--rubric-deep); border-bottom-color: var(--rubric); background: var(--raised);
 }
 .tab-panel[hidden] { display: none; }
 .tab-panel pre { margin-top: 12px; }
+/* Without JavaScript every panel stays visible rather than only the first, so
+   the labels tell the reader which language each block is. */
+.tab-panel > h6 {
+  font: 600 12px var(--serif); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--faint); margin: 16px 0 0;
+}
+.js-tabs .tab-panel > h6 { display: none; }
