@@ -635,14 +635,13 @@ are not executed by CI.
 
 ### Kotlin
 
+<!-- example:examples/today.kt -->
 ```kotlin
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.net.HttpURLConnection
 import java.net.URL
 
-// Model only the fields you use; `ignoreUnknownKeys` keeps the app working when
-// the API adds fields, which it does additively rather than by breaking shapes.
 @Serializable data class Named(val amharic: String, val english: String? = null)
 @Serializable data class Ethiopic(val date: String, val day: Int, val year: Int,
                                   val monthName: Named)
@@ -654,8 +653,7 @@ import java.net.URL
 private val json = Json { ignoreUnknownKeys = true }
 
 fun today(): Today {
-    // Reckon the day in Addis Ababa rather than from the device clock, or a user
-    // in another timezone sees the wrong commemorations for part of every day.
+    // Reckon the day in Addis Ababa, not from the device clock.
     val url = URL("https://eotcdev-api.natinael-96.workers.dev" +
         "/v1/today?tz=Africa/Addis_Ababa&include=sinksar")
     val connection = (url.openConnection() as HttpURLConnection).apply {
@@ -667,22 +665,15 @@ fun today(): Today {
         return json.decodeFromString<Today>(reader.readText())
     }
 }
-
-fun main() {
-    val day = today()
-    println("${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.")
-    println(if (day.fasting.isFasting) "ጾም · ${day.fasting.reason}" else "Not a fasting day.")
-    day.sinksar?.annual?.forEach { println("  $it") }
-}
 ```
+<!-- /example -->
 
 ### Swift
 
+<!-- example:examples/today.swift -->
 ```swift
 import Foundation
 
-// Model only the fields you use. Optionals cover the payloads that appear only
-// when `include` asks for them.
 struct Named: Decodable { let amharic: String; let english: String? }
 struct Ethiopic: Decodable { let date: String; let day: Int; let year: Int
                              let monthName: Named }
@@ -692,8 +683,7 @@ struct Today: Decodable { let ethiopic: Ethiopic; let weekday: Named
                           let fasting: Fasting; let sinksar: Sinksar? }
 
 func fetchToday() async throws -> Today {
-    // Reckon the day in Addis Ababa rather than from the device clock, or a user
-    // in another timezone sees the wrong commemorations for part of every day.
+    // Reckon the day in Addis Ababa, not from the device clock.
     var components = URLComponents(
         string: "https://eotcdev-api.natinael-96.workers.dev/v1/today")!
     components.queryItems = [
@@ -708,12 +698,8 @@ func fetchToday() async throws -> Today {
     }
     return try JSONDecoder().decode(Today.self, from: data)
 }
-
-let day = try await fetchToday()
-print("\(day.ethiopic.monthName.amharic) \(day.ethiopic.day), \(day.ethiopic.year) ዓ.ም.")
-print(day.fasting.isFasting ? "ጾም · \(day.fasting.reason)" : "Not a fasting day.")
-day.sinksar?.annual.forEach { print("  \($0)") }
 ```
+<!-- /example -->
 
 ## Handling errors
 

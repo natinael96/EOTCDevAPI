@@ -76,66 +76,66 @@
     </div>
     <div class="tab-panel" id="today-js" role="tabpanel" aria-labelledby="tab-today-js"><h6>JavaScript</h6>
 <!-- example:examples/today.js -->
-<pre><code>/**
+<pre><code><span class="cm">/**
  * Today's screen: the Ethiopian date, whether it is a fast, who is
  * commemorated, and the readings appointed for the day -- in one request.
  *
  * Run: node examples/today.js
- */
-const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+ */</span>
+<span class="k">const</span> API = <span class="k">process</span>.env.EOTC_API ?? <span class="s">'https://eotcdev-api.natinael-96.workers.dev'</span>;
 
-// Ask the API what "today" is. Do not build this from the device clock: a phone
-// in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a
-// locally computed date shows the wrong commemorations. Name the timezone the
-// day should be reckoned in and let the server resolve it.
-//
-// `include` is opt-in. Without it this returns just the date and fasting status;
-// with it, one request fills the whole screen.
-const url = `${API}/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar`;
-const response = await fetch(url);
-if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
-const day = await response.json();
+<span class="cm">// Ask the API what "today" is. Do not build this from the device clock: a phone</span>
+<span class="cm">// in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a</span>
+<span class="cm">// locally computed date shows the wrong commemorations. Name the timezone the</span>
+<span class="cm">// day should be reckoned in and let the server resolve it.</span>
+<span class="cm">//</span>
+<span class="cm">// `include` is opt-in. Without it this returns just the date and fasting status;</span>
+<span class="cm">// with it, one request fills the whole screen.</span>
+<span class="k">const</span> url = <span class="s">`${API}/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar`</span>;
+<span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(url);
+<span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="fn">Error</span>(<span class="s">`EOTC API returned ${response.status}`</span>);
+<span class="k">const</span> day = <span class="k">await</span> response.<span class="fn">json</span>();
 
-console.log(`${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.`);
-console.log(`${day.weekday.amharic} · ${day.gregorian.date} · ${day.ethiopic.date} EC`);
-console.log(day.fasting.isFasting ? `ጾም · ${day.fasting.reason}` : 'Not a fasting day.');
+console.<span class="fn">log</span>(<span class="s">`${day.ethiopic.monthName.amharic} ${day.ethiopic.day}, ${day.ethiopic.year} ዓ.ም.`</span>);
+console.<span class="fn">log</span>(<span class="s">`${day.weekday.amharic} · ${day.gregorian.date} · ${day.ethiopic.date} EC`</span>);
+console.<span class="fn">log</span>(day.fasting.isFasting ? <span class="s">`ጾም · ${day.fasting.reason}`</span> : <span class="s">'Not a fasting day.'</span>);
 
-// Who is commemorated. `annual` is kept once a year; `monthly` recurs on this
-// day of every month, so both lists belong on the screen.
-for (const [label, names] of [['ዓመታዊ · annual', day.sinksar.annual],
-                              ['ወርኀዊ · monthly', day.sinksar.monthly]]) {
-  if (!names.length) continue;
-  console.log(`\n${label}`);
-  for (const name of names) console.log(`  ${name}`);
+<span class="cm">// Who is commemorated. `annual` is kept once a year; `monthly` recurs on this</span>
+<span class="cm">// day of every month, so both lists belong on the screen.</span>
+<span class="k">for</span> (<span class="k">const</span> [label, names] <span class="k">of</span> [[<span class="s">'ዓመታዊ · annual'</span>, day.sinksar.annual],
+                              [<span class="s">'ወርኀዊ · monthly'</span>, day.sinksar.monthly]]) {
+  <span class="k">if</span> (!names.length) continue;
+  console.<span class="fn">log</span>(<span class="s">`\n${label}`</span>);
+  <span class="k">for</span> (<span class="k">const</span> name <span class="k">of</span> names) console.<span class="fn">log</span>(<span class="s">`  ${name}`</span>);
 }
 
-/**
+<span class="cm">/**
  * Render one reading. `canonicalReference` is the linkable form: its chapter and
  * verse numbers follow the Hebrew numbering used by ordinary Bible editions, not
  * the Ge'ez psalter numbering printed in the Gitsawe, so a Psalm reference here
  * can legitimately differ by one from the printed citation. It is null when the
  * printed citation could not be resolved, and `sourceCitation` always survives.
- */
-function reference(reading) {
-  const ref = reading.canonicalReference;
-  if (!ref) return `${reading.sourceBook} ${reading.sourceCitation} (unresolved)`;
-  const verses = ref.verseStart
-    ? `:${ref.verseStart}${ref.verseEnd &amp;&amp; ref.verseEnd !== ref.verseStart ? `-${ref.verseEnd}` : ''}`
-    : '';
-  return `${ref.book} ${ref.chapter}${verses}`;
+ */</span>
+<span class="k">function</span> <span class="fn">reference</span>(reading) {
+  <span class="k">const</span> ref = reading.canonicalReference;
+  <span class="k">if</span> (!ref) <span class="k">return</span> <span class="s">`${reading.sourceBook} ${reading.sourceCitation} (unresolved)`</span>;
+  <span class="k">const</span> verses = ref.verseStart
+    ? <span class="s">`:${ref.verseStart}${ref.verseEnd &amp;&amp; ref.verseEnd !== ref.verseStart ? `</span>-${ref.verseEnd}<span class="s">` : ''}`</span>
+    : <span class="s">''</span>;
+  <span class="k">return</span> <span class="s">`${ref.book} ${ref.chapter}${verses}`</span>;
 }
 
-const liturgy = day.readings.services.liturgy;
-console.log('\nቅዳሴ · liturgy');
-for (const psalm of liturgy.psalms) console.log(`  ምስባክ  ${reference(psalm)}`);
-for (const epistle of liturgy.epistles) console.log(`  ንባብ   ${reference(epistle)}`);
-for (const gospel of liturgy.gospels) console.log(`  ወንጌል  ${reference(gospel)}`);
-if (liturgy.anaphora) console.log(`  ቅዳሴ   ${liturgy.anaphora}`);</code></pre>
+<span class="k">const</span> liturgy = day.readings.services.liturgy;
+console.<span class="fn">log</span>(<span class="s">'\nቅዳሴ · liturgy'</span>);
+<span class="k">for</span> (<span class="k">const</span> psalm <span class="k">of</span> liturgy.psalms) console.<span class="fn">log</span>(<span class="s">`  ምስባክ  ${reference(psalm)}`</span>);
+<span class="k">for</span> (<span class="k">const</span> epistle <span class="k">of</span> liturgy.epistles) console.<span class="fn">log</span>(<span class="s">`  ንባብ   ${reference(epistle)}`</span>);
+<span class="k">for</span> (<span class="k">const</span> gospel <span class="k">of</span> liturgy.gospels) console.<span class="fn">log</span>(<span class="s">`  ወንጌል  ${reference(gospel)}`</span>);
+<span class="k">if</span> (liturgy.anaphora) console.<span class="fn">log</span>(<span class="s">`  ቅዳሴ   ${liturgy.anaphora}`</span>);</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="today-py" role="tabpanel" aria-labelledby="tab-today-py"><h6>Python</h6>
 <!-- example:examples/today.py -->
-<pre><code>"""
+<pre><code><span class="cm">"""
 Today's screen: the Ethiopian date, whether it is a fast, who is commemorated,
 and the readings appointed for the day -- in one request.
 
@@ -143,142 +143,146 @@ Run: python examples/today.py
 
 Uses only the standard library so it runs anywhere. `requests` or `httpx` work
 the same way; only the two transport lines change.
-"""
+"""</span>
 
-import json
-import os
-import urllib.request
+<span class="k">import</span> json
+<span class="k">import</span> os
+<span class="k">import</span> urllib.request
 
-API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
-
-
-# Identify your application. The public deployment sits behind Cloudflare, which
-# rejects the default "Python-urllib/3.x" user agent with a 403; any descriptive
-# User-Agent is accepted, and it also lets the maintainers see what is calling.
-HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
+API = os.environ.<span class="fn">get</span>(<span class="s">"EOTC_API"</span>, <span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span>)
 
 
-def get(path: str) -&gt; dict:
-    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+<span class="cm"># Identify your application. The public deployment sits behind Cloudflare, which</span>
+<span class="cm"># rejects the default "Python-urllib/3.x" user agent with a 403; any descriptive</span>
+<span class="cm"># User-Agent is accepted, and it also lets the maintainers see what is calling.</span>
+HEADERS = {<span class="s">"User-Agent"</span>: <span class="s">"eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"</span>}
 
 
-# Ask the API what "today" is. Do not build this from the device clock: a phone
-# in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a
-# locally computed date shows the wrong commemorations. Name the timezone the
-# day should be reckoned in and let the server resolve it.
-#
-# `include` is opt-in. Without it this returns just the date and fasting status;
-# with it, one request fills the whole screen.
-day = get("/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar")
+<span class="k">def</span> <span class="fn">get</span>(path: str) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(f<span class="s">"{API}{path}"</span>, headers=HEADERS)
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
-print(f"{day['ethiopic']['monthName']['amharic']} {day['ethiopic']['day']}, "
-      f"{day['ethiopic']['year']} ዓ.ም.")
-print(f"{day['weekday']['amharic']} · {day['gregorian']['date']} · {day['ethiopic']['date']} EC")
-print(f"ጾም · {day['fasting']['reason']}" if day["fasting"]["isFasting"]
-      else "Not a fasting day.")
 
-# Who is commemorated. `annual` is kept once a year; `monthly` recurs on this day
-# of every month, so both lists belong on the screen.
-for label, names in (("ዓመታዊ · annual", day["sinksar"]["annual"]),
-                     ("ወርኀዊ · monthly", day["sinksar"]["monthly"])):
-    if not names:
+<span class="cm"># Ask the API what "today" is. Do not build this from the device clock: a phone</span>
+<span class="cm"># in Toronto at 9pm is already on the next Ethiopian day in Addis Ababa, so a</span>
+<span class="cm"># locally computed date shows the wrong commemorations. Name the timezone the</span>
+<span class="cm"># day should be reckoned in and let the server resolve it.</span>
+<span class="cm">#</span>
+<span class="cm"># `include` is opt-in. Without it this returns just the date and fasting status;</span>
+<span class="cm"># with it, one request fills the whole screen.</span>
+day = <span class="fn">get</span>(<span class="s">"/v1/today?tz=Africa/Addis_Ababa&amp;include=readings,sinksar"</span>)
+
+<span class="k">print</span>(f<span class="s">"{day['ethiopic']['monthName']['amharic']} {day['ethiopic']['day']}, "</span>
+      f<span class="s">"{day['ethiopic']['year']} ዓ.ም."</span>)
+<span class="k">print</span>(f<span class="s">"{day['weekday']['amharic']} · {day['gregorian']['date']} · {day['ethiopic']['date']} EC"</span>)
+<span class="k">print</span>(f<span class="s">"ጾም · {day['fasting']['reason']}"</span> <span class="k">if</span> day[<span class="s">"fasting"</span>][<span class="s">"isFasting"</span>]
+      <span class="k">else</span> <span class="s">"Not a fasting day."</span>)
+
+<span class="cm"># Who is commemorated. `annual` is kept once a year; `monthly` recurs on this day</span>
+<span class="cm"># of every month, so both lists belong on the screen.</span>
+<span class="k">for</span> label, names <span class="k">in</span> ((<span class="s">"ዓመታዊ · annual"</span>, day[<span class="s">"sinksar"</span>][<span class="s">"annual"</span>]),
+                     (<span class="s">"ወርኀዊ · monthly"</span>, day[<span class="s">"sinksar"</span>][<span class="s">"monthly"</span>])):
+    <span class="k">if</span> <span class="k">not</span> names:
         continue
-    print(f"\n{label}")
-    for name in names:
-        print(f"  {name}")
+    <span class="k">print</span>(f<span class="s">"\n{label}"</span>)
+    <span class="k">for</span> name <span class="k">in</span> names:
+        <span class="k">print</span>(f<span class="s">"  {name}"</span>)
 
 
-def reference(reading: dict) -&gt; str:
-    """Render one reading.
+<span class="k">def</span> <span class="fn">reference</span>(reading: dict) -&gt; str:
+    <span class="cm">"""Render one reading.
 
     `canonicalReference` is the linkable form: its chapter and verse numbers
     follow the Hebrew numbering used by ordinary Bible editions, not the Ge'ez
     psalter numbering printed in the Gitsawe, so a Psalm reference here can
     legitimately differ by one from the printed citation. It is None when the
     printed citation could not be resolved, and `sourceCitation` always survives.
-    """
-    ref = reading.get("canonicalReference")
-    if not ref:
-        return f"{reading['sourceBook']} {reading['sourceCitation']} (unresolved)"
-    verses = ""
-    if ref["verseStart"]:
-        verses = f":{ref['verseStart']}"
-        if ref["verseEnd"] and ref["verseEnd"] != ref["verseStart"]:
-            verses += f"-{ref['verseEnd']}"
-    return f"{ref['book']} {ref['chapter']}{verses}"
+    """</span>
+    ref = reading.<span class="fn">get</span>(<span class="s">"canonicalReference"</span>)
+    <span class="k">if</span> <span class="k">not</span> ref:
+        <span class="k">return</span> f<span class="s">"{reading['sourceBook']} {reading['sourceCitation']} (unresolved)"</span>
+    verses = <span class="s">""</span>
+    <span class="k">if</span> ref[<span class="s">"verseStart"</span>]:
+        verses = f<span class="s">":{ref['verseStart']}"</span>
+        <span class="k">if</span> ref[<span class="s">"verseEnd"</span>] <span class="k">and</span> ref[<span class="s">"verseEnd"</span>] != ref[<span class="s">"verseStart"</span>]:
+            verses += f<span class="s">"-{ref['verseEnd']}"</span>
+    <span class="k">return</span> f<span class="s">"{ref['book']} {ref['chapter']}{verses}"</span>
 
 
-liturgy = day["readings"]["services"]["liturgy"]
-print("\nቅዳሴ · liturgy")
-for psalm in liturgy["psalms"]:
-    print(f"  ምስባክ  {reference(psalm)}")
-for epistle in liturgy["epistles"]:
-    print(f"  ንባብ   {reference(epistle)}")
-for gospel in liturgy["gospels"]:
-    print(f"  ወንጌል  {reference(gospel)}")
-if liturgy["anaphora"]:
-    print(f"  ቅዳሴ   {liturgy['anaphora']}")</code></pre>
+liturgy = day[<span class="s">"readings"</span>][<span class="s">"services"</span>][<span class="s">"liturgy"</span>]
+<span class="k">print</span>(<span class="s">"\nቅዳሴ · liturgy"</span>)
+<span class="k">for</span> psalm <span class="k">in</span> liturgy[<span class="s">"psalms"</span>]:
+    <span class="k">print</span>(f<span class="s">"  ምስባክ  {reference(psalm)}"</span>)
+<span class="k">for</span> epistle <span class="k">in</span> liturgy[<span class="s">"epistles"</span>]:
+    <span class="k">print</span>(f<span class="s">"  ንባብ   {reference(epistle)}"</span>)
+<span class="k">for</span> gospel <span class="k">in</span> liturgy[<span class="s">"gospels"</span>]:
+    <span class="k">print</span>(f<span class="s">"  ወንጌል  {reference(gospel)}"</span>)
+<span class="k">if</span> liturgy[<span class="s">"anaphora"</span>]:
+    <span class="k">print</span>(f<span class="s">"  ቅዳሴ   {liturgy['anaphora']}"</span>)</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="today-kt" role="tabpanel" aria-labelledby="tab-today-kt"><h6>Kotlin</h6>
-<pre><code>import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import java.net.HttpURLConnection
-import java.net.URL
+<!-- example:examples/today.kt -->
+<pre><code><span class="k">import</span> kotlinx.serialization.Serializable
+<span class="k">import</span> kotlinx.serialization.json.Json
+<span class="k">import</span> java.net.HttpURLConnection
+<span class="k">import</span> java.net.URL
 
-@Serializable data class Named(val amharic: String, val english: String? = null)
-@Serializable data class Ethiopic(val date: String, val day: Int, val year: Int,
-                                  val monthName: Named)
-@Serializable data class Fasting(val isFasting: Boolean, val reason: String)
-@Serializable data class Sinksar(val annual: List&lt;String&gt;, val monthly: List&lt;String&gt;)
-@Serializable data class Today(val ethiopic: Ethiopic, val weekday: Named,
-                               val fasting: Fasting, val sinksar: Sinksar? = null)
+<span class="at">@Serializable</span> <span class="k">data</span> <span class="k">class</span> <span class="fn">Named</span>(<span class="k">val</span> amharic: <span class="k">String</span>, <span class="k">val</span> english: <span class="k">String</span>? = <span class="k">null</span>)
+<span class="at">@Serializable</span> <span class="k">data</span> <span class="k">class</span> <span class="fn">Ethiopic</span>(<span class="k">val</span> date: <span class="k">String</span>, <span class="k">val</span> day: <span class="k">Int</span>, <span class="k">val</span> year: <span class="k">Int</span>,
+                                  <span class="k">val</span> monthName: Named)
+<span class="at">@Serializable</span> <span class="k">data</span> <span class="k">class</span> <span class="fn">Fasting</span>(<span class="k">val</span> isFasting: <span class="k">Boolean</span>, <span class="k">val</span> reason: <span class="k">String</span>)
+<span class="at">@Serializable</span> <span class="k">data</span> <span class="k">class</span> <span class="fn">Sinksar</span>(<span class="k">val</span> annual: <span class="k">List</span>&lt;<span class="k">String</span>&gt;, <span class="k">val</span> monthly: <span class="k">List</span>&lt;<span class="k">String</span>&gt;)
+<span class="at">@Serializable</span> <span class="k">data</span> <span class="k">class</span> <span class="fn">Today</span>(<span class="k">val</span> ethiopic: Ethiopic, <span class="k">val</span> weekday: Named,
+                               <span class="k">val</span> fasting: Fasting, <span class="k">val</span> sinksar: Sinksar? = <span class="k">null</span>)
 
-private val json = Json { ignoreUnknownKeys = true }
+<span class="k">private</span> <span class="k">val</span> json = Json { ignoreUnknownKeys = <span class="k">true</span> }
 
-fun today(): Today {
-    // Reckon the day in Addis Ababa, not from the device clock.
-    val url = URL("https://eotcdev-api.natinael-96.workers.dev" +
-        "/v1/today?tz=Africa/Addis_Ababa&amp;include=sinksar")
-    val connection = (url.openConnection() as HttpURLConnection).apply {
-        setRequestProperty("User-Agent", "my-eotc-app/1.0")
-        connectTimeout = 15_000
-        readTimeout = 15_000
+<span class="k">fun</span> <span class="fn">today</span>(): Today {
+    <span class="cm">// Reckon the day in Addis Ababa, not from the device clock.</span>
+    <span class="k">val</span> url = <span class="fn">URL</span>(<span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span> +
+        <span class="s">"/v1/today?tz=Africa/Addis_Ababa&amp;include=sinksar"</span>)
+    <span class="k">val</span> connection = (url.<span class="fn">openConnection</span>() <span class="k">as</span> HttpURLConnection).<span class="k">apply</span> {
+        <span class="fn">setRequestProperty</span>(<span class="s">"User-Agent"</span>, <span class="s">"my-eotc-app/1.0"</span>)
+        connectTimeout = <span class="n">15_000</span>
+        readTimeout = <span class="n">15_000</span>
     }
-    connection.inputStream.bufferedReader().use { reader -&gt;
-        return json.decodeFromString&lt;Today&gt;(reader.readText())
+    connection.inputStream.<span class="fn">bufferedReader</span>().<span class="k">use</span> { reader -&gt;
+        <span class="k">return</span> json.decodeFromString&lt;Today&gt;(reader.<span class="fn">readText</span>())
     }
 }</code></pre>
+<!-- /example -->
     </div>
     <div class="tab-panel" id="today-sw" role="tabpanel" aria-labelledby="tab-today-sw"><h6>Swift</h6>
-<pre><code>import Foundation
+<!-- example:examples/today.swift -->
+<pre><code><span class="k">import</span> Foundation
 
-struct Named: Decodable { let amharic: String; let english: String? }
-struct Ethiopic: Decodable { let date: String; let day: Int; let year: Int
-                             let monthName: Named }
-struct Fasting: Decodable { let isFasting: Bool; let reason: String }
-struct Sinksar: Decodable { let annual: [String]; let monthly: [String] }
-struct Today: Decodable { let ethiopic: Ethiopic; let weekday: Named
-                          let fasting: Fasting; let sinksar: Sinksar? }
+<span class="k">struct</span> Named: <span class="k">Decodable</span> { <span class="k">let</span> amharic: <span class="k">String</span>; <span class="k">let</span> english: <span class="k">String</span>? }
+<span class="k">struct</span> Ethiopic: <span class="k">Decodable</span> { <span class="k">let</span> date: <span class="k">String</span>; <span class="k">let</span> day: <span class="k">Int</span>; <span class="k">let</span> year: <span class="k">Int</span>
+                             <span class="k">let</span> monthName: Named }
+<span class="k">struct</span> Fasting: <span class="k">Decodable</span> { <span class="k">let</span> isFasting: <span class="k">Bool</span>; <span class="k">let</span> reason: <span class="k">String</span> }
+<span class="k">struct</span> Sinksar: <span class="k">Decodable</span> { <span class="k">let</span> annual: [<span class="k">String</span>]; <span class="k">let</span> monthly: [<span class="k">String</span>] }
+<span class="k">struct</span> Today: <span class="k">Decodable</span> { <span class="k">let</span> ethiopic: Ethiopic; <span class="k">let</span> weekday: Named
+                          <span class="k">let</span> fasting: Fasting; <span class="k">let</span> sinksar: Sinksar? }
 
-func fetchToday() async throws -&gt; Today {
-    // Reckon the day in Addis Ababa, not from the device clock.
-    var components = URLComponents(
-        string: "https://eotcdev-api.natinael-96.workers.dev/v1/today")!
+<span class="k">func</span> <span class="fn">fetchToday</span>() <span class="k">async</span> <span class="k">throws</span> -&gt; Today {
+    <span class="cm">// Reckon the day in Addis Ababa, not from the device clock.</span>
+    <span class="k">var</span> components = <span class="fn">URLComponents</span>(
+        string: <span class="s">"https://eotcdev-api.natinael-96.workers.dev/v1/today"</span>)!
     components.queryItems = [
-        URLQueryItem(name: "tz", value: "Africa/Addis_Ababa"),
-        URLQueryItem(name: "include", value: "sinksar"),
+        <span class="fn">URLQueryItem</span>(name: <span class="s">"tz"</span>, value: <span class="s">"Africa/Addis_Ababa"</span>),
+        <span class="fn">URLQueryItem</span>(name: <span class="s">"include"</span>, value: <span class="s">"sinksar"</span>),
     ]
-    var request = URLRequest(url: components.url!)
-    request.setValue("my-eotc-app/1.0", forHTTPHeaderField: "User-Agent")
-    let (data, response) = try await URLSession.shared.data(for: request)
-    guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-        throw URLError(.badServerResponse)
+    <span class="k">var</span> request = <span class="fn">URLRequest</span>(url: components.url!)
+    request.<span class="fn">setValue</span>(<span class="s">"my-eotc-app/1.0"</span>, forHTTPHeaderField: <span class="s">"User-Agent"</span>)
+    <span class="k">let</span> (data, response) = <span class="k">try</span> <span class="k">await</span> URLSession.shared.<span class="fn">data</span>(<span class="k">for</span>: request)
+    <span class="k">guard</span> <span class="k">let</span> http = response <span class="k">as</span>? HTTPURLResponse, http.statusCode == <span class="n">200</span> <span class="k">else</span> {
+        <span class="k">throw</span> <span class="fn">URLError</span>(.badServerResponse)
     }
-    return try JSONDecoder().decode(Today.self, from: data)
+    <span class="k">return</span> <span class="k">try</span> <span class="fn">JSONDecoder</span>().<span class="fn">decode</span>(Today.<span class="k">self</span>, <span class="k">from</span>: data)
 }</code></pre>
+<!-- /example -->
     </div>
 
     <h2 id="fasting">Is it a fasting day?<a class="anchor" href="#fasting">¶</a></h2>
@@ -293,85 +297,85 @@ func fetchToday() async throws -&gt; Today {
     </div>
     <div class="tab-panel" id="fast-js" role="tabpanel" aria-labelledby="tab-fast-js"><h6>JavaScript</h6>
 <!-- example:examples/fasting.js -->
-<pre><code>/**
+<pre><code><span class="cm">/**
  * Is it a fasting day, and why?
  *
  * Run: node examples/fasting.js [YYYY-MM-DD]
- */
-const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+ */</span>
+<span class="k">const</span> API = <span class="k">process</span>.env.EOTC_API ?? <span class="s">'https://eotcdev-api.natinael-96.workers.dev'</span>;
 
-// A date given on the command line is Gregorian; with no argument the API's own
-// "today" is used, reckoned in Addis Ababa. Deriving the date from the device
-// clock would put users west of Addis on the wrong day for part of every day.
-const date = process.argv[2];
-const url = date
-  ? `${API}/v1/fasting/${date}`
-  : `${API}/v1/today?tz=Africa/Addis_Ababa`;
+<span class="cm">// A date given on the command line is Gregorian; with no argument the API's own</span>
+<span class="cm">// "today" is used, reckoned in Addis Ababa. Deriving the date from the device</span>
+<span class="cm">// clock would put users west of Addis on the wrong day for part of every day.</span>
+<span class="k">const</span> date = <span class="k">process</span>.argv[<span class="n">2</span>];
+<span class="k">const</span> url = date
+  ? <span class="s">`${API}/v1/fasting/${date}`</span>
+  : <span class="s">`${API}/v1/today?tz=Africa/Addis_Ababa`</span>;
 
-const response = await fetch(url);
-if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
-const body = await response.json();
+<span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(url);
+<span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="fn">Error</span>(<span class="s">`EOTC API returned ${response.status}`</span>);
+<span class="k">const</span> body = <span class="k">await</span> response.<span class="fn">json</span>();
 
-// /v1/today nests the same information under `fasting`; /v1/fasting spreads it.
-const fasting = body.fasting ?? body;
-const on = body.gregorian?.date ?? body.gregorian;
+<span class="cm">// /v1/today nests the same information under `fasting`; /v1/fasting spreads it.</span>
+<span class="k">const</span> fasting = body.fasting ?? body;
+<span class="k">const</span> on = body.gregorian?.date ?? body.gregorian;
 
-console.log(`${on}: ${fasting.isFasting ? 'ጾም · fasting' : 'not a fasting day'}`);
-console.log(`  ${fasting.reason}`);
+console.<span class="fn">log</span>(<span class="s">`${on}: ${fasting.isFasting ? 'ጾም · fasting' : 'not a fasting day'}`</span>);
+console.<span class="fn">log</span>(<span class="s">`  ${fasting.reason}`</span>);
 
-// `periods` names the fasts the day falls inside, which is what a UI should
-// label the day with. A day can sit inside a period and still not be a fast:
-// the weekly Wednesday and Friday fast is suspended for the fifty days after
-// Fasika and on the great feasts of the Lord, and `reason` says so.
-for (const period of fasting.periods ?? []) {
-  console.log(`  in ${period.amharic} · ${period.english}`);
+<span class="cm">// `periods` names the fasts the day falls inside, which is what a UI should</span>
+<span class="cm">// label the day with. A day can sit inside a period and still not be a fast:</span>
+<span class="cm">// the weekly Wednesday and Friday fast is suspended for the fifty days after</span>
+<span class="cm">// Fasika and on the great feasts of the Lord, and `reason` says so.</span>
+<span class="k">for</span> (<span class="k">const</span> period <span class="k">of</span> fasting.periods ?? []) {
+  console.<span class="fn">log</span>(<span class="s">`  in ${period.amharic} · ${period.english}`</span>);
 }</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="fast-py" role="tabpanel" aria-labelledby="tab-fast-py"><h6>Python</h6>
 <!-- example:examples/fasting.py -->
-<pre><code>"""
+<pre><code><span class="cm">"""
 Is it a fasting day, and why?
 
 Run: python examples/fasting.py [YYYY-MM-DD]
-"""
+"""</span>
 
-import json
-import os
-import sys
-import urllib.request
+<span class="k">import</span> json
+<span class="k">import</span> os
+<span class="k">import</span> sys
+<span class="k">import</span> urllib.request
 
-API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
-# The public deployment sits behind Cloudflare, which rejects the default
-# "Python-urllib/3.x" user agent with a 403. Any descriptive User-Agent works.
-HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
-
-
-def get(path: str) -&gt; dict:
-    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+API = os.environ.<span class="fn">get</span>(<span class="s">"EOTC_API"</span>, <span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span>)
+<span class="cm"># The public deployment sits behind Cloudflare, which rejects the default</span>
+<span class="cm"># "Python-urllib/3.x" user agent with a 403. Any descriptive User-Agent works.</span>
+HEADERS = {<span class="s">"User-Agent"</span>: <span class="s">"eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"</span>}
 
 
-# A date given on the command line is Gregorian; with no argument the API's own
-# "today" is used, reckoned in Addis Ababa. Deriving the date from the device
-# clock would put users west of Addis on the wrong day for part of every day.
-date = sys.argv[1] if len(sys.argv) &gt; 1 else None
-body = get(f"/v1/fasting/{date}") if date else get("/v1/today?tz=Africa/Addis_Ababa")
+<span class="k">def</span> <span class="fn">get</span>(path: str) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(f<span class="s">"{API}{path}"</span>, headers=HEADERS)
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
-# /v1/today nests the same information under `fasting`; /v1/fasting spreads it.
-fasting = body.get("fasting", body)
-on = body["gregorian"]["date"] if isinstance(body.get("gregorian"), dict) else body["gregorian"]
 
-print(f"{on}: {'ጾም · fasting' if fasting['isFasting'] else 'not a fasting day'}")
-print(f"  {fasting['reason']}")
+<span class="cm"># A date given on the command line is Gregorian; with no argument the API's own</span>
+<span class="cm"># "today" is used, reckoned in Addis Ababa. Deriving the date from the device</span>
+<span class="cm"># clock would put users west of Addis on the wrong day for part of every day.</span>
+date = sys.argv[<span class="n">1</span>] <span class="k">if</span> <span class="fn">len</span>(sys.argv) &gt; <span class="n">1</span> <span class="k">else</span> <span class="k">None</span>
+body = <span class="fn">get</span>(f<span class="s">"/v1/fasting/{date}"</span>) <span class="k">if</span> date <span class="k">else</span> <span class="fn">get</span>(<span class="s">"/v1/today?tz=Africa/Addis_Ababa"</span>)
 
-# `periods` names the fasts the day falls inside, which is what a UI should label
-# the day with. A day can sit inside a period and still not be a fast: the weekly
-# Wednesday and Friday fast is suspended for the fifty days after Fasika and on
-# the great feasts of the Lord, and `reason` says so.
-for period in fasting.get("periods", []):
-    print(f"  in {period['amharic']} · {period['english']}")</code></pre>
+<span class="cm"># /v1/today nests the same information under `fasting`; /v1/fasting spreads it.</span>
+fasting = body.<span class="fn">get</span>(<span class="s">"fasting"</span>, body)
+on = body[<span class="s">"gregorian"</span>][<span class="s">"date"</span>] <span class="k">if</span> <span class="fn">isinstance</span>(body.<span class="fn">get</span>(<span class="s">"gregorian"</span>), dict) <span class="k">else</span> body[<span class="s">"gregorian"</span>]
+
+<span class="k">print</span>(f<span class="s">"{on}: {'ጾም · fasting' if fasting['isFasting'] else 'not a fasting day'}"</span>)
+<span class="k">print</span>(f<span class="s">"  {fasting['reason']}"</span>)
+
+<span class="cm"># `periods` names the fasts the day falls inside, which is what a UI should label</span>
+<span class="cm"># the day with. A day can sit inside a period and still not be a fast: the weekly</span>
+<span class="cm"># Wednesday and Friday fast is suspended for the fifty days after Fasika and on</span>
+<span class="cm"># the great feasts of the Lord, and `reason` says so.</span>
+<span class="k">for</span> period <span class="k">in</span> fasting.<span class="fn">get</span>(<span class="s">"periods"</span>, []):
+    <span class="k">print</span>(f<span class="s">"  in {period['amharic']} · {period['english']}"</span>)</code></pre>
 <!-- /example -->
     </div>
 
@@ -386,82 +390,82 @@ for period in fasting.get("periods", []):
     </div>
     <div class="tab-panel" id="up-js" role="tabpanel" aria-labelledby="tab-up-js"><h6>JavaScript</h6>
 <!-- example:examples/upcoming.js -->
-<pre><code>/**
+<pre><code><span class="cm">/**
  * What is coming up: feasts and fasts within the next 30 days.
  *
  * Run: node examples/upcoming.js
- */
-const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+ */</span>
+<span class="k">const</span> API = <span class="k">process</span>.env.EOTC_API ?? <span class="s">'https://eotcdev-api.natinael-96.workers.dev'</span>;
 
-// `days` is capped at 30. Omitting `from` anchors the window to the API's own
-// today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from
-// a fixed date instead. Note the cache difference: the anchored form is
-// revalidated every 60 seconds, the dated form is cacheable for a day.
-const response = await fetch(`${API}/v1/upcoming?days=30&amp;type=all`);
-if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
-const { from, count, items } = await response.json();
+<span class="cm">// `days` is capped at 30. Omitting `from` anchors the window to the API's own</span>
+<span class="cm">// today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from</span>
+<span class="cm">// a fixed date instead. Note the cache difference: the anchored form is</span>
+<span class="cm">// revalidated every 60 seconds, the dated form is cacheable for a day.</span>
+<span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(<span class="s">`${API}/v1/upcoming?days=30&amp;type=all`</span>);
+<span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="fn">Error</span>(<span class="s">`EOTC API returned ${response.status}`</span>);
+<span class="k">const</span> { <span class="k">from</span>, count, items } = <span class="k">await</span> response.<span class="fn">json</span>();
 
-console.log(`${count} occasions in the 30 days from ${from.gregorian}\n`);
-for (const item of items) {
-  // Each item is either a feast day or the first day of a fasting period, and
-  // carries the matching object. A movable fast can open on the same day as the
-  // feast that names it, so both appear -- `kind` is what tells them apart.
-  const occasion = item.feast ?? item.fast;
-  const label = item.kind === 'fast_begins'
-    ? `${occasion.amharic} begins (${occasion.days} days)`
+console.<span class="fn">log</span>(<span class="s">`${count} occasions in the 30 days from ${from.gregorian}\n`</span>);
+<span class="k">for</span> (<span class="k">const</span> item <span class="k">of</span> items) {
+  <span class="cm">// Each item is either a feast day or the first day of a fasting period, and</span>
+  <span class="cm">// carries the matching object. A movable fast can open on the same day as the</span>
+  <span class="cm">// feast that names it, so both appear -- `kind` is what tells them apart.</span>
+  <span class="k">const</span> occasion = item.feast ?? item.fast;
+  <span class="k">const</span> label = item.kind === <span class="s">'fast_begins'</span>
+    ? <span class="s">`${occasion.amharic} begins (${occasion.days} days)`</span>
     : occasion.amharic;
-  const away = item.daysAway === 0 ? 'today'
-    : item.daysAway === 1 ? 'tomorrow'
-    : `in ${item.daysAway} days`;
-  console.log(`${item.gregorian}  ${label} · ${occasion.english} — ${away}`);
+  <span class="k">const</span> away = item.daysAway === <span class="n">0</span> ? <span class="s">'today'</span>
+    : item.daysAway === <span class="n">1</span> ? <span class="s">'tomorrow'</span>
+    : <span class="s">`in ${item.daysAway} days`</span>;
+  console.<span class="fn">log</span>(<span class="s">`${item.gregorian}  ${label} · ${occasion.english} — ${away}`</span>);
 }</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="up-py" role="tabpanel" aria-labelledby="tab-up-py"><h6>Python</h6>
 <!-- example:examples/upcoming.py -->
-<pre><code>"""
+<pre><code><span class="cm">"""
 What is coming up: feasts and fasts within the next 30 days.
 
 Run: python examples/upcoming.py
-"""
+"""</span>
 
-import json
-import os
-import urllib.request
+<span class="k">import</span> json
+<span class="k">import</span> os
+<span class="k">import</span> urllib.request
 
-API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
-HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
-
-
-def get(path: str) -&gt; dict:
-    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+API = os.environ.<span class="fn">get</span>(<span class="s">"EOTC_API"</span>, <span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span>)
+HEADERS = {<span class="s">"User-Agent"</span>: <span class="s">"eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"</span>}
 
 
-# `days` is capped at 30. Omitting `from` anchors the window to the API's own
-# today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from
-# a fixed date instead. Note the cache difference: the anchored form is
-# revalidated every 60 seconds, the dated form is cacheable for a day.
-body = get("/v1/upcoming?days=30&amp;type=all")
+<span class="k">def</span> <span class="fn">get</span>(path: str) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(f<span class="s">"{API}{path}"</span>, headers=HEADERS)
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
-print(f"{body['count']} occasions in the 30 days from {body['from']['gregorian']}\n")
-for item in body["items"]:
-    # Each item is either a feast day or the first day of a fasting period, and
-    # carries the matching object. A movable fast can open on the same day as the
-    # feast that names it, so both appear -- `kind` is what tells them apart.
-    occasion = item.get("feast") or item["fast"]
-    if item["kind"] == "fast_begins":
-        label = f"{occasion['amharic']} begins ({occasion['days']} days)"
-    else:
-        label = occasion["amharic"]
-    if item["daysAway"] == 0:
-        away = "today"
-    elif item["daysAway"] == 1:
-        away = "tomorrow"
-    else:
-        away = f"in {item['daysAway']} days"
-    print(f"{item['gregorian']}  {label} · {occasion['english']} — {away}")</code></pre>
+
+<span class="cm"># `days` is capped at 30. Omitting `from` anchors the window to the API's own</span>
+<span class="cm"># today, which is what a widget wants; pass `from=YYYY-MM-DD` to look ahead from</span>
+<span class="cm"># a fixed date instead. Note the cache difference: the anchored form is</span>
+<span class="cm"># revalidated every 60 seconds, the dated form is cacheable for a day.</span>
+body = <span class="fn">get</span>(<span class="s">"/v1/upcoming?days=30&amp;type=all"</span>)
+
+<span class="k">print</span>(f<span class="s">"{body['count']} occasions in the 30 days from {body['from']['gregorian']}\n"</span>)
+<span class="k">for</span> item <span class="k">in</span> body[<span class="s">"items"</span>]:
+    <span class="cm"># Each item is either a feast day or the first day of a fasting period, and</span>
+    <span class="cm"># carries the matching object. A movable fast can open on the same day as the</span>
+    <span class="cm"># feast that names it, so both appear -- `kind` is what tells them apart.</span>
+    occasion = item.<span class="fn">get</span>(<span class="s">"feast"</span>) <span class="k">or</span> item[<span class="s">"fast"</span>]
+    <span class="k">if</span> item[<span class="s">"kind"</span>] == <span class="s">"fast_begins"</span>:
+        label = f<span class="s">"{occasion['amharic']} begins ({occasion['days']} days)"</span>
+    <span class="k">else</span>:
+        label = occasion[<span class="s">"amharic"</span>]
+    <span class="k">if</span> item[<span class="s">"daysAway"</span>] == <span class="n">0</span>:
+        away = <span class="s">"today"</span>
+    <span class="k">elif</span> item[<span class="s">"daysAway"</span>] == <span class="n">1</span>:
+        away = <span class="s">"tomorrow"</span>
+    <span class="k">else</span>:
+        away = f<span class="s">"in {item['daysAway']} days"</span>
+    <span class="k">print</span>(f<span class="s">"{item['gregorian']}  {label} · {occasion['english']} — {away}"</span>)</code></pre>
 <!-- /example -->
     </div>
 
@@ -475,93 +479,93 @@ for item in body["items"]:
     </div>
     <div class="tab-panel" id="conv-js" role="tabpanel" aria-labelledby="tab-conv-js"><h6>JavaScript</h6>
 <!-- example:examples/convert.js -->
-<pre><code>/**
+<pre><code><span class="cm">/**
  * Converting between the Ethiopian and Gregorian calendars.
  *
  * Run: node examples/convert.js
- */
-const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+ */</span>
+<span class="k">const</span> API = <span class="k">process</span>.env.EOTC_API ?? <span class="s">'https://eotcdev-api.natinael-96.workers.dev'</span>;
 
-async function get(path) {
-  const response = await fetch(`${API}${path}`);
-  if (!response.ok) throw new Error(`EOTC API returned ${response.status} for ${path}`);
-  return response.json();
+<span class="k">async</span> <span class="k">function</span> <span class="fn">get</span>(path) {
+  <span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(<span class="s">`${API}${path}`</span>);
+  <span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="fn">Error</span>(<span class="s">`EOTC API returned ${response.status} for ${path}`</span>);
+  <span class="k">return</span> response.<span class="fn">json</span>();
 }
 
-// Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.
-const forward = await get('/v1/convert/2026-04-12');
-console.log(`${forward.gregorian.date}  -&gt;  ${forward.ethiopic.date} EC (${forward.weekday.english})`);
+<span class="cm">// Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.</span>
+<span class="k">const</span> forward = <span class="k">await</span> <span class="fn">get</span>(<span class="s">'/v1/convert/2026-04-12'</span>);
+console.<span class="fn">log</span>(<span class="s">`${forward.gregorian.date}  -&gt;  ${forward.ethiopic.date} EC (${forward.weekday.english})`</span>);
 
-// Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year
-// has 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code
-// that loops over months must go 1..13, not 1..12.
-const back = await get('/v1/convert/2018-13-05?calendar=ethiopian');
-console.log(`${back.ethiopic.date} EC  -&gt;  ${back.gregorian.date} (${back.weekday.english})`);
+<span class="cm">// Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year</span>
+<span class="cm">// has 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code</span>
+<span class="cm">// that loops over months must go 1..13, not 1..12.</span>
+<span class="k">const</span> back = <span class="k">await</span> <span class="fn">get</span>(<span class="s">'/v1/convert/2018-13-05?calendar=ethiopian'</span>);
+console.<span class="fn">log</span>(<span class="s">`${back.ethiopic.date} EC  -&gt;  ${back.gregorian.date} (${back.weekday.english})`</span>);
 
-// A list of dates converts in one round trip, up to 366 per request. Individual
-// bad dates come back as per-item errors rather than failing the whole batch.
-const batch = await fetch(`${API}/v1/calendar/convert/batch`, {
-  method: 'POST',
-  headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({ dates: ['2026-01-07', '2026-09-11', '2026-02-31'] }),
+<span class="cm">// A list of dates converts in one round trip, up to 366 per request. Individual</span>
+<span class="cm">// bad dates come back as per-item errors rather than failing the whole batch.</span>
+<span class="k">const</span> batch = <span class="k">await</span> <span class="fn">fetch</span>(<span class="s">`${API}/v1/calendar/convert/batch`</span>, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'content-type'</span>: <span class="s">'application/json'</span> },
+  body: JSON.<span class="fn">stringify</span>({ dates: [<span class="s">'2026-01-07'</span>, <span class="s">'2026-09-11'</span>, <span class="s">'2026-02-31'</span>] }),
 });
-for (const result of (await batch.json()).results) {
-  console.log(result.error ? `${result.input}  -&gt;  ${result.error}`
-                           : `${result.input}  -&gt;  ${result.ethiopic.date} EC`);
+<span class="k">for</span> (<span class="k">const</span> result <span class="k">of</span> (<span class="k">await</span> batch.<span class="fn">json</span>()).results) {
+  console.<span class="fn">log</span>(result.error ? <span class="s">`${result.input}  -&gt;  ${result.error}`</span>
+                           : <span class="s">`${result.input}  -&gt;  ${result.ethiopic.date} EC`</span>);
 }</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="conv-py" role="tabpanel" aria-labelledby="tab-conv-py"><h6>Python</h6>
 <!-- example:examples/convert.py -->
-<pre><code>"""
+<pre><code><span class="cm">"""
 Converting between the Ethiopian and Gregorian calendars.
 
 Run: python examples/convert.py
-"""
+"""</span>
 
-import json
-import os
-import urllib.request
+<span class="k">import</span> json
+<span class="k">import</span> os
+<span class="k">import</span> urllib.request
 
-API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
-HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
-
-
-def get(path: str) -&gt; dict:
-    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+API = os.environ.<span class="fn">get</span>(<span class="s">"EOTC_API"</span>, <span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span>)
+HEADERS = {<span class="s">"User-Agent"</span>: <span class="s">"eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"</span>}
 
 
-def post(path: str, payload: dict) -&gt; dict:
-    request = urllib.request.Request(
-        f"{API}{path}", method="POST", data=json.dumps(payload).encode(),
-        headers={**HEADERS, "Content-Type": "application/json"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+<span class="k">def</span> <span class="fn">get</span>(path: str) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(f<span class="s">"{API}{path}"</span>, headers=HEADERS)
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
 
-# Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.
-forward = get("/v1/convert/2026-04-12")
-print(f"{forward['gregorian']['date']}  -&gt;  {forward['ethiopic']['date']} EC "
-      f"({forward['weekday']['english']})")
+<span class="k">def</span> <span class="fn">post</span>(path: str, payload: dict) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(
+        f<span class="s">"{API}{path}"</span>, method=<span class="s">"POST"</span>, data=json.<span class="fn">dumps</span>(payload).<span class="fn">encode</span>(),
+        headers={**HEADERS, <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span>})
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
-# Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year has
-# 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code that
-# loops over months must go 1..13, not 1..12.
-back = get("/v1/convert/2018-13-05?calendar=ethiopian")
-print(f"{back['ethiopic']['date']} EC  -&gt;  {back['gregorian']['date']} "
-      f"({back['weekday']['english']})")
 
-# A list of dates converts in one round trip, up to 366 per request. Individual
-# bad dates come back as per-item errors rather than failing the whole batch.
-batch = post("/v1/calendar/convert/batch",
-             {"dates": ["2026-01-07", "2026-09-11", "2026-02-31"]})
-for result in batch["results"]:
-    if "error" in result:
-        print(f"{result['input']}  -&gt;  {result['error']}")
-    else:
-        print(f"{result['input']}  -&gt;  {result['ethiopic']['date']} EC")</code></pre>
+<span class="cm"># Gregorian in, Ethiopian out. Input is Gregorian unless told otherwise.</span>
+forward = <span class="fn">get</span>(<span class="s">"/v1/convert/2026-04-12"</span>)
+<span class="k">print</span>(f<span class="s">"{forward['gregorian']['date']}  -&gt;  {forward['ethiopic']['date']} EC "</span>
+      f<span class="s">"({forward['weekday']['english']})"</span>)
+
+<span class="cm"># Ethiopian in, Gregorian out. Ethiopian years are Amete Mihret, and the year has</span>
+<span class="cm"># 13 months: Pagumen, month 13, has 5 days, or 6 before a leap year. Code that</span>
+<span class="cm"># loops over months must go 1..13, not 1..12.</span>
+back = <span class="fn">get</span>(<span class="s">"/v1/convert/2018-13-05?calendar=ethiopian"</span>)
+<span class="k">print</span>(f<span class="s">"{back['ethiopic']['date']} EC  -&gt;  {back['gregorian']['date']} "</span>
+      f<span class="s">"({back['weekday']['english']})"</span>)
+
+<span class="cm"># A list of dates converts in one round trip, up to 366 per request. Individual</span>
+<span class="cm"># bad dates come back as per-item errors rather than failing the whole batch.</span>
+batch = <span class="fn">post</span>(<span class="s">"/v1/calendar/convert/batch"</span>,
+             {<span class="s">"dates"</span>: [<span class="s">"2026-01-07"</span>, <span class="s">"2026-09-11"</span>, <span class="s">"2026-02-31"</span>]})
+<span class="k">for</span> result <span class="k">in</span> batch[<span class="s">"results"</span>]:
+    <span class="k">if</span> <span class="s">"error"</span> <span class="k">in</span> result:
+        <span class="k">print</span>(f<span class="s">"{result['input']}  -&gt;  {result['error']}"</span>)
+    <span class="k">else</span>:
+        <span class="k">print</span>(f<span class="s">"{result['input']}  -&gt;  {result['ethiopic']['date']} EC"</span>)</code></pre>
 <!-- /example -->
     </div>
 
@@ -575,72 +579,72 @@ for result in batch["results"]:
     </div>
     <div class="tab-panel" id="saint-js" role="tabpanel" aria-labelledby="tab-saint-js"><h6>JavaScript</h6>
 <!-- example:examples/saint.js -->
-<pre><code>/**
+<pre><code><span class="cm">/**
  * On which day is a saint commemorated?
  *
  * Run: node examples/saint.js [name]
- */
-const API = process.env.EOTC_API ?? 'https://eotcdev-api.natinael-96.workers.dev';
+ */</span>
+<span class="k">const</span> API = <span class="k">process</span>.env.EOTC_API ?? <span class="s">'https://eotcdev-api.natinael-96.workers.dev'</span>;
 
-const query = process.argv[2] ?? 'ተክለ ሃይማኖት';
-const year = 2018; // Ethiopian year; resolves each match to a real date.
+<span class="k">const</span> query = <span class="k">process</span>.argv[<span class="n">2</span>] ?? <span class="s">'ተክለ ሃይማኖት'</span>;
+<span class="k">const</span> year = <span class="n">2018</span>; <span class="cm">// Ethiopian year; resolves each match to a real date.</span>
 
-// Matching is homophone-folded, so a name spelled with any of the Ge'ez letters
-// that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.
-const url = `${API}/v1/sinksar/search?q=${encodeURIComponent(query)}&amp;year=${year}`;
-const response = await fetch(url);
-if (!response.ok) throw new Error(`EOTC API returned ${response.status}`);
-const { totalMatches, truncated, matches } = await response.json();
+<span class="cm">// Matching is homophone-folded, so a name spelled with any of the Ge'ez letters</span>
+<span class="cm">// that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.</span>
+<span class="k">const</span> url = <span class="s">`${API}/v1/sinksar/search?q=${encodeURIComponent(query)}&amp;year=${year}`</span>;
+<span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(url);
+<span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="fn">Error</span>(<span class="s">`EOTC API returned ${response.status}`</span>);
+<span class="k">const</span> { totalMatches, truncated, matches } = <span class="k">await</span> response.<span class="fn">json</span>();
 
-console.log(`${totalMatches} match(es) for "${query}"${truncated ? ' (truncated)' : ''}\n`);
-for (const match of matches) {
-  // A monthly commemoration recurs on this day of every month, so one saint
-  // legitimately appears many times; an annual one is kept on a single day.
-  const recurrence = match.kind === 'monthly' ? 'monthly' : 'annual ';
-  console.log(`${recurrence}  ${match.monthName.amharic} ${match.ethiopianDay}`
-    + `  ${match.date.gregorian}  ${match.title}`);
+console.<span class="fn">log</span>(<span class="s">`${totalMatches} match(es) for "${query}"${truncated ? ' (truncated)' : ''}\n`</span>);
+<span class="k">for</span> (<span class="k">const</span> match <span class="k">of</span> matches) {
+  <span class="cm">// A monthly commemoration recurs on this day of every month, so one saint</span>
+  <span class="cm">// legitimately appears many times; an annual one is kept on a single day.</span>
+  <span class="k">const</span> recurrence = match.kind === <span class="s">'monthly'</span> ? <span class="s">'monthly'</span> : <span class="s">'annual '</span>;
+  console.<span class="fn">log</span>(<span class="s">`${recurrence}  ${match.monthName.amharic} ${match.ethiopianDay}`</span>
+    + <span class="s">`  ${match.date.gregorian}  ${match.title}`</span>);
 }</code></pre>
 <!-- /example -->
     </div>
     <div class="tab-panel" id="saint-py" role="tabpanel" aria-labelledby="tab-saint-py"><h6>Python</h6>
 <!-- example:examples/saint.py -->
-<pre><code>"""
+<pre><code><span class="cm">"""
 On which day is a saint commemorated?
 
 Run: python examples/saint.py [name]
-"""
+"""</span>
 
-import json
-import os
-import sys
-import urllib.parse
-import urllib.request
+<span class="k">import</span> json
+<span class="k">import</span> os
+<span class="k">import</span> sys
+<span class="k">import</span> urllib.parse
+<span class="k">import</span> urllib.request
 
-API = os.environ.get("EOTC_API", "https://eotcdev-api.natinael-96.workers.dev")
-HEADERS = {"User-Agent": "eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"}
-
-
-def get(path: str) -&gt; dict:
-    request = urllib.request.Request(f"{API}{path}", headers=HEADERS)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+API = os.environ.<span class="fn">get</span>(<span class="s">"EOTC_API"</span>, <span class="s">"https://eotcdev-api.natinael-96.workers.dev"</span>)
+HEADERS = {<span class="s">"User-Agent"</span>: <span class="s">"eotcdev-example/1.0 (+https://github.com/natinael96/EOTCDevAPI)"</span>}
 
 
-query = sys.argv[1] if len(sys.argv) &gt; 1 else "ተክለ ሃይማኖት"
-year = 2018  # Ethiopian year; resolves each match to a real date.
+<span class="k">def</span> <span class="fn">get</span>(path: str) -&gt; dict:
+    request = urllib.request.<span class="fn">Request</span>(f<span class="s">"{API}{path}"</span>, headers=HEADERS)
+    <span class="k">with</span> urllib.request.<span class="fn">urlopen</span>(request, timeout=<span class="n">30</span>) <span class="k">as</span> response:
+        <span class="k">return</span> json.<span class="fn">load</span>(response)
 
-# Matching is homophone-folded, so a name spelled with any of the Ge'ez letters
-# that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.
-body = get(f"/v1/sinksar/search?q={urllib.parse.quote(query)}&amp;year={year}")
 
-truncated = " (truncated)" if body["truncated"] else ""
-print(f"{body['totalMatches']} match(es) for \"{query}\"{truncated}\n")
-for match in body["matches"]:
-    # A monthly commemoration recurs on this day of every month, so one saint
-    # legitimately appears many times; an annual one is kept on a single day.
-    recurrence = "monthly" if match["kind"] == "monthly" else "annual "
-    print(f"{recurrence}  {match['monthName']['amharic']} {match['ethiopianDay']}"
-          f"  {match['date']['gregorian']}  {match['title']}")</code></pre>
+query = sys.argv[<span class="n">1</span>] <span class="k">if</span> <span class="fn">len</span>(sys.argv) &gt; <span class="n">1</span> <span class="k">else</span> <span class="s">"ተክለ ሃይማኖት"</span>
+year = <span class="n">2018</span>  <span class="cm"># Ethiopian year; resolves each match to a real date.</span>
+
+<span class="cm"># Matching is homophone-folded, so a name spelled with any of the Ge'ez letters</span>
+<span class="cm"># that share a sound still matches -- ሃይማኖት and ሓይማኖት find the same entry.</span>
+body = <span class="fn">get</span>(f<span class="s">"/v1/sinksar/search?q={urllib.parse.quote(query)}&amp;year={year}"</span>)
+
+truncated = <span class="s">" (truncated)"</span> <span class="k">if</span> body[<span class="s">"truncated"</span>] <span class="k">else</span> <span class="s">""</span>
+<span class="k">print</span>(f<span class="s">"{body['totalMatches']} match(es) for \"{query}\"{truncated}\n"</span>)
+<span class="k">for</span> match <span class="k">in</span> body[<span class="s">"matches"</span>]:
+    <span class="cm"># A monthly commemoration recurs on this day of every month, so one saint</span>
+    <span class="cm"># legitimately appears many times; an annual one is kept on a single day.</span>
+    recurrence = <span class="s">"monthly"</span> <span class="k">if</span> match[<span class="s">"kind"</span>] == <span class="s">"monthly"</span> <span class="k">else</span> <span class="s">"annual "</span>
+    <span class="k">print</span>(f<span class="s">"{recurrence}  {match['monthName']['amharic']} {match['ethiopianDay']}"</span>
+          f<span class="s">"  {match['date']['gregorian']}  {match['title']}"</span>)</code></pre>
 <!-- /example -->
     </div>
 

@@ -15,6 +15,8 @@
   --terminal-dim: #9c8f75;
   --terminal-red: #e0745c;
   --terminal-gold: #d9a94e;
+  --terminal-sage: #9cb37f;
+  --terminal-slate: #86a9bd;
   --serif: "Fraunces", Georgia, serif;
   --ethiopic: "Noto Serif Ethiopic", "Abyssinica SIL", "Nyala", serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -106,6 +108,9 @@ pre .p { color: var(--terminal-dim); }
 pre .k { color: var(--terminal-gold); }
 pre .s { color: var(--terminal-red); }
 pre .cm { color: var(--terminal-dim); font-style: italic; }
+pre .n { color: var(--terminal-sage); }
+pre .fn { color: var(--terminal-slate); }
+pre .at { color: var(--terminal-gold); }
 
 /* endpoint heading */
 .endpoint {
