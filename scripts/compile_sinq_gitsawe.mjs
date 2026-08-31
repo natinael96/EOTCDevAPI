@@ -8,7 +8,7 @@
 // titles, matching metadata, and the feast graph are carried through.
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalBookId, geezToInteger } from "./gitsawe_lib.mjs";
+import { canonicalBookId, geezPsalterToCanonical, geezToInteger } from "./gitsawe_lib.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
@@ -124,7 +124,20 @@ function normalizedReading(reading, sourceSlot, where) {
     review({ kind: "unresolved_bible_book", where, sourceSlot,
       sourceBookTitle: verse.bookTitle ?? null });
   }
-  const chapter = intOrNull(verse.chapter);
+  // Sinq cites Psalms in the Ge'ez psalter's Septuagint numbering, as the
+  // Gitsawe scan does; convert to the Hebrew numbering the catalog's canonical
+  // references use. An inconvertible citation keeps its printed numbers and is
+  // flagged for review rather than silently pointing at the wrong psalm.
+  let chapter = intOrNull(verse.chapter);
+  let verseStart = intOrNull(verse.start);
+  let verseEnd = intOrNull(verse.end);
+  if (bibleBook === "PSA" && chapter) {
+    const mapped = geezPsalterToCanonical(chapter, verseStart, verseEnd);
+    if (mapped) ({ chapter, verseStart, verseEnd } = mapped);
+    else review({ kind: "psalm_citation_unmappable", where, sourceSlot,
+      chapter, verseStart, verseEnd,
+      note: "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept." });
+  }
   if (bibleBook && chapter && chapterCounts.has(bibleBook) && chapter > chapterCounts.get(bibleBook)) {
     localReport.reviewItems.push({ kind: "chapter_out_of_range", where, sourceSlot,
       bibleBook, chapter, chapterCount: chapterCounts.get(bibleBook), versification: "am-1980" });
@@ -143,8 +156,8 @@ function normalizedReading(reading, sourceSlot, where) {
       bibleBook,
       familyMatch,
       chapter,
-      verseStart: intOrNull(verse.start),
-      verseEnd: intOrNull(verse.end),
+      verseStart,
+      verseEnd,
       endText: verse.endText ?? null,
       endNote: verse.endNote ?? null,
       sourceCitation: verse.citation ?? reading.citation ?? null,
@@ -412,7 +425,7 @@ function classifyAgainst(reference, candidates) {
 
 const reconciliation = {
   version: 1,
-  method: "Per day, service, and slot: the Sinq reference is classified against the scan transcription's readings of the same slot group. exact = book/chapter/verse bounds agree; equivalent_numbering = Psalm chapter off by one with the same start verse; partial = same book and chapter, different or missing verse bounds; conflict = the scan appoints a different chapter or book; unavailable = the scan has no parsed reading for the slot group. Caveat: the vespers office and the 65 scan-backfilled days were imported into Sinq FROM this repository's transcription, so their agreement validates the two parsers' round trip, not independent sources. Only matins/liturgy on the 301 npm-derived days compare genuinely independent data.",
+  method: "Per day, service, and slot: the Sinq reference is classified against the scan transcription's readings of the same slot group. Psalm references on both sides are first converted from the Ge'ez psalter (Septuagint) numbering to the Hebrew numbering the canonical references use. exact = book/chapter/verse bounds agree; equivalent_numbering = Psalm chapter off by one with the same start verse; partial = same book and chapter, different or missing verse bounds; conflict = the scan appoints a different chapter or book; unavailable = the scan has no parsed reading for the slot group. Caveat: the vespers office and the 65 scan-backfilled days were imported into Sinq FROM this repository's transcription, so their agreement validates the two parsers' round trip, not independent sources. Only matins/liturgy on the 301 npm-derived days compare genuinely independent data.",
   summary: { byClass: {}, byService: {}, daysCompared: 0 },
   days: [],
 };

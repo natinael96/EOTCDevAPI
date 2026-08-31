@@ -1,3 +1,5 @@
+import bibleCatalog from "../py/eotc/bible_catalog.js";
+
 const GEEZ_DIGITS = new Map([
   ["፩", 1], ["፪", 2], ["፫", 3], ["፬", 4], ["፭", 5],
   ["፮", 6], ["፯", 7], ["፰", 8], ["፱", 9], ["፲", 10],
@@ -81,6 +83,54 @@ export function normalizeReadingField(raw) {
   // Some transcriptions contain Hebrew/Cambodian lookalikes in the last letter.
   if (field.includes("ወንጌ")) return { type: "gospel", alternate };
   return { type: "unknown", alternate, sourceField: raw };
+}
+
+const PSALM_VERSE_COUNTS = bibleCatalog.books.find((book) => book.id === "PSA").verseCounts;
+
+// The Gitsawe and Sinq sources cite Psalms in the Ge'ez psalter's numbering,
+// which follows the Septuagint: one chapter behind the Hebrew numbering used
+// by the am-1980/gez-1980 editions for most of the psalter, with merges and
+// splits at the edges (LXX 9 = Heb 9+10, LXX 113 = Heb 114+115, LXX 114+115 =
+// Heb 116, LXX 146+147 = Heb 147). Canonical references target the
+// Hebrew-numbered editions, so printed chapters and verses must be converted
+// before they can be linked. Returns null when the citation cannot be
+// expressed as one in-range Hebrew reference (Psalm 151, out-of-range verses,
+// ranges spanning a Hebrew psalm boundary).
+export function geezPsalterToCanonical(chapter, verseStart, verseEnd, toEndOfChapter = false) {
+  if (!chapter || chapter < 1) return null;
+  const mapVerse = (v) => {
+    if (chapter <= 8 || chapter >= 148) return [chapter, v];
+    if (chapter === 9) return v !== null && v > 21 ? [10, v - 21] : [9, v];
+    if (chapter <= 112) return [chapter + 1, v];
+    if (chapter === 113) return v !== null && v > 8 ? [115, v - 8] : [114, v];
+    if (chapter === 114) return [116, v];
+    if (chapter === 115) return [116, v === null ? null : v + 9];
+    if (chapter <= 145) return [chapter + 1, v];
+    if (chapter === 146) return [147, v];
+    return [147, v === null ? null : v + 11]; // Ge'ez 147 = Hebrew 147:12-20
+  };
+  const [outChapter, outStart] = mapVerse(verseStart ?? null);
+  if (outChapter > PSALM_VERSE_COUNTS.length) return null; // Psalm 151: absent from these editions
+  const verseCount = PSALM_VERSE_COUNTS[outChapter - 1];
+  if (outStart !== null && outStart > verseCount) return null;
+  let outEnd = null;
+  let outToEnd = false;
+  if (toEndOfChapter) {
+    // "To the end" of the Ge'ez chapter: where that chapter's end falls mid
+    // Hebrew psalm, pin the explicit final verse; where the range would span
+    // into the next Hebrew psalm, it has no single-reference equivalent.
+    if (chapter === 114) outEnd = 9; // Ge'ez 114 ends at Hebrew 116:9
+    else if (chapter === 146) outEnd = 11; // Ge'ez 146 ends at Hebrew 147:11
+    else if (chapter === 9 && outChapter === 9) return null;
+    else if (chapter === 113 && outChapter === 114) return null;
+    else outToEnd = true;
+  } else if (verseEnd !== null && verseEnd !== undefined) {
+    const [endChapter, mappedEnd] = mapVerse(verseEnd);
+    // A range crossing a Hebrew psalm boundary keeps its start; the end verse
+    // cannot be carried into another chapter.
+    if (endChapter === outChapter && mappedEnd <= verseCount) outEnd = mappedEnd;
+  }
+  return { chapter: outChapter, verseStart: outStart, verseEnd: outEnd, toEndOfChapter: outToEnd };
 }
 
 export function parseCitation(raw) {

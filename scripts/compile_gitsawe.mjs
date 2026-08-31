@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalBookId, geezToInteger, normalizeReadingField, parseCitation } from "./gitsawe_lib.mjs";
+import { canonicalBookId, geezPsalterToCanonical, geezToInteger, normalizeReadingField, parseCitation } from "./gitsawe_lib.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
@@ -30,18 +30,25 @@ function normalizedReading(reading, fieldType, inheritedBook = null) {
   const sourceBook = reading.book || reading.reading_type || "";
   const book = contextualBookId(sourceBook, fieldType, inheritedBook);
   const citation = parseCitation(reading.chapter_verse);
+  // The printed Psalm numbers follow the Ge'ez psalter (Septuagint numbering);
+  // canonical references use the Hebrew numbering of the am-1980/gez-1980
+  // editions, so Psalms are converted and an inconvertible citation stays
+  // unresolved rather than pointing at the wrong psalm.
+  const mapped = book === "PSA" && citation.chapter
+    ? geezPsalterToCanonical(citation.chapter, citation.verseStart, citation.verseEnd, citation.toEndOfChapter)
+    : citation;
   return {
     sourceBook,
     bibleBook: book,
     sourceCitation: citation.source,
-    canonicalReference: book && citation.chapter ? {
+    canonicalReference: book && citation.chapter && mapped ? {
       book,
-      chapter: citation.chapter,
-      verseStart: citation.verseStart,
-      verseEnd: citation.verseEnd,
-      toEndOfChapter: citation.toEndOfChapter,
-      method: "printed_citation",
-      confidence: citation.verseStart ? "probable" : "unresolved",
+      chapter: mapped.chapter,
+      verseStart: mapped.verseStart,
+      verseEnd: mapped.verseEnd,
+      toEndOfChapter: mapped.toEndOfChapter,
+      method: book === "PSA" ? "printed_citation_geez_psalter" : "printed_citation",
+      confidence: mapped.verseStart ? "probable" : "unresolved",
     } : null,
   };
 }
@@ -127,6 +134,15 @@ for (const file of fs.readdirSync(path.join(root, "data/gitsawe")).filter((x) =>
             });
           }
           const citation = parseCitation(reading.chapter_verse);
+          if (book === "PSA" && citation.chapter
+              && !geezPsalterToCanonical(citation.chapter, citation.verseStart, citation.verseEnd, citation.toEndOfChapter)) {
+            report.reviewItems.push({
+              kind: "psalm_citation_unmappable", file, ethiopianMonth: data.month_index,
+              ethiopianDay: index + 1, service: serviceName, sourceField,
+              sourceCitation: citation.source,
+              note: "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved.",
+            });
+          }
           if (citation.chapter && citation.verseStart) report.bibleLinks.parsedCitations++;
           else {
             report.bibleLinks.incompleteCitations++;

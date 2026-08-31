@@ -101,6 +101,36 @@
       "sourceCitation": "ም· ፭ ጥ· ፩ – ፲፫"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 20,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፻፲፫ ቍ· ፴፭ – ፴፯",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 21,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፵፯ ቍ· ፴ – ፴፬",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 22,
+      "service": "ዘነግህ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፻፵ ቍ· ፴ – ፴፬",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
       "kind": "incomplete_citation",
       "file": "05-tir.json",
       "ethiopianMonth": 5,
@@ -112,6 +142,16 @@
       "sourceCitation": "፶ ቍ· ቍ· ፲፬ – ፲፯"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "file": "05-tir.json",
+      "ethiopianMonth": 5,
+      "ethiopianDay": 23,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፸፫ ቍ· ፴ – ፴፬",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
       "kind": "incomplete_citation",
       "file": "05-tir.json",
       "ethiopianMonth": 5,
@@ -121,6 +161,16 @@
       "sourceBook": "መዝ·",
       "bibleBook": "PSA",
       "sourceCitation": "፷፭ ፋ · ፲፫ – ፲፭"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "06-yekatit.json",
+      "ethiopianMonth": 6,
+      "ethiopianDay": 1,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፺፮ ቍ· ፲፭ – ፲፮",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
     },
     {
       "kind": "unresolved_bible_book",
@@ -144,6 +194,16 @@
       "sourceCitation": "ም· ፱ · ፩ – ፲"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "file": "06-yekatit.json",
+      "ethiopianMonth": 6,
+      "ethiopianDay": 25,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፻፳፬ ቍ· ፯ – ፰",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
       "kind": "incomplete_citation",
       "file": "07-megabit.json",
       "ethiopianMonth": 7,
@@ -164,6 +224,26 @@
       "sourceBook": "መዝ·",
       "bibleBook": "PSA",
       "sourceCitation": "፸፪ – ፸፫"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "07-megabit.json",
+      "ethiopianMonth": 7,
+      "ethiopianDay": 12,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፻፲፯ ቍ· ፸፫ – ፸፬",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "07-megabit.json",
+      "ethiopianMonth": 7,
+      "ethiopianDay": 15,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፴፯ ቍ· ፳፱ – ፴",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
     },
     {
       "kind": "unresolved_bible_book",
@@ -296,6 +376,16 @@
       "sourceCitation": "ም· ፩ ጥ· ፲፫ – ፍ፡ም፡"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "file": "11-hamle.json",
+      "ethiopianMonth": 11,
+      "ethiopianDay": 24,
+      "service": "ዘቅዳሴ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፺፬ ቍ· ፲፫ – ፲፬",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
+    },
+    {
       "kind": "incomplete_citation",
       "file": "12-nehase.json",
       "ethiopianMonth": 12,
@@ -305,6 +395,16 @@
       "sourceBook": "ጴጥ ፩",
       "bibleBook": "1PE",
       "sourceCitation": "ም· ፪ ጥ· ፯ – ፳፭"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "file": "13-paguemen.json",
+      "ethiopianMonth": 13,
+      "ethiopianDay": 3,
+      "service": "ዘሠርክ",
+      "sourceField": "ምስባክ",
+      "sourceCitation": "፬ ቍ· ፱ – ፲",
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; left unresolved."
     },
     {
       "kind": "sinksar_day_heading_mismatch",

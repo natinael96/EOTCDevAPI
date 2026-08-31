@@ -34,12 +34,75 @@
   },
   "reviewItems": [
     {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 21-01 negh",
+      "sourceSlot": "msbak",
+      "chapter": 25,
+      "verseStart": 16,
+      "verseEnd": 17,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 06-02 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 66,
+      "verseStart": 13,
+      "verseEnd": 14,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 28-02 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 111,
+      "verseStart": 12,
+      "verseEnd": 13,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 08-03 kidassie",
       "sourceSlot": "secondDeacon",
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ራዕይ",
       "bibleBook": "REV"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 13-03 negh",
+      "sourceSlot": "msbak",
+      "chapter": 103,
+      "verseStart": 40,
+      "verseEnd": 41,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 17-03 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 145,
+      "verseStart": 14,
+      "verseEnd": 15,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 18-03 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 145,
+      "verseStart": 14,
+      "verseEnd": 15,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 03-04 negh",
+      "sourceSlot": "msbak",
+      "chapter": 66,
+      "verseStart": 13,
+      "verseEnd": 14,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
       "kind": "slot_family_mismatch",
@@ -66,6 +129,15 @@
       "bibleBook": "JUD"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 23-04 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 18,
+      "verseStart": 19,
+      "verseEnd": 20,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 28-04 kidassie",
       "sourceSlot": "secondDeacon",
@@ -82,10 +154,46 @@
       "bibleBook": "JHN"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 20-05 serk",
+      "sourceSlot": "msbak",
+      "chapter": 113,
+      "verseStart": 35,
+      "verseEnd": 37,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 23-05 serk",
+      "sourceSlot": "msbak",
+      "chapter": 73,
+      "verseStart": 30,
+      "verseEnd": 34,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 26-05 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 66,
+      "verseStart": 13,
+      "verseEnd": 14,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
       "kind": "unresolved_bible_book",
       "where": "daily 28-05 kidassie",
       "sourceSlot": "firstDeacon",
       "sourceBookTitle": null
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 01-06 serk",
+      "sourceSlot": "msbak",
+      "chapter": 96,
+      "verseStart": 15,
+      "verseEnd": 16,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
       "kind": "unresolved_bible_book",
@@ -130,6 +238,24 @@
       "sourceBookTitle": null
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 25-06 serk",
+      "sourceSlot": "msbak",
+      "chapter": 124,
+      "verseStart": 7,
+      "verseEnd": 8,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 12-07 serk",
+      "sourceSlot": "msbak",
+      "chapter": 117,
+      "verseStart": 73,
+      "verseEnd": 74,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 09-08 kidassie",
       "sourceSlot": "secondDeacon",
@@ -158,6 +284,15 @@
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ወንጌል 1",
       "bibleBook": "JHN"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 16-08 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 114,
+      "verseStart": 23,
+      "verseEnd": 24,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
       "kind": "slot_family_mismatch",
@@ -300,6 +435,15 @@
       "bibleBook": "JHN"
     },
     {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 01-11 kidassie",
+      "sourceSlot": "msbak",
+      "chapter": 18,
+      "verseStart": 19,
+      "verseEnd": 20,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
       "kind": "slot_family_mismatch",
       "where": "daily 06-11 kidassie",
       "sourceSlot": "secondDeacon",
@@ -328,6 +472,24 @@
       "slot": "catholicEpistle",
       "sourceBookTitle": "የዮሐንስ ወንጌል 1",
       "bibleBook": "JHN"
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "daily 03-13 serk",
+      "sourceSlot": "msbak",
+      "chapter": 4,
+      "verseStart": 9,
+      "verseEnd": 10,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
+    },
+    {
+      "kind": "psalm_citation_unmappable",
+      "where": "seasonal 01-tnsae negh",
+      "sourceSlot": "msbak",
+      "chapter": 77,
+      "verseStart": 85,
+      "verseEnd": 86,
+      "note": "Ge'ez psalter citation has no in-range Hebrew-numbered equivalent; printed numbers kept."
     },
     {
       "kind": "slot_family_mismatch",
