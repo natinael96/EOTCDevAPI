@@ -1,5 +1,10 @@
 # EOTCDev API — Detailed Developer Documentation
 
+> **Building something against this API?** Start with
+> [INTEGRATION.md](INTEGRATION.md) for complete, runnable recipes in JavaScript,
+> Python, Kotlin, and Swift. This document is the reference for every endpoint,
+> field, and contract.
+
 ## 1. Overview
 
 EOTCDev API is an open backend for Ethiopian Orthodox Tewahedo Church calendar

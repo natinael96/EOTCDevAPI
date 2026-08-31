@@ -181,6 +181,11 @@ The v1 product, compatibility, and content boundaries are defined in
 [`docs/V1_SCOPE.md`](docs/V1_SCOPE.md).
 The complete endpoint, data-model, testing, rate-limit, and deployment guide is
 [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md).
+Copy-paste recipes for building against the API -- a daily screen, a fasting
+check, upcoming occasions, date conversion, and saint lookup, in JavaScript,
+Python, Kotlin, and Swift -- are in
+[`docs/INTEGRATION.md`](docs/INTEGRATION.md); the JavaScript and Python ones are
+runnable files in [`examples/`](examples) that CI executes on every run.
 
 The Worker uses a dynamic token bucket (60-request burst capacity, refilling at 10
 requests/second) plus Cloudflare's native 600-per-minute edge backstop. Self-hosted

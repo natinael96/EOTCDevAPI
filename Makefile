@@ -4,7 +4,7 @@
 # (CI installs dependencies into the runner's Python and has no venv).
 PY := $(if $(wildcard py/.venv/bin/python),./.venv/bin/python,python3)
 
-.PHONY: help setup-check install install-ts install-py test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck
+.PHONY: help setup-check install install-ts install-py test test-ts test-py spec gitsawe validate-json check-generated ci dev-ts dev-py deploy typecheck examples sync-docs
 
 help:
 	@grep -E '^[a-z-]+:.*?##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -46,11 +46,17 @@ gitsawe:            ## Compile and validate the Gitsawe, Sinq, and Bible catalog
 	node scripts/compile_sinq_gitsawe.mjs
 	node scripts/compile_bible_meta.mjs
 
-check-generated: spec gitsawe   ## Fail when generated fixtures or Gitsawe artifacts are stale
-	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js \
-		data/sinq-gitsawe py/eotc/sinq_catalog.js py/eotc/bible_catalog.js
+examples:           ## Run the documentation examples against a local API
+	./scripts/run_examples.sh $(PY)
 
-ci: validate-json gitsawe check-generated test-ts test-py typecheck   ## Run the complete CI verification suite
+sync-docs:          ## Inline examples/ into docs/INTEGRATION.md
+	node scripts/sync_examples.mjs
+
+check-generated: spec gitsawe sync-docs   ## Fail when generated fixtures, Gitsawe artifacts, or docs are stale
+	git diff --exit-code -- spec data/gitsawe/quality-report.json py/eotc/gitsawe_catalog.js \
+		data/sinq-gitsawe py/eotc/sinq_catalog.js py/eotc/bible_catalog.js docs/INTEGRATION.md
+
+ci: validate-json gitsawe check-generated test-ts test-py typecheck examples   ## Run the complete CI verification suite
 
 dev-ts:             ## Serve the Hono app on Cloudflare Workers locally
 	cd ts && npx wrangler dev
